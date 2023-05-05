@@ -40,7 +40,7 @@ public class ColorSelectionScreen extends Screen {
         super(Component.translatable(health ? "colorfulhearts.screen.health.title" : "colorfulhearts.screen.absorption.title"));
         this.lastScreen = lastScreen;
         this.health = health;
-        this.updateHeartType(HeartType.NORMAL);
+        this.updateHeartType(HeartType.NORMAL, false);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ColorSelectionScreen extends Screen {
 
         final Button normalHearts = Button.builder(
                 Component.translatable("colorfulhearts.options.button.hearttype.normal"),
-                (btn) -> this.updateHeartType(HeartType.NORMAL)).pos(startX, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
+                (btn) -> this.updateHeartType(HeartType.NORMAL, true)).pos(startX, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
         normalHearts.active = !(this.heartType == HeartType.NORMAL);
         this.addRenderableWidget(normalHearts);
         this.heartTypeButtons.add(normalHearts);
@@ -81,7 +81,7 @@ public class ColorSelectionScreen extends Screen {
         int x = startX + BUTTON_WIDTH + BUTTON_SPACING;
         final Button poisonedHearts = Button.builder(
                 Component.translatable("colorfulhearts.options.button.hearttype.poisoned"),
-                (btn) -> this.updateHeartType(HeartType.POISONED)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
+                (btn) -> this.updateHeartType(HeartType.POISONED, true)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
         poisonedHearts.active = !(this.heartType == HeartType.POISONED);
         this.addRenderableWidget(poisonedHearts);
         this.heartTypeButtons.add(poisonedHearts);
@@ -89,7 +89,7 @@ public class ColorSelectionScreen extends Screen {
         x += BUTTON_WIDTH + BUTTON_SPACING;
         final Button witheredHearts = Button.builder(
                 Component.translatable("colorfulhearts.options.button.hearttype.withered"),
-                (btn) -> this.updateHeartType(HeartType.WITHERED)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
+                (btn) -> this.updateHeartType(HeartType.WITHERED, true)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
         witheredHearts.active = !(this.heartType == HeartType.WITHERED);
         this.addRenderableWidget(witheredHearts);
         this.heartTypeButtons.add(witheredHearts);
@@ -97,7 +97,7 @@ public class ColorSelectionScreen extends Screen {
         x += BUTTON_WIDTH + BUTTON_SPACING;
         final Button frozenHearts = Button.builder(
                 Component.translatable("colorfulhearts.options.button.hearttype.frozen"),
-                (btn) -> this.updateHeartType(HeartType.FROZEN)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
+                (btn) -> this.updateHeartType(HeartType.FROZEN, true)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
         frozenHearts.active = !(this.heartType == HeartType.FROZEN);
         this.addRenderableWidget(frozenHearts);
         this.heartTypeButtons.add(frozenHearts);
@@ -135,11 +135,13 @@ public class ColorSelectionScreen extends Screen {
         }
     }
 
-    public void updateHeartType(HeartType type) {
+    public void updateHeartType(HeartType type, boolean rebuildWidgets) {
         this.heartType = type;
         this.vanillaHeart = this.hasVanillaHeartVariant() && this.heartColorsContainVanilla();
         this.editBoxes = null;
-        this.rebuildWidgets();
+        if (rebuildWidgets) {
+            this.rebuildWidgets();
+        }
     }
 
     public boolean canSave() {
