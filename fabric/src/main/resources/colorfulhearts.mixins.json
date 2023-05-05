@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "package": "terrails.colorfulhearts.fabric.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "client": [ "GuiMixin" ],
+  "injectors": { "defaultRequire": 1 }
+}
