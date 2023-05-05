@@ -41,7 +41,7 @@ public class RenderUtils {
         drawColoredTexturedQuad(poseStack.last().pose(),
                 x1, x2,
                 y1, y2,
-                Minecraft.getInstance().gui.getBlitOffset(),
+                0,
                 (u1) / 256.0F, (u2) / 256.0F,
                 (v1) / 256.0F, (v2) / 256.0F,
                 red, green, blue, alpha);

@@ -55,8 +55,8 @@ public class HeartColorEditBox extends EditBox {
     }
 
     @Override
-    public void renderButton(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.renderButton(poseStack, mouseX, mouseY, partialTick);
+    public void renderWidget(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        super.renderWidget(poseStack, mouseX, mouseY, partialTick);
 
         if (!this.isVisible()) {
             return;

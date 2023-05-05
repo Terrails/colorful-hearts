@@ -88,7 +88,7 @@ public class ConfigurationScreen extends Screen {
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        this.renderDirtBackground(0);
+        this.renderDirtBackground(poseStack);
         GuiComponent.drawCenteredString(poseStack, this.font, this.title, this.width / 2, 20, 16777215);
         super.render(poseStack, mouseX, mouseY, partialTick);
     }
