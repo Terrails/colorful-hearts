@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[44,)"
+loaderVersion = "[41,)"
 issueTrackerURL = "https://github.com/Terrails/colorful-hearts"
 license = "MIT"
 
@@ -17,7 +17,7 @@ displayTest = "IGNORE_ALL_VERSION" # ignore everything since its a client only m
 [[dependencies.colorfulhearts]]
 modId = "forge"
 mandatory = true
-versionRange = "[44,)"
+versionRange = "[41,)"
 ordering = "NONE"
 side = "CLIENT"
 
