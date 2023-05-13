@@ -67,15 +67,15 @@ public class HeartColorEditBox extends EditBox {
             if (isBordered) {
                 // draw over the border in red if the hex text is invalid
                 int borderColor = this.isFocused() ? 0xFFD6231A : 0xFF590707;
-                GuiComponent.fill(poseStack, this.getX() - 1, this.getY() - 1, this.getX() + this.width + 1, this.getY(), borderColor);
-                GuiComponent.fill(poseStack, this.getX() - 1, this.getY() + this.height, this.getX() + this.width + 1,  this.getY() + this.height + 1, borderColor);
-                GuiComponent.fill(poseStack, this.getX() - 1, this.getY(), this.getX(), this.getY() + this.height, borderColor);
-                GuiComponent.fill(poseStack, this.getX() + this.width, this.getY(), this.getX() + this.width + 1, this.getY() + this.height, borderColor);
+                GuiComponent.fill(poseStack, this.x - 1, this.y - 1, this.x + this.width + 1, this.y, borderColor);
+                GuiComponent.fill(poseStack, this.x - 1, this.y + this.height, this.x + this.width + 1,  this.y + this.height + 1, borderColor);
+                GuiComponent.fill(poseStack, this.x - 1, this.y, this.x, this.y + this.height, borderColor);
+                GuiComponent.fill(poseStack, this.x + this.width, this.y, this.x + this.width + 1, this.y + this.height, borderColor);
             }
         } else {
             // draw heart in the remaining empty space inside the box
             HeartPiece heart = this.getHeartPiece();
-            heart.draw(poseStack, this.getX() + this.width - 11, this.getY() + this.height / 2 - 4, false, false, this.type);
+            heart.draw(poseStack, this.x + this.width - 11, this.y + this.height / 2 - 4, false, false, this.type);
         }
     }
 }

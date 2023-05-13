@@ -71,33 +71,45 @@ public class ColorSelectionScreen extends Screen {
         int y = (marginY - Button.DEFAULT_HEIGHT) / 2;
         this.heartTypeButtons = new ArrayList<>();
 
-        final Button normalHearts = Button.builder(
+        final Button normalHearts = new Button(
+                startX, y,
+                BUTTON_WIDTH, Button.DEFAULT_HEIGHT,
                 Component.translatable("colorfulhearts.options.button.hearttype.normal"),
-                (btn) -> this.updateHeartType(HeartType.NORMAL, true)).pos(startX, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
+                (btn) -> this.updateHeartType(HeartType.NORMAL, true)
+        );
         normalHearts.active = !(this.heartType == HeartType.NORMAL);
         this.addRenderableWidget(normalHearts);
         this.heartTypeButtons.add(normalHearts);
 
         int x = startX + BUTTON_WIDTH + BUTTON_SPACING;
-        final Button poisonedHearts = Button.builder(
+        final Button poisonedHearts = new Button(
+                x, y,
+                BUTTON_WIDTH, Button.DEFAULT_HEIGHT,
                 Component.translatable("colorfulhearts.options.button.hearttype.poisoned"),
-                (btn) -> this.updateHeartType(HeartType.POISONED, true)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
+                (btn) -> this.updateHeartType(HeartType.POISONED, true)
+        );
         poisonedHearts.active = !(this.heartType == HeartType.POISONED);
         this.addRenderableWidget(poisonedHearts);
         this.heartTypeButtons.add(poisonedHearts);
 
         x += BUTTON_WIDTH + BUTTON_SPACING;
-        final Button witheredHearts = Button.builder(
+        final Button witheredHearts = new Button(
+                x, y,
+                BUTTON_WIDTH, Button.DEFAULT_HEIGHT,
                 Component.translatable("colorfulhearts.options.button.hearttype.withered"),
-                (btn) -> this.updateHeartType(HeartType.WITHERED, true)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
+                (btn) -> this.updateHeartType(HeartType.WITHERED, true)
+        );
         witheredHearts.active = !(this.heartType == HeartType.WITHERED);
         this.addRenderableWidget(witheredHearts);
         this.heartTypeButtons.add(witheredHearts);
 
         x += BUTTON_WIDTH + BUTTON_SPACING;
-        final Button frozenHearts = Button.builder(
+        final Button frozenHearts = new Button(
+                x, y,
+                BUTTON_WIDTH, Button.DEFAULT_HEIGHT,
                 Component.translatable("colorfulhearts.options.button.hearttype.frozen"),
-                (btn) -> this.updateHeartType(HeartType.FROZEN, true)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
+                (btn) -> this.updateHeartType(HeartType.FROZEN, true)
+        );
         frozenHearts.active = !(this.heartType == HeartType.FROZEN);
         this.addRenderableWidget(frozenHearts);
         this.heartTypeButtons.add(frozenHearts);
@@ -108,22 +120,28 @@ public class ColorSelectionScreen extends Screen {
         startX = (width - BUTTON_WIDTH * 2 - BUTTON_SPACING) / 2;
         y = height - (Button.DEFAULT_HEIGHT / 2) - (marginY / 2);
 
-        final Button saveButton = Button.builder(
+        final Button saveButton = new Button(
+                startX, y,
+                BUTTON_WIDTH, Button.DEFAULT_HEIGHT,
                 Component.translatable("colorfulhearts.options.button.confirmsave"),
                 (btn) -> {
                     this.saveConfig();
                     // forces a heart update in renderer
                     HeartRenderer.INSTANCE.lastHeartType = null;
                     this.onClose();
-                }).pos(startX, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
+                }
+        );
         saveButton.active = false;
         this.addRenderableWidget(saveButton);
         this.saveButton = saveButton;
 
         x = startX + BUTTON_WIDTH + BUTTON_SPACING;
-        final Button cancelButton = Button.builder(
+        final Button cancelButton = new Button(
+                x, y,
+                BUTTON_WIDTH, Button.DEFAULT_HEIGHT,
                 Component.translatable("colorfulhearts.options.button.cancel"),
-                (btn) -> this.onClose()).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
+                (btn) -> this.onClose()
+        );
         this.addRenderableWidget(cancelButton);
 
         if (this.hasChanged) {
@@ -273,13 +291,17 @@ public class ColorSelectionScreen extends Screen {
                     return Component.translatable("colorfulhearts.options.button.vanillaheart.false");
                 }
             };
-            final Button vanillaHeart = Button.builder(componentSupplier.get(),
+            final Button vanillaHeart = new Button(
+                    startX, 0,
+                    BUTTON_DIMS + BUTTON_SPACING + EDIT_BOX_WIDTH, Button.DEFAULT_HEIGHT,
+                    componentSupplier.get(),
                     (btn) -> {
                         this.vanillaHeart = !this.vanillaHeart;
                         this.hasChanged = this.haveValuesChanged();
                         btn.setMessage(componentSupplier.get());
                         this.rebuildWidgets();
-                    }).pos(startX, 0).size(BUTTON_DIMS + BUTTON_SPACING + EDIT_BOX_WIDTH, Button.DEFAULT_HEIGHT).build();
+                    }
+            );
             widgets.add(vanillaHeart);
         }
 
@@ -307,12 +329,16 @@ public class ColorSelectionScreen extends Screen {
             int column = (i + OFFSET) % ELEMENTS_PER_ROW;
             int x = startX + column * (EDIT_BOX_WIDTH + BUTTON_DIMS + ELEMENT_SPACING + BUTTON_SPACING);
 
-            final Button button = Button.builder(Component.literal("-").withStyle(ChatFormatting.RED),
+            final Button button = new Button(
+                    x, 0,
+                    BUTTON_DIMS, BUTTON_DIMS,
+                    Component.literal("-").withStyle(ChatFormatting.RED),
                     (btn) -> {
                         this.editBoxes.remove(index);
                         this.hasChanged = this.haveValuesChanged();
                         this.rebuildWidgets();
-                    }).pos(x, 0).size(BUTTON_DIMS, BUTTON_DIMS).build();
+                    }
+            );
 
             HeartColorEditBox box = this.editBoxes.get(index);
             box = new HeartColorEditBox(this.font, x + BUTTON_DIMS + BUTTON_SPACING, 0, EDIT_BOX_WIDTH - 2, Button.DEFAULT_HEIGHT, box, Component.empty(), this.heartType, this.health);
@@ -338,7 +364,10 @@ public class ColorSelectionScreen extends Screen {
                 if (canHaveMoreHearts) {
                     column = (column + 1) % ELEMENTS_PER_ROW;
                     x = startX + (column * EDIT_BOX_WIDTH) + (column * BUTTON_DIMS) + (column * ELEMENT_SPACING) + (column * BUTTON_SPACING);
-                    final Button addButton = Button.builder(Component.literal("+").withStyle(ChatFormatting.GREEN),
+                    final Button addButton = new Button(
+                            x, 0,
+                            BUTTON_DIMS, BUTTON_DIMS,
+                            Component.literal("+").withStyle(ChatFormatting.GREEN),
                             (btn) -> {
                                 this.editBoxes.add(new HeartColorEditBox(this.font,
                                         0, 0,
@@ -348,7 +377,8 @@ public class ColorSelectionScreen extends Screen {
                                         this.health));
                                 this.hasChanged = this.haveValuesChanged();
                                 this.rebuildWidgets();
-                            }).pos(x, 0).size(BUTTON_DIMS, BUTTON_DIMS).build();
+                            }
+                    );
                     widgets.add(addButton);
                 }
                 this.colorSelectionList.addEntry(new ScrollableWidgetList.Entry(widgets));
@@ -357,7 +387,10 @@ public class ColorSelectionScreen extends Screen {
 
         if (this.editBoxes.size() == 0) {
             int x = startX + EDIT_BOX_WIDTH + BUTTON_DIMS + ELEMENT_SPACING + BUTTON_SPACING;
-            final Button addButton = Button.builder(Component.literal("+").withStyle(ChatFormatting.GREEN),
+            final Button addButton = new Button(
+                    x, 0,
+                    BUTTON_DIMS, BUTTON_DIMS,
+                    Component.literal("+").withStyle(ChatFormatting.GREEN),
                     (btn) -> {
                         this.editBoxes.add(new HeartColorEditBox(this.font,
                                 0, 0,
@@ -368,7 +401,8 @@ public class ColorSelectionScreen extends Screen {
                         // not required as the widgets are rebuilt anyway
                         //this.hasChanged = this.haveValuesChanged();
                         this.rebuildWidgets();
-                    }).pos(x, 0).size(BUTTON_DIMS, BUTTON_DIMS).build();
+                    }
+            );
             widgets.add(addButton);
             this.colorSelectionList.addEntry(new ScrollableWidgetList.Entry(widgets));
         }

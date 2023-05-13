@@ -14,7 +14,7 @@
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/colorful-hearts"
   },
 
-  "icon": "assets/colorfulhearts/icon.png",
+  "icon": "colorfulhearts.png",
 
   "environment": "client",
   "entrypoints": {
@@ -30,7 +30,7 @@
   "depends": {
     "fabricloader": ">=0.14.19",
     "fabric-api": "*",
-    "minecraft": ">=1.19 <1.19.4",
+    "minecraft": ">=1.19 <1.19.3",
     "java": ">=17"
   }
 }

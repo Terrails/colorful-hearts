@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[41,)"
+loaderVersion = "[41,43]"
 issueTrackerURL = "https://github.com/Terrails/colorful-hearts"
 license = "MIT"
 
@@ -11,19 +11,19 @@ displayName = "Colorful Hearts"
 authors = "Terrails"
 description = ''' A simple renderer for colored hearts '''
 
-logoFile = "assets/colorfulhearts/icon.png"
+logoFile = "colorfulhearts.png"
 displayTest = "IGNORE_ALL_VERSION" # ignore everything since its a client only mod
 
 [[dependencies.colorfulhearts]]
 modId = "forge"
 mandatory = true
-versionRange = "[41,)"
+versionRange = "[41,43]"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.colorfulhearts]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19,1.19.3]"
+versionRange = "[1.19,1.19.2]"
 ordering = "NONE"
 side = "CLIENT"

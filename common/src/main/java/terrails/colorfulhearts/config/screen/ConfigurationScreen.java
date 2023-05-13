@@ -53,17 +53,21 @@ public class ConfigurationScreen extends Screen {
 
         y += font.lineHeight * 2;
         this.addRenderableWidget(
-                Button.builder(Component.translatable("colorfulhearts.options.button.health_colors"),
-                                (btn) -> this.minecraft.setScreen(new ColorSelectionScreen(this, true)))
-                        .pos(leftButtonX, y).size(Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT)
-                        .build()
+                new Button(
+                        leftButtonX, y,
+                        Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT,
+                        Component.translatable("colorfulhearts.options.button.health_colors"),
+                        (btn) -> this.minecraft.setScreen(new ColorSelectionScreen(this, true))
+                )
         );
 
         this.addRenderableWidget(
-                Button.builder(Component.translatable("colorfulhearts.options.button.absorption_colors"),
-                                (btn) -> this.minecraft.setScreen(new ColorSelectionScreen(this, false)))
-                        .pos(rightButtonX, y).size(Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT)
-                        .build()
+                new Button(
+                        rightButtonX, y,
+                        Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT,
+                        Component.translatable("colorfulhearts.options.button.absorption_colors"),
+                        (btn) -> this.minecraft.setScreen(new ColorSelectionScreen(this, false))
+                )
         );
 
         //
@@ -74,16 +78,28 @@ public class ConfigurationScreen extends Screen {
         );
 
         y += font.lineHeight * 2;
-        this.addRenderableWidget(Button.builder(ConfigurationScreen.overHealthButtonText.get(), (btn) -> {
-            Configuration.ABSORPTION.renderOverHealth.set(!Configuration.ABSORPTION.renderOverHealth.get());
-            btn.setMessage(ConfigurationScreen.overHealthButtonText.get());
-        }).pos(leftButtonX, y).size(Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT).build());
+        this.addRenderableWidget(new Button(
+                        leftButtonX, y,
+                        Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT,
+                        ConfigurationScreen.overHealthButtonText.get(),
+                        (btn) -> {
+                            Configuration.ABSORPTION.renderOverHealth.set(!Configuration.ABSORPTION.renderOverHealth.get());
+                            btn.setMessage(ConfigurationScreen.overHealthButtonText.get());
+                        }
+                )
+        );
 
         //
         // Bottom button
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
-            this.onClose();
-        }).bounds(this.width / 2 - 100, this.height - 27, 200, 20).build());
+        this.addRenderableWidget(new Button(
+                        this.width / 2 - 100, this.height - 27,
+                        200, 20,
+                        CommonComponents.GUI_DONE,
+                        button -> {
+                            this.onClose();
+                        }
+                )
+        );
     }
 
     @Override

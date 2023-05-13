@@ -3,10 +3,10 @@ package terrails.colorfulhearts.config.screen.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.network.chat.Component;
 
-public class LabelLine implements Renderable {
+public class LabelLine implements Widget {
 
     private final Font font;
     private final int x, y, width;

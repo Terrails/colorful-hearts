@@ -66,7 +66,7 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
         @Override
         public void render(@NotNull PoseStack poseStack, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
             this.children.forEach(widget -> {
-                widget.setY(top);
+                widget.y = top;
                 widget.render(poseStack, mouseX, mouseY, partialTick);
             });
         }
