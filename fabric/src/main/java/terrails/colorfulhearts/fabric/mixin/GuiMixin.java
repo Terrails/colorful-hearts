@@ -23,7 +23,7 @@ public abstract class GuiMixin {
      * Disables the default heart renderer by setting for-loop index to -1 resulting in it never executing
      * Also injects own heart render
      */
-    @ModifyVariable(method = "renderHearts", at = @At("STORE"), ordinal = 11, print = true)
+    @ModifyVariable(method = "renderHearts", at = @At("STORE"), ordinal = 11)
     private int cancelLoopAndRender(
             int defaultIndexVal,
             PoseStack poseStack,
@@ -45,7 +45,7 @@ public abstract class GuiMixin {
      * Modifies the heart bar rows to 1 or 2, depending on if absorption is in the same row
      * Required for armor bar to render at correct height when there are multiple heart rows
      */
-    @ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 7, print = true)
+    @ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 7)
     private int modifyRows(int defaultValue) {
         int absorption = Mth.ceil(this.getCameraPlayer().getAbsorptionAmount());
         return (!Configuration.ABSORPTION.renderOverHealth.get() && absorption > 0) ? 2 : 1;
