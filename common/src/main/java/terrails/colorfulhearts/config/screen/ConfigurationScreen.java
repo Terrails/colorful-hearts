@@ -80,9 +80,10 @@ public class ConfigurationScreen extends Screen {
 
         //
         // Bottom button
-        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
-            this.onClose();
-        }).bounds(this.width / 2 - 100, this.height - 27, 200, 20).build());
+        this.addRenderableWidget(Button
+                .builder(CommonComponents.GUI_DONE, button -> this.onClose())
+                .bounds(this.width / 2 - 100, this.height - 27, 200, 20)
+                .build());
     }
 
     @Override

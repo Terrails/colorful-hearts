@@ -83,7 +83,7 @@ public class HeartPiece {
 
     @Override
     public int hashCode() {
-        return Objects.hash((Boolean) this.absorption, this.color);
+        return Objects.hash(this.absorption, this.color);
     }
 
     @Override
