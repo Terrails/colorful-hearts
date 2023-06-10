@@ -67,7 +67,7 @@ public class RenderEventHandler {
         int offset = 10 + (absorption > 0 && !Configuration.ABSORPTION.renderOverHealth.get() ? 10 : 0);
         gui.leftHeight += offset;
 
-        HeartRenderer.INSTANCE.renderPlayerHearts(event.getPoseStack(), player, left, top, healthMax, health, this.displayHealth, absorption, highlight);
+        HeartRenderer.INSTANCE.renderPlayerHearts(event.getGuiGraphics().pose(), player, left, top, healthMax, health, this.displayHealth, absorption, highlight);
 
         client.getProfiler().pop();
 

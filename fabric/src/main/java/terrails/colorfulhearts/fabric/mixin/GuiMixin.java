@@ -1,7 +1,7 @@
 package terrails.colorfulhearts.fabric.mixin;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +26,7 @@ public abstract class GuiMixin {
     @ModifyVariable(method = "renderHearts", at = @At("STORE"), ordinal = 11)
     private int cancelLoopAndRender(
             int defaultIndexVal,
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             Player player,
             int x,
             int y,
@@ -37,7 +37,7 @@ public abstract class GuiMixin {
             int displayHealth,
             int absorptionAmount,
             boolean blinking) {
-        HeartRenderer.INSTANCE.renderPlayerHearts(poseStack, player, x, y, Mth.ceil(maxHealth), currentHealth, displayHealth, absorptionAmount, blinking);
+        HeartRenderer.INSTANCE.renderPlayerHearts(guiGraphics.pose(), player, x, y, Mth.ceil(maxHealth), currentHealth, displayHealth, absorptionAmount, blinking);
         return -1;
     }
 

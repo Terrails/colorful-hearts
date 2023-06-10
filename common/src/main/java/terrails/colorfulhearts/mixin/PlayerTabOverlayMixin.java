@@ -1,6 +1,6 @@
 package terrails.colorfulhearts.mixin;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,13 +16,13 @@ public class PlayerTabOverlayMixin {
 
     @Inject(method = "renderTablistHearts", cancellable = true,
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/components/PlayerTabOverlay;blit(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIII)V",
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V",
                     opcode = 0,
                     shift = At.Shift.BEFORE),
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void renderTablistHearts(int y, int x, int offset, UUID playerUuid, PoseStack poseStack, int scoreValue, CallbackInfo ci, PlayerTabOverlay.HealthState healthState) {
+    private void renderTablistHearts(int y, int x, int offset, UUID playerUuid, GuiGraphics guiGraphics, int scoreValue, CallbackInfo ci, PlayerTabOverlay.HealthState healthState) {
         // this handles just 2 rows and then uses vanilla NNhp format (default behaviour)
-        TabHeartRenderer.INSTANCE.renderPlayerListHud(y, x, offset, poseStack, scoreValue, healthState);
+        TabHeartRenderer.INSTANCE.renderPlayerListHud(y, x, offset, guiGraphics.pose(), scoreValue, healthState);
         ci.cancel();
     }
 }

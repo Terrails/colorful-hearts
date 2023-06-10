@@ -1,9 +1,9 @@
 package terrails.colorfulhearts.config.screen.base;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -64,10 +64,10 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
         }
 
         @Override
-        public void render(@NotNull PoseStack poseStack, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
+        public void render(@NotNull GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
             this.children.forEach(widget -> {
                 widget.setY(top);
-                widget.render(poseStack, mouseX, mouseY, partialTick);
+                widget.render(guiGraphics, mouseX, mouseY, partialTick);
             });
         }
 

@@ -3,7 +3,6 @@ package terrails.colorfulhearts.heart;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.LoaderExpectPlatform;
 import terrails.colorfulhearts.config.Configuration;
@@ -127,12 +126,12 @@ public class Heart {
 
         // Draw background/container
         if (this.isBackgroundFull) {
-            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+            RenderSystem.setShaderTexture(0, CColorfulHearts.GUI_ICONS_LOCATION);
             RenderUtils.drawTexture(poseStack, xPos, yPos, 16 + (canBlink && blinkBackground ? 9 : 0), hardcore ? 45 : 0);
         } else {
             RenderSystem.setShaderTexture(0, CColorfulHearts.HALF_HEART_ICONS_LOCATION);
             RenderUtils.drawTexture(poseStack, xPos, yPos, 0, (canBlink && blinkBackground ? 9 : 0));
-            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+            RenderSystem.setShaderTexture(0, CColorfulHearts.GUI_ICONS_LOCATION);
         }
 
         if (this.firstHalf != null) {

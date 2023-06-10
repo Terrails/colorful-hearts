@@ -1,8 +1,7 @@
 package terrails.colorfulhearts.config.screen;
 
-import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -87,10 +86,10 @@ public class ConfigurationScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        this.renderDirtBackground(poseStack);
-        GuiComponent.drawCenteredString(poseStack, this.font, this.title, this.width / 2, 20, 16777215);
-        super.render(poseStack, mouseX, mouseY, partialTick);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.renderDirtBackground(guiGraphics);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 16777215);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

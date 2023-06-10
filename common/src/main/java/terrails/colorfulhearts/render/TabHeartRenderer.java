@@ -3,9 +3,9 @@ package terrails.colorfulhearts.render;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.util.Mth;
+import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.heart.Heart;
 import terrails.colorfulhearts.heart.HeartPiece;
 import terrails.colorfulhearts.heart.HeartType;
@@ -47,7 +47,7 @@ public class TabHeartRenderer {
         // Adds space between hearts when there are less than 10
         int spacingMultiplier = Mth.floor(Math.min((float) (offset - x - 4) / (float) spacingDivisor, 9.0F));
 
-        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+        RenderSystem.setShaderTexture(0, CColorfulHearts.GUI_ICONS_LOCATION);
         RenderSystem.enableBlend();
         for (int i = 0; i < this.hearts.length; i++) {
             Heart heart = this.hearts[i];

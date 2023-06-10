@@ -1,8 +1,7 @@
 package terrails.colorfulhearts.config.screen.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -55,8 +54,8 @@ public class HeartColorEditBox extends EditBox {
     }
 
     @Override
-    public void renderWidget(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(poseStack, mouseX, mouseY, partialTick);
+    public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
         if (!this.isVisible()) {
             return;
@@ -67,15 +66,15 @@ public class HeartColorEditBox extends EditBox {
             if (isBordered) {
                 // draw over the border in red if the hex text is invalid
                 int borderColor = this.isFocused() ? 0xFFD6231A : 0xFF590707;
-                GuiComponent.fill(poseStack, this.getX() - 1, this.getY() - 1, this.getX() + this.width + 1, this.getY(), borderColor);
-                GuiComponent.fill(poseStack, this.getX() - 1, this.getY() + this.height, this.getX() + this.width + 1,  this.getY() + this.height + 1, borderColor);
-                GuiComponent.fill(poseStack, this.getX() - 1, this.getY(), this.getX(), this.getY() + this.height, borderColor);
-                GuiComponent.fill(poseStack, this.getX() + this.width, this.getY(), this.getX() + this.width + 1, this.getY() + this.height, borderColor);
+                guiGraphics.fill(this.getX() - 1, this.getY() - 1, this.getX() + this.width + 1, this.getY(), borderColor);
+                guiGraphics.fill(this.getX() - 1, this.getY() + this.height, this.getX() + this.width + 1,  this.getY() + this.height + 1, borderColor);
+                guiGraphics.fill(this.getX() - 1, this.getY(), this.getX(), this.getY() + this.height, borderColor);
+                guiGraphics.fill(this.getX() + this.width, this.getY(), this.getX() + this.width + 1, this.getY() + this.height, borderColor);
             }
         } else {
             // draw heart in the remaining empty space inside the box
             HeartPiece heart = this.getHeartPiece();
-            heart.draw(poseStack, this.getX() + this.width - 11, this.getY() + this.height / 2 - 4, false, false, this.type);
+            heart.draw(guiGraphics.pose(), this.getX() + this.width - 11, this.getY() + this.height / 2 - 4, false, false, this.type);
         }
     }
 }

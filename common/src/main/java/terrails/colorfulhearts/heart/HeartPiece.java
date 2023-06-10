@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.render.RenderUtils;
@@ -112,7 +111,7 @@ public class HeartPiece {
         int y2 = 9;
 
         if (this.isVanilla()) {
-            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+            RenderSystem.setShaderTexture(0, CColorfulHearts.GUI_ICONS_LOCATION);
             // Draw vanilla heart
             RenderUtils.drawTexture(poseStack, xPos, xPos + x2, yPos, yPos + y2, xTex, xTex + x2, yTex, yTex + y2);
         } else {
@@ -139,7 +138,7 @@ public class HeartPiece {
                 RenderUtils.drawTexture(poseStack, xPos, xPos + x2, yPos, yPos + y2, xTex, xTex + x2, yTex, yTex + y2, type == HeartType.WITHERED ? 56 : 127);
             }
 
-            RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
+            RenderSystem.setShaderTexture(0, CColorfulHearts.GUI_ICONS_LOCATION);
         }
     }
 
