@@ -35,7 +35,7 @@ allprojects {
     apply plugin: "architectury-plugin"
 
     archivesBaseName = "${rootProject.modid}-${project.name}-${rootProject.minecraft_version}"
-    version = "1.0.0" // Overriden in project specific configuration
+    version = rootProject.mod_version
     group = rootProject.group
 
     tasks.withType(JavaCompile) {
