@@ -37,7 +37,7 @@ public abstract class GuiMixin {
             int displayHealth,
             int absorptionAmount,
             boolean blinking) {
-        HeartRenderer.INSTANCE.renderPlayerHearts(guiGraphics.pose(), player, x, y, Mth.ceil(maxHealth), currentHealth, displayHealth, absorptionAmount, blinking);
+        HeartRenderer.INSTANCE.renderPlayerHearts(guiGraphics, player, x, y, Mth.ceil(maxHealth), currentHealth, displayHealth, absorptionAmount, blinking);
         return -1;
     }
 

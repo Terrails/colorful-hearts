@@ -3,6 +3,7 @@ package terrails.colorfulhearts.render;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +30,7 @@ public class HeartRenderer {
     private Heart[] hearts;
 
     public void renderPlayerHearts(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             Player player,
             int x,
             int y,
@@ -92,7 +93,7 @@ public class HeartRenderer {
             // therefore both should be passed through to draw
             boolean highlightHeart = renderHighlight && index < displayHealthHearts;
 
-            heart.draw(poseStack, xPos, yPos, renderHighlight, highlightHeart, heartType);
+            heart.draw(guiGraphics.pose(), xPos, yPos, renderHighlight, highlightHeart, heartType);
         }
         RenderSystem.disableBlend();
     }
