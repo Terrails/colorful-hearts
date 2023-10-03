@@ -17,7 +17,6 @@ public class Heart {
     public static final Heart CONTAINER_FULL, CONTAINER_HALF;
 
     static {
-        // ugly cast, but required since it is of that type through mixins
         CONTAINER_FULL = new Heart(CHeartType.CONTAINER, null, false, null);
         CONTAINER_HALF = new Heart(CHeartType.CONTAINER, null, true, null);
     }
