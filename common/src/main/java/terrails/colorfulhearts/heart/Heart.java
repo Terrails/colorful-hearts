@@ -1,153 +1,99 @@
 package terrails.colorfulhearts.heart;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import terrails.colorfulhearts.CColorfulHearts;
-import terrails.colorfulhearts.LoaderExpectPlatform;
-import terrails.colorfulhearts.config.Configuration;
-import terrails.colorfulhearts.render.RenderUtils;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
-
 public class Heart {
 
-    /** Set with all created {@link Heart} objects
-     * in order to avoid creating multiple objects with same values.
+    /**
+     * Set with all created {@link Heart} objects
+     * in order to avoid creating multiple objects with same values
      */
-    private static final Set<Heart> HEART_CACHE;
+    private static final Set<Heart> CACHE = new HashSet<>();
 
-    /** Two predefined background/container hearts that should always be present and easier to access. */
     public static final Heart CONTAINER_FULL, CONTAINER_HALF;
 
-    /** Heart background/container that is always present, either full or halved. */
-    private final boolean isBackgroundFull;
-
-    /** First half of a heart. This value may never be null outside the two predefined instances.
-     * @see #CONTAINER_FULL
-     * @see #CONTAINER_HALF
-     */
-    private final HeartPiece firstHalf;
-    /** Second half of a heart. May be null, equal or different from firstHalf. */
-    private final HeartPiece secondHalf;
-
-    private Heart(boolean isBackgroundFull, HeartPiece firstHalf, HeartPiece secondHalf) {
-        this.isBackgroundFull = isBackgroundFull;
-        this.firstHalf = firstHalf;
-        this.secondHalf = secondHalf;
-    }
-
     static {
-        HEART_CACHE = new HashSet<>();
-        CONTAINER_FULL = new Heart(true, null, null);
-        CONTAINER_HALF = new Heart(false, null, null);
+        // ugly cast, but required since it is of that type through mixins
+        CONTAINER_FULL = new Heart(CHeartType.CONTAINER, null, false, null);
+        CONTAINER_HALF = new Heart(CHeartType.CONTAINER, null, true, null);
     }
 
-    public static Heart full(HeartPiece firstHalf, HeartPiece secondHalf) {
-        if (firstHalf == null || secondHalf == null) {
-            LOGGER.error("Something went very wrong with heart creation. HeartPiece cannot be null, returning heart container to prevent crashes...");
-            return CONTAINER_FULL;
-        }
-        Optional<Heart> optional = HEART_CACHE.stream()
-                .filter(heart -> heart.isBackgroundFull && Objects.equals(heart.firstHalf, firstHalf) && Objects.equals(heart.secondHalf, secondHalf))
-                .findAny();
+    private final CHeartType heartType;
+    private final Integer color;
+    private final boolean half;
 
-        return optional.orElseGet(() -> {
-            Heart heart = new Heart(true, firstHalf, secondHalf);
-            HEART_CACHE.add(heart);
-            return heart;
-        });
+    // used to draw background or heart a row under current
+    private final Heart backgroundHeart;
+
+    private Heart(CHeartType heartType, Integer color, boolean half, Heart backgroundHeart) {
+        this.heartType = heartType;
+        this.color = color;
+        this.half = half;
+        this.backgroundHeart = backgroundHeart;
     }
 
-    public static Heart full(HeartPiece heartPiece) {
-        if (heartPiece == null) {
-            LOGGER.error("Something went very wrong with heart creation. HeartPiece cannot be null, returning heart container to prevent crashes...");
-            return CONTAINER_FULL;
-        }
-
-        Optional<Heart> optional = HEART_CACHE.stream()
-                .filter(heart -> heart.isBackgroundFull && Objects.equals(heart.firstHalf, heartPiece) && Objects.equals(heart.secondHalf, heartPiece))
-                .findAny();
-
-        return optional.orElseGet(() -> {
-            Heart heart = new Heart(true, heartPiece, heartPiece);
-            HEART_CACHE.add(heart);
-            return heart;
-        });
+    public static Heart full(@NotNull CHeartType heartType, Integer color) {
+        return CACHE.stream()
+                .filter(h -> !h.half && Objects.equals(h.color, color) && Objects.equals(h.heartType, heartType) && h.backgroundHeart == CONTAINER_FULL)
+                .findAny()
+                .orElseGet(() -> {
+                    Heart heart = new Heart(heartType, color, false, CONTAINER_FULL);
+                    CACHE.add(heart);
+                    return heart;
+                });
     }
 
-    public static Heart half(HeartPiece heartPiece, boolean isBackgroundFull) {
-        if (heartPiece == null) {
-            LOGGER.error("Something went very wrong with heart creation. HeartPiece cannot be null, returning heart container to prevent crashes...");
-            return (isBackgroundFull ? CONTAINER_FULL : CONTAINER_HALF);
-        }
+    public static Heart full(@NotNull CHeartType heartType, Integer color, @NotNull Heart background) {
+        // comparing backgroundHeart by just == should work since there will always be a single instance of that specific type
+        return CACHE.stream()
+                .filter(h -> h.half && Objects.equals(h.color, color) && Objects.equals(h.heartType, heartType) && h.backgroundHeart == background)
+                .findAny()
+                .orElseGet(() -> {
+                    Heart heart = new Heart(heartType, color, true, background);
+                    CACHE.add(heart);
+                    return heart;
+                });
+    }
 
-        Optional<Heart> optional = HEART_CACHE.stream()
-                .filter(heart -> heart.isBackgroundFull == isBackgroundFull && Objects.equals(heart.firstHalf, heartPiece) && heart.secondHalf == null)
-                .findAny();
-
-        return optional.orElseGet(() -> {
-            Heart heart = new Heart(isBackgroundFull, heartPiece, null);
-            HEART_CACHE.add(heart);
-            return heart;
-        });
+    public static Heart half(@NotNull CHeartType heartType, Integer color) {
+        return CACHE.stream()
+                .filter(h -> h.half && Objects.equals(h.color, color) && Objects.equals(h.heartType, heartType) && h.backgroundHeart == CONTAINER_HALF)
+                .findAny()
+                .orElseGet(() -> {
+                    Heart heart = new Heart(heartType, color, true, CONTAINER_HALF);
+                    CACHE.add(heart);
+                    return heart;
+                });
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        } else if (obj != null && this.getClass() == obj.getClass()) {
-            Heart heart = (Heart) obj;
-            return this.isBackgroundFull == heart.isBackgroundFull && Objects.equals(this.firstHalf, heart.firstHalf) && Objects.equals(this.secondHalf, heart.secondHalf);
-        } else return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Heart heart = (Heart) o;
+        return this.half == heart.half && this.heartType == heart.heartType
+                && Objects.equals(this.color, heart.color) && this.backgroundHeart == heart.backgroundHeart;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.isBackgroundFull, this.firstHalf, this.secondHalf);
+        return Objects.hash(this.heartType, this.color, this.half, this.backgroundHeart);
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "isBackgroundFull=" + isBackgroundFull +
-                ", firstHalf=" + firstHalf +
-                ", secondHalf=" + secondHalf +
-                "}";
+    public boolean isContainer() {
+        return (this == CONTAINER_FULL || this == CONTAINER_HALF);
     }
 
-    public void draw(PoseStack poseStack, int xPos, int yPos, boolean blinkBackground, boolean blinkHeart, HeartType type) {
-        final Minecraft client = Minecraft.getInstance();
-        boolean hardcore = LoaderExpectPlatform.forcedHardcoreHearts() || (client.level != null && client.level.getLevelData().isHardcore());
-        boolean canBlink = Configuration.ABSORPTION.renderOverHealth.get() || (this.firstHalf == null || !this.firstHalf.isAbsorption());
+    public void draw(GuiGraphics guiGraphics, int x, int y, boolean hardcore, boolean highlightContainer, boolean highlightHeart) {
+        if (this.backgroundHeart != null) this.backgroundHeart.draw(guiGraphics, x, y, hardcore, highlightContainer, highlightHeart);
 
-        // Draw background/container
-        if (this.isBackgroundFull) {
-            RenderSystem.setShaderTexture(0, CColorfulHearts.GUI_ICONS_LOCATION);
-            RenderUtils.drawTexture(poseStack, xPos, yPos, 16 + (canBlink && blinkBackground ? 9 : 0), hardcore ? 45 : 0);
-        } else {
-            RenderSystem.setShaderTexture(0, CColorfulHearts.HALF_HEART_ICONS_LOCATION);
-            RenderUtils.drawTexture(poseStack, xPos, yPos, 0, (canBlink && blinkBackground ? 9 : 0));
-            RenderSystem.setShaderTexture(0, CColorfulHearts.GUI_ICONS_LOCATION);
-        }
-
-        if (this.firstHalf != null) {
-
-            if (this.secondHalf == null) {
-                // If second half is null draw only the first half
-                this.firstHalf.draw(poseStack, xPos, yPos, blinkHeart, hardcore, type, true);
-            } else if (Objects.equals(this.firstHalf, this.secondHalf)) {
-                // If halves are equal draw one whole heart
-                this.firstHalf.draw(poseStack, xPos, yPos, blinkHeart, hardcore, type);
-            } else {
-                // If halves are not equal render the first and second half separately
-                this.firstHalf.draw(poseStack, xPos, yPos, blinkHeart, hardcore, type, true);
-                this.secondHalf.draw(poseStack, xPos, yPos, blinkHeart, hardcore, type, false);
-            }
-        }
+        boolean highlight = this.isContainer() ? highlightContainer : highlightHeart;
+        ResourceLocation spriteLocation = this.heartType.getSprite(hardcore, highlight, this.half, this.color, true);
+        guiGraphics.blitSprite(spriteLocation, x, y, 9, 9);
     }
 
     /**
@@ -161,38 +107,44 @@ public class Heart {
      * @return An array of Heart objects. The array length is 20 at most, with first 10 elements being in health row and latter 10 in absorption row
      *          Only case where array length is 10 at most is when renderOverHealth config option is enabled as absorption has to be in the same row as health then
      */
-    public static Heart[] calculateHearts(int absorption, int health, int maxHealth, List<HeartPiece> healthColors, List<HeartPiece> absorptionColors, boolean absorptionSameRow) {
-        final HeartPiece[] // Indices: 0 == Top, 1 == Bottom
+    public static Heart[] calculateHearts(int absorption, int health, int maxHealth, CHeartType healthType, CHeartType absorbingType, boolean absorptionSameRow) {
+        final Integer[] // Indices: 0 == Top, 1 == Bottom
                 healthPieces,
                 absorptionPieces;
 
+        final Integer[] healthColors = healthType.getColors();
+        final Integer[] absorbingColors = absorption > 0 ? absorbingType.getColors() : new Integer[2];
+        assert healthColors != null && absorbingColors != null;
+
         // Index for bottom color
-        final int healthColorIndex = Math.max((int) (health / 20.0) % healthColors.size() - 1, 0);
+        final int healthColorIndex = Math.max((int) (health / 20.0) % healthColors.length - 1, 0);
         // Can there be a top color?
         final boolean hasTopHealth = (health % 20 != 0 && health > 20);
 
-        healthPieces = new HeartPiece[]{
-                hasTopHealth ? healthColors.get((healthColorIndex + 1) % healthColors.size()) : null,
-                healthColors.get(healthColorIndex)
+        healthPieces = new Integer[]{
+                hasTopHealth ? healthColors[(healthColorIndex + 1) % healthColors.length] : 0,
+                healthColors[healthColorIndex]
         };
 
         // Usually there are only 10 absorption hearts, but there is a special case when there are more (when there are less than 10 health hearts)
         final int maxAbsorptionHearts = absorptionSameRow ? 20 : (maxHealth >= 19 ? 20 : 40 - maxHealth - (maxHealth % 2));
 
         // Index for bottom color
-        final int absorptionColorIndex = Math.max((absorption / maxAbsorptionHearts) % absorptionColors.size() - 1, 0);
+        final int absorptionColorIndex = Math.max((absorption / maxAbsorptionHearts) % absorbingColors.length - 1, 0);
         // Can there be a top color?
         final boolean hasTopAbsorption = (absorption % maxAbsorptionHearts != 0 && absorption > maxAbsorptionHearts);
 
-        absorptionPieces = new HeartPiece[]{
-                hasTopAbsorption ? absorptionColors.get((absorptionColorIndex + 1) % absorptionColors.size()) : null,
-                absorptionColors.get(absorptionColorIndex)
+        absorptionPieces = new Integer[]{
+                hasTopAbsorption ? absorbingColors[(absorptionColorIndex + 1) % absorbingColors.length] : 0,
+                absorbingColors[absorptionColorIndex]
         };
 
         // Common counters
         int topHealthCount = health > 20 ? (health % 20) : 0;
         int bottomHealthCount = health <= 20 ? health : 20 - topHealthCount;
         int emptyHealthCount = health < 20 ? Math.min(20, maxHealth) - bottomHealthCount : 0;
+
+
 
         final List<Heart> hearts = new ArrayList<>();
         if (absorptionSameRow && absorption > 0 && absorption < 20) {
@@ -220,79 +172,79 @@ public class Heart {
 
                 if (overflownAbsorptionCount > 0) {
                     if (overflownAbsorptionCount > 1) {
-                        hearts.add(Heart.full(absorptionPieces[1]));
+                        hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
                         overflownAbsorptionCount -= 2;
                     } else {
                         if (topHealthCount > 0) {
-                            hearts.add(Heart.full(absorptionPieces[1], healthPieces[0]));
+                            hearts.add(Heart.full(absorbingType, absorptionPieces[1], Heart.full(healthType, healthPieces[0])));
                             overflownAbsorptionCount--;
                             topHealthCount--;
                         } else if (bottomHealthCount > 0) {
-                            hearts.add(Heart.full(absorptionPieces[1], healthPieces[1]));
+                            hearts.add(Heart.full(absorbingType, absorptionPieces[1], Heart.full(healthType, healthPieces[1])));
                             overflownAbsorptionCount--;
                             bottomHealthCount--;
                         } else {
-                            hearts.add(Heart.half(absorptionPieces[1], true));
+                            hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
                             overflownAbsorptionCount--;
                             emptyHealthCount--;
                         }
                     }
                 } else if (topHealthCount > 0) {
                     if (topHealthCount > 1) {
-                        hearts.add(Heart.full(healthPieces[0]));
+                        hearts.add(Heart.full(healthType, healthPieces[0]));
                         topHealthCount -= 2;
                     } else {
-                        hearts.add(Heart.full(healthPieces[0], absorptionPieces[1]));
+                        hearts.add(Heart.full(healthType, healthPieces[0], Heart.full(absorbingType, absorptionPieces[1])));
                         topHealthCount--;
                         bottomAbsorptionCount--;
                     }
                 } else if (health >= 20) {
                     if (bottomAbsorptionCount > 0) {
                         if (bottomAbsorptionCount > 1) {
-                            hearts.add(Heart.full(absorptionPieces[1]));
+                            hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
                             bottomAbsorptionCount -= 2;
                         } else {
                             if (bottomHealthCount > 0) {
-                                hearts.add(Heart.full(absorptionPieces[1], healthPieces[1]));
+                                hearts.add(Heart.full(absorbingType, absorptionPieces[1], Heart.full(healthType, healthPieces[1])));
                                 bottomAbsorptionCount--;
                                 bottomHealthCount--;
                             } else if (emptyHealthCount > 0) {
-                                hearts.add(Heart.half(absorptionPieces[1], true));
+                                hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
                                 bottomAbsorptionCount--;
                                 emptyHealthCount--;
                             }
                         }
                     } else if (bottomHealthCount > 0) {
-                        hearts.add(Heart.full(healthPieces[1]));
+                        hearts.add(Heart.full(healthType, healthPieces[1]));
                         bottomHealthCount -= 2;
                     }
                 } else {
                     if (bottomHealthCount > 0) {
                         if (bottomHealthCount > 1) {
-                            hearts.add(Heart.full(healthPieces[1]));
+                            hearts.add(Heart.full(healthType, healthPieces[1]));
                             bottomHealthCount -= 2;
                         } else if (bottomAbsorptionCount > 0) {
-                            hearts.add(Heart.full(healthPieces[1], absorptionPieces[1]));
+                            hearts.add(Heart.full(healthType, healthPieces[1], Heart.full(absorbingType, absorptionPieces[1])));
                             bottomHealthCount--;
                             bottomAbsorptionCount--;
                         } else if (emptyHealthCount > 0) {
-                            hearts.add(Heart.half(healthPieces[1], true));
+                            hearts.add(Heart.full(healthType, healthPieces[1]));
                             bottomHealthCount--;
                             emptyHealthCount--;
                         } else {
-                            hearts.add(Heart.half(healthPieces[1], false));
+                            hearts.add(Heart.half(healthType, healthPieces[1]));
                             bottomHealthCount--;
                         }
                     } else if (bottomAbsorptionCount > 0) {
                         if (bottomAbsorptionCount > 1) {
-                            hearts.add(Heart.full(absorptionPieces[1]));
+                            hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
                             bottomAbsorptionCount -= 2;
                         } else if (emptyHealthCount > 0) {
-                            hearts.add(Heart.half(absorptionPieces[1], true));
+                            hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
                             bottomAbsorptionCount--;
                             emptyHealthCount--;
                         } else {
-                            hearts.add(Heart.half(absorptionPieces[1], false));
+                            hearts.add(Heart.half(absorbingType, absorptionPieces[1]));
                             bottomAbsorptionCount--;
                         }
                     } else if (emptyHealthCount > 0) {
@@ -331,23 +283,23 @@ public class Heart {
 
                 if (topHealthCount > 0) {
                     if (topHealthCount > 1) {
-                        hearts.add(Heart.full(healthPieces[0]));
+                        hearts.add(Heart.full(healthType, healthPieces[0]));
                         topHealthCount -= 2;
                     } else {
-                        hearts.add(Heart.full(healthPieces[0], healthPieces[1]));
+                        hearts.add(Heart.full(healthType, healthPieces[0], Heart.full(healthType, healthPieces[1])));
                         topHealthCount--;
                         bottomHealthCount--;
                     }
                 } else if (bottomHealthCount > 0) {
                     if (bottomHealthCount > 1) {
-                        hearts.add(Heart.full(healthPieces[1]));
+                        hearts.add(Heart.full(healthType, healthPieces[1]));
                         bottomHealthCount -= 2;
                     } else if (emptyHealthCount > 0) {
-                        hearts.add(Heart.half(healthPieces[1], true));
+                        hearts.add(Heart.full(healthType, healthPieces[1], Heart.CONTAINER_FULL));
                         bottomHealthCount--;
                         emptyHealthCount--;
                     } else {
-                        hearts.add(Heart.half(healthPieces[1], false));
+                        hearts.add(Heart.half(healthType, healthPieces[1]));
                         bottomHealthCount--;
                     }
                 } else if (emptyHealthCount > 0) {
@@ -360,19 +312,19 @@ public class Heart {
                     }
                 } else if (topAbsorptionCount > 0) {
                     if (topAbsorptionCount > 1) {
-                        hearts.add(Heart.full(absorptionPieces[0]));
+                        hearts.add(Heart.full(absorbingType, absorptionPieces[0]));
                         topAbsorptionCount -= 2;
                     } else {
-                        hearts.add(Heart.full(absorptionPieces[0], absorptionPieces[1]));
+                        hearts.add(Heart.full(absorbingType, absorptionPieces[0], Heart.full(absorbingType, absorptionPieces[1])));
                         topAbsorptionCount--;
                         bottomAbsorptionCount--;
                     }
                 } else if (bottomAbsorptionCount > 0) {
                     if (bottomAbsorptionCount > 1) {
-                        hearts.add(Heart.full(absorptionPieces[1]));
+                        hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
                         bottomAbsorptionCount -= 2;
                     } else {
-                        hearts.add(Heart.half(absorptionPieces[1], false));
+                        hearts.add(Heart.half(absorbingType, absorptionPieces[1]));
                         bottomAbsorptionCount--;
                     }
                 }

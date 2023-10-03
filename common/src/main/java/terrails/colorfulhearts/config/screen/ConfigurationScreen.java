@@ -88,16 +88,15 @@ public class ConfigurationScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderDirtBackground(guiGraphics);
-        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 16777215);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 16777215);
     }
 
     @Override
     public void onClose() {
         LoaderExpectPlatform.applyConfig();
         // forces a heart update in renderer
-        HeartRenderer.INSTANCE.lastHeartType = null;
+        HeartRenderer.INSTANCE.lastHealthType = null;
         assert this.minecraft != null;
         this.minecraft.setScreen(this.lastScreen);
     }

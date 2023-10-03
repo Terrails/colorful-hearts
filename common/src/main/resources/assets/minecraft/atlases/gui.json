@@ -1,0 +1,52 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "colorfulhearts:heart/container_half"
+    },
+    {
+      "type": "single",
+      "resource": "colorfulhearts:heart/container_half_blinking"
+    },
+    {
+      "type": "single",
+      "resource": "colorfulhearts:heart/container_hardcore_half"
+    },
+    {
+      "type": "single",
+      "resource": "colorfulhearts:heart/container_hardcore_half_blinking"
+    },
+    {
+      "type": "colorfulhearts:colored_hearts",
+      "heart": "HEALTH"
+    },
+    {
+      "type": "colorfulhearts:colored_hearts",
+      "heart": "HEALTH_POISONED"
+    },
+    {
+      "type": "colorfulhearts:colored_hearts",
+      "heart": "HEALTH_WITHERED"
+    },
+    {
+      "type": "colorfulhearts:colored_hearts",
+      "heart": "HEALTH_FROZEN"
+    },
+    {
+      "type": "colorfulhearts:colored_hearts",
+      "heart": "ABSORBING"
+    },
+    {
+      "type": "colorfulhearts:colored_hearts",
+      "heart": "ABSORBING_POISONED"
+    },
+    {
+      "type": "colorfulhearts:colored_hearts",
+      "heart": "ABSORBING_WITHERED"
+    },
+    {
+      "type": "colorfulhearts:colored_hearts",
+      "heart": "ABSORBING_FROZEN"
+    }
+  ]
+}

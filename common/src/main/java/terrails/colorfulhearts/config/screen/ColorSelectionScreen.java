@@ -2,20 +2,16 @@ package terrails.colorfulhearts.config.screen;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 import terrails.colorfulhearts.LoaderExpectPlatform;
 import terrails.colorfulhearts.config.ConfigOption;
 import terrails.colorfulhearts.config.Configuration;
-import terrails.colorfulhearts.config.screen.widgets.HeartColorEditBox;
 import terrails.colorfulhearts.config.screen.base.ScrollableWidgetList;
-import terrails.colorfulhearts.heart.HeartPiece;
-import terrails.colorfulhearts.heart.HeartType;
-import terrails.colorfulhearts.render.HeartRenderer;
+import terrails.colorfulhearts.config.screen.widgets.HeartColorEditBox;
+import terrails.colorfulhearts.heart.CHeartType;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -24,28 +20,39 @@ import java.util.stream.Collectors;
 public class ColorSelectionScreen extends Screen {
 
     private final Screen lastScreen;
-    private final boolean health;
-
-    private boolean vanillaHeart, hasChanged;
 
     private List<HeartColorEditBox> editBoxes;
-
     private List<Button> heartTypeButtons;
     private Button saveButton;
 
+    private boolean vanillaHeart;
+    private boolean hasChanged;
+    private boolean colorsChanged;
+
     private ScrollableWidgetList colorSelectionList;
-    private HeartType heartType;
+    private CHeartType heartType;
 
     public ColorSelectionScreen(Screen lastScreen, boolean health) {
         super(Component.translatable(health ? "colorfulhearts.screen.health.title" : "colorfulhearts.screen.absorption.title"));
         this.lastScreen = lastScreen;
-        this.health = health;
-        this.updateHeartType(HeartType.NORMAL, false);
+        this.heartType = health ? CHeartType.HEALTH : CHeartType.ABSORBING;
+        this.updateHeartType(this.heartType, false);
+    }
+
+    @Override
+    public void tick() {
+        if (this.hasChanged) {
+            this.heartTypeButtons.forEach(btn -> btn.active = false);
+            this.saveButton.active = this.canApplyChanges();
+        } else if (this.saveButton.active) {
+            this.rebuildWidgets();
+        }
     }
 
     @Override
     protected void init() {
         super.init();
+        this.colorsChanged = false;
 
         // some basic info
         int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
@@ -58,6 +65,10 @@ public class ColorSelectionScreen extends Screen {
         // create scrollable list widget and add it to this screen's children
         this.colorSelectionList = this.addRenderableWidget(new ScrollableWidgetList(Minecraft.getInstance(), width, height, marginY, height - marginY, Button.DEFAULT_HEIGHT + 6));
 
+        // set background type
+        assert this.minecraft != null;
+        this.colorSelectionList.setRenderBackground(this.minecraft.level == null);
+
         // add elements to the scrollable widget
         this.addColorElements();
 
@@ -67,186 +78,95 @@ public class ColorSelectionScreen extends Screen {
         // add buttons for switching between heart types
         int BUTTON_SPACING = 10;
         int BUTTON_WIDTH = 80;
+        int BUTTON_HEIGHT = Button.DEFAULT_HEIGHT;
         int startX = (width - BUTTON_WIDTH * 4 - BUTTON_SPACING * 3) / 2;
         int y = (marginY - Button.DEFAULT_HEIGHT) / 2;
-        this.heartTypeButtons = new ArrayList<>();
 
-        final Button normalHearts = Button.builder(
+        final Button normalHearts = this.addRenderableWidget(Button.builder(
                 Component.translatable("colorfulhearts.options.button.hearttype.normal"),
-                (btn) -> this.updateHeartType(HeartType.NORMAL, true)).pos(startX, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
-        normalHearts.active = !(this.heartType == HeartType.NORMAL);
-        this.addRenderableWidget(normalHearts);
-        this.heartTypeButtons.add(normalHearts);
+                (btn) -> this.updateHeartType(this.heartType.isHealth() ? CHeartType.HEALTH : CHeartType.ABSORBING, true)
+        ).pos(startX, y).size(BUTTON_WIDTH, BUTTON_HEIGHT).build());
+        normalHearts.active = !(this.heartType == CHeartType.HEALTH || this.heartType == CHeartType.ABSORBING);
 
         int x = startX + BUTTON_WIDTH + BUTTON_SPACING;
-        final Button poisonedHearts = Button.builder(
+        final Button poisonedHearts = this.addRenderableWidget(Button.builder(
                 Component.translatable("colorfulhearts.options.button.hearttype.poisoned"),
-                (btn) -> this.updateHeartType(HeartType.POISONED, true)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
-        poisonedHearts.active = !(this.heartType == HeartType.POISONED);
-        this.addRenderableWidget(poisonedHearts);
-        this.heartTypeButtons.add(poisonedHearts);
+                (btn) -> this.updateHeartType(this.heartType.isHealth() ? CHeartType.HEALTH_POISONED : CHeartType.ABSORBING_POISONED, true)
+        ).pos(x, y).size(BUTTON_WIDTH, BUTTON_HEIGHT).build());
+        poisonedHearts.active = !(this.heartType == CHeartType.HEALTH_POISONED || this.heartType == CHeartType.ABSORBING_POISONED);
 
         x += BUTTON_WIDTH + BUTTON_SPACING;
-        final Button witheredHearts = Button.builder(
+        final Button witheredHearts = this.addRenderableWidget(Button.builder(
                 Component.translatable("colorfulhearts.options.button.hearttype.withered"),
-                (btn) -> this.updateHeartType(HeartType.WITHERED, true)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
-        witheredHearts.active = !(this.heartType == HeartType.WITHERED);
-        this.addRenderableWidget(witheredHearts);
-        this.heartTypeButtons.add(witheredHearts);
+                (btn) -> this.updateHeartType(this.heartType.isHealth() ? CHeartType.HEALTH_WITHERED : CHeartType.ABSORBING_WITHERED, true)
+        ).pos(x, y).size(BUTTON_WIDTH, BUTTON_HEIGHT).build());
+        witheredHearts.active = !(this.heartType == CHeartType.HEALTH_WITHERED || this.heartType == CHeartType.ABSORBING_WITHERED);
 
         x += BUTTON_WIDTH + BUTTON_SPACING;
-        final Button frozenHearts = Button.builder(
+        final Button frozenHearts = this.addRenderableWidget(Button.builder(
                 Component.translatable("colorfulhearts.options.button.hearttype.frozen"),
-                (btn) -> this.updateHeartType(HeartType.FROZEN, true)).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
-        frozenHearts.active = !(this.heartType == HeartType.FROZEN);
-        this.addRenderableWidget(frozenHearts);
-        this.heartTypeButtons.add(frozenHearts);
+                (btn) -> this.updateHeartType(this.heartType.isHealth() ? CHeartType.HEALTH_FROZEN : CHeartType.ABSORBING_FROZEN, true)
+        ).pos(x, y).size(BUTTON_WIDTH, BUTTON_HEIGHT).build());
+        frozenHearts.active = !(this.heartType == CHeartType.HEALTH_FROZEN || this.heartType == CHeartType.ABSORBING_FROZEN);
+
+        this.heartTypeButtons = List.of(normalHearts, poisonedHearts, witheredHearts, frozenHearts);
 
         // add save & cancel buttons
         BUTTON_WIDTH = Button.SMALL_WIDTH;
         BUTTON_SPACING = 30;
         startX = (width - BUTTON_WIDTH * 2 - BUTTON_SPACING) / 2;
-        y = height - (Button.DEFAULT_HEIGHT / 2) - (marginY / 2);
+        y = height - (BUTTON_HEIGHT / 2) - (marginY / 2);
 
-        final Button saveButton = Button.builder(
+        this.saveButton = this.addRenderableWidget(Button.builder(
                 Component.translatable("colorfulhearts.options.button.confirmsave"),
                 (btn) -> {
                     this.saveConfig();
-                    // forces a heart update in renderer
-                    HeartRenderer.INSTANCE.lastHeartType = null;
+                    // send a value to ConfigurationScreen to mark for resourcepack restart
                     this.onClose();
-                }).pos(startX, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
-        saveButton.active = false;
-        this.addRenderableWidget(saveButton);
-        this.saveButton = saveButton;
+                }
+        ).pos(startX, y).size(BUTTON_WIDTH, BUTTON_HEIGHT).build());
+        this.saveButton.active = false;
 
         x = startX + BUTTON_WIDTH + BUTTON_SPACING;
-        final Button cancelButton = Button.builder(
+        this.addRenderableWidget(Button.builder(
                 Component.translatable("colorfulhearts.options.button.cancel"),
-                (btn) -> this.onClose()).pos(x, y).size(BUTTON_WIDTH, Button.DEFAULT_HEIGHT).build();
-        this.addRenderableWidget(cancelButton);
+                (btn) -> this.onClose()
+        ).pos(x, y).size(BUTTON_WIDTH, BUTTON_HEIGHT).build());
 
         if (this.hasChanged) {
             this.heartTypeButtons.forEach(btn -> btn.active = false);
         }
 
-        if (this.canSave()) {
+        if (this.canApplyChanges()) {
             this.saveButton.active = true;
         }
     }
 
-    public void updateHeartType(HeartType type, boolean rebuildWidgets) {
+    @Override
+    public void onClose() {
+        assert this.minecraft != null;
+        this.minecraft.setScreen(this.lastScreen);
+        if (this.colorsChanged) {
+            this.minecraft.reloadResourcePacks();
+        }
+    }
+
+    public void updateHeartType(CHeartType type, boolean rebuildWidgets) {
         this.heartType = type;
-        this.vanillaHeart = this.hasVanillaHeartVariant() && this.heartColorsContainVanilla();
         this.editBoxes = null;
+
+        Integer[] colors = type.getColors();
+        assert colors != null;
+        this.vanillaHeart = this.hasVanillaVariant() && colors[0] == null;
+
         if (rebuildWidgets) {
             this.rebuildWidgets();
         }
     }
 
-    public boolean canSave() {
-        boolean invalidColorsPresent = this.editBoxes.stream().anyMatch(box -> !box.isValidHex());
-        // if there's not enough valid colors, do not allow saving
-        // at least 1 color for:
-        //  - health
-        //  - NORMAL heart variants
-        // exactly 2 colors for:
-        //  - absorption effect variants (no vanilla textures)
-        long colorCount = this.editBoxes.stream().filter(HeartColorEditBox::isValidHex).count();
-        boolean hasEnoughColors = colorCount > 0 &&
-                ((this.health && (this.heartType == HeartType.NORMAL || this.vanillaHeart || colorCount == 2)) // health
-                        ||
-                        (!this.health && (this.heartType == HeartType.NORMAL || colorCount == 2)));
-
-        return this.hasChanged && !invalidColorsPresent && hasEnoughColors;
-    }
-
-    public boolean hasVanillaHeartVariant() {
-        // all health hearts have a vanilla variant, absorption only has a NORMAL vanilla variant
-        return this.health || (this.heartType == HeartType.NORMAL);
-    }
-
-    private boolean haveValuesChanged() {
-        final List<HeartPiece> pieces = this.heartColorsWithoutVanilla();
-        boolean isSizeEqual = pieces.size() == this.editBoxes.size();
-        boolean hasVanillaOptionChanged = !this.hasVanillaHeartVariant() // has no vanilla option
-                || (this.heartType == HeartType.NORMAL && this.vanillaHeart == this.configVanillaHeart().get()) // normal vanilla option
-                || (this.heartType != HeartType.NORMAL && this.vanillaHeart == this.heartColorsContainVanilla()); // effect vanilla variants
-
-        if (isSizeEqual && hasVanillaOptionChanged) {
-            for (int i = 0; i < pieces.size(); i++) {
-                HeartColorEditBox box = this.editBoxes.get(i);
-                HeartPiece piece = pieces.get(i);
-                if (!box.isValidHex() || !piece.getHexColor().equalsIgnoreCase(box.getValue())) {
-                    return true;
-                }
-            }
-        } else {
-            return true;
-        }
-        return false;
-    }
-
-    private List<HeartPiece> heartColorsWithoutVanilla() {
-        List<HeartPiece> pieces = new ArrayList<>(HeartPiece.getHeartPiecesForType(this.heartType, !this.health));
-        if (health) {
-            pieces.remove(HeartPiece.VANILLA_HEALTH);
-        } else {
-            pieces.remove(HeartPiece.VANILLA_ABSORPTION);
-        }
-        return pieces;
-    }
-
-    private boolean heartColorsContainVanilla() {
-        List<HeartPiece> pieces = new ArrayList<>(HeartPiece.getHeartPiecesForType(this.heartType, !this.health));
-        if (health) {
-            return pieces.contains(HeartPiece.VANILLA_HEALTH);
-        } else {
-            return pieces.contains(HeartPiece.VANILLA_ABSORPTION);
-        }
-    }
-
-    private ConfigOption<Boolean> configVanillaHeart() {
-        if (health) {
-            return Configuration.HEALTH.vanillaHearts;
-        } else {
-            return Configuration.ABSORPTION.vanillaHearts;
-        }
-    }
-
-    private void saveConfig() {
-        // save only valid color fields
-        final List<HeartPiece> heartPieces = this.editBoxes.stream().filter(HeartColorEditBox::isValidHex).map(HeartColorEditBox::getHeartPiece).collect(Collectors.toList());
-        if (this.hasVanillaHeartVariant() && this.vanillaHeart) {
-            if (this.health) {
-                heartPieces.add(0, HeartPiece.VANILLA_HEALTH);
-            } else {
-                heartPieces.add(0, HeartPiece.VANILLA_ABSORPTION);
-            }
-        }
-
-        if (health) {
-            switch (heartType) {
-                case NORMAL -> {
-                    Configuration.HEALTH.colors.set(HeartPiece.getColorList(heartPieces));
-                    Configuration.HEALTH.vanillaHearts.set(this.vanillaHeart);
-                }
-                case POISONED -> Configuration.HEALTH.poisonedColors.set(HeartPiece.getColorList(heartPieces));
-                case WITHERED -> Configuration.HEALTH.witheredColors.set(HeartPiece.getColorList(heartPieces));
-                case FROZEN -> Configuration.HEALTH.frozenColors.set(HeartPiece.getColorList(heartPieces));
-            }
-        } else {
-            switch (heartType) {
-                case NORMAL -> {
-                    Configuration.ABSORPTION.colors.set(HeartPiece.getColorList(heartPieces));
-                    Configuration.ABSORPTION.vanillaHearts.set(this.vanillaHeart);
-                }
-                case POISONED -> Configuration.ABSORPTION.poisonedColors.set(HeartPiece.getColorList(heartPieces));
-                case WITHERED -> Configuration.ABSORPTION.witheredColors.set(HeartPiece.getColorList(heartPieces));
-                case FROZEN -> Configuration.ABSORPTION.frozenColors.set(HeartPiece.getColorList(heartPieces));
-            }
-        }
-        LoaderExpectPlatform.applyConfig();
+    public boolean hasVanillaVariant() {
+        // all health hearts have a vanilla variant, absorption only normal variant
+        return this.heartType.isHealth() || (this.heartType == CHeartType.ABSORBING);
     }
 
     private void addColorElements() {
@@ -263,32 +183,29 @@ public class ColorSelectionScreen extends Screen {
         List<AbstractWidget> widgets = new ArrayList<>();
 
         int OFFSET = 0;
-        if (this.hasVanillaHeartVariant()) {
+        if (this.hasVanillaVariant()) {
             OFFSET = 1;
 
-            final Supplier<Component> componentSupplier = () -> {
-                if (this.vanillaHeart) {
-                    return Component.translatable("colorfulhearts.options.button.vanillaheart.true");
-                } else {
-                    return Component.translatable("colorfulhearts.options.button.vanillaheart.false");
-                }
-            };
-            final Button vanillaHeart = Button.builder(componentSupplier.get(),
-                    (btn) -> {
-                        this.vanillaHeart = !this.vanillaHeart;
-                        this.hasChanged = this.haveValuesChanged();
-                        btn.setMessage(componentSupplier.get());
-                        this.rebuildWidgets();
-                    }).pos(startX, 0).size(BUTTON_DIMS + BUTTON_SPACING + EDIT_BOX_WIDTH, Button.DEFAULT_HEIGHT).build();
-            widgets.add(vanillaHeart);
+            final Supplier<Component> componentSupplier = () -> Component.translatable(
+                    this.vanillaHeart ? "colorfulhearts.options.button.vanillaheart.true" : "colorfulhearts.options.button.vanillaheart.false"
+            );
+            widgets.add(Button.builder(componentSupplier.get(), (btn) -> {
+                this.vanillaHeart = !this.vanillaHeart;
+                this.hasChanged = this.haveValuesChanged();
+                btn.setMessage(componentSupplier.get());
+                this.rebuildWidgets();
+            }).pos(startX, 0).size(BUTTON_DIMS + BUTTON_SPACING + EDIT_BOX_WIDTH, Button.DEFAULT_HEIGHT).build());
         }
 
         if (this.editBoxes == null) {
-            this.editBoxes = new ArrayList<>();
-            final List<HeartPiece> pieces = this.heartColorsWithoutVanilla();
-            for (HeartPiece piece : pieces) {
-                final HeartColorEditBox box = new HeartColorEditBox(this.font, 0, 0, 0, 0, Component.empty(), this.heartType, this.health);
-                box.setValue(piece.getHexColor());
+            final Integer[] colors = this.heartType.getColors();
+            assert colors != null;
+
+            this.editBoxes = new LinkedList<>();
+            for (Integer color : colors) {
+                if (color == null) continue;
+                final HeartColorEditBox box = new HeartColorEditBox(this.font, 0, 0, 0, 0, this.heartType);
+                box.setValue("#" + HexFormat.of().toHexDigits(color, 6));
                 this.editBoxes.add(box);
             }
         }
@@ -296,98 +213,159 @@ public class ColorSelectionScreen extends Screen {
         final int elementCount = this.editBoxes.size();
         for (int i = 0; i < elementCount; i++) {
 
-            // if not NORMAL and if there's vanilla and 1 heart being rendered OR 2 hearts being rendered
-            boolean stopRendering = this.health && this.heartType != HeartType.NORMAL && ((i > 0 && this.vanillaHeart) || i > 1);
-            if (stopRendering) {
+            // if not normal variant and if there's vanilla and 1 color OR 2 colors
+//            boolean stop = this.heartType.isEffect() && ((i > 0 && this.vanillaHeart) || i > 1);
+            boolean stop = this.heartType.isHealth() && this.heartType != CHeartType.HEALTH && ((i > 0 && this.vanillaHeart) || i > 1);
+            if (stop) {
                 this.colorSelectionList.addEntry(new ScrollableWidgetList.Entry(widgets));
                 break;
             }
-            final int index = i;
 
             int column = (i + OFFSET) % ELEMENTS_PER_ROW;
             int x = startX + column * (EDIT_BOX_WIDTH + BUTTON_DIMS + ELEMENT_SPACING + BUTTON_SPACING);
 
-            final Button button = Button.builder(Component.literal("-").withStyle(ChatFormatting.RED),
+            final int i_ = i;
+            final Button button = Button.builder(
+                    Component.literal("-").withStyle(ChatFormatting.RED),
                     (btn) -> {
-                        this.editBoxes.remove(index);
+                        this.editBoxes.remove(i_);
                         this.hasChanged = this.haveValuesChanged();
                         this.rebuildWidgets();
-                    }).pos(x, 0).size(BUTTON_DIMS, BUTTON_DIMS).build();
+                    }
+            ).pos(x, 0).size(BUTTON_DIMS, BUTTON_DIMS).build();
 
-            HeartColorEditBox box = this.editBoxes.get(index);
-            box = new HeartColorEditBox(this.font, x + BUTTON_DIMS + BUTTON_SPACING, 0, EDIT_BOX_WIDTH - 2, Button.DEFAULT_HEIGHT, box, Component.empty(), this.heartType, this.health);
+            HeartColorEditBox box = this.editBoxes.get(i);
+            box = new HeartColorEditBox(this.font, x + BUTTON_DIMS + BUTTON_SPACING, 0, EDIT_BOX_WIDTH - 2, Button.DEFAULT_HEIGHT, box, this.heartType);
             box.setResponder((str) -> this.hasChanged = this.haveValuesChanged());
-            this.editBoxes.set(index, box);
+            this.editBoxes.set(i, box);
 
             widgets.add(button);
             widgets.add(box);
 
-            boolean isFinished = (index + 1) == elementCount;
-            boolean isRowDone = (column + 1) == ELEMENTS_PER_ROW;
-
-            if (isRowDone) {
+            // row finished
+            if ((column + 1) == ELEMENTS_PER_ROW) {
                 this.colorSelectionList.addEntry(new ScrollableWidgetList.Entry(widgets));
                 widgets.clear();
             }
 
-            if (isFinished) {
-                // NORMAL = unlimited colors, EFFECT = 2 colors
-                // do not need EFFECT = vanilla & 1 color as it is handled outside this loop, since no colors are present
-                boolean canHaveMoreHearts = this.heartType == HeartType.NORMAL || (elementCount < 2 && !this.vanillaHeart);
+            // last element
+            if ((i + 1) == elementCount) {
+                boolean canAddMoreHearts = !this.heartType.isEffect() || !this.hasEnoughColors();
 
-                if (canHaveMoreHearts) {
+                if (canAddMoreHearts) {
                     column = (column + 1) % ELEMENTS_PER_ROW;
-                    x = startX + (column * EDIT_BOX_WIDTH) + (column * BUTTON_DIMS) + (column * ELEMENT_SPACING) + (column * BUTTON_SPACING);
-                    final Button addButton = Button.builder(Component.literal("+").withStyle(ChatFormatting.GREEN),
+                    x = startX + column * (EDIT_BOX_WIDTH + BUTTON_DIMS + ELEMENT_SPACING + BUTTON_SPACING);
+                    final Button addButton = Button.builder(
+                            Component.literal("+").withStyle(ChatFormatting.GREEN),
                             (btn) -> {
-                                this.editBoxes.add(new HeartColorEditBox(this.font,
-                                        0, 0,
-                                        EDIT_BOX_WIDTH - 22, Button.DEFAULT_HEIGHT,
-                                        Component.empty(),
-                                        this.heartType,
-                                        this.health));
+                                this.editBoxes.add(new HeartColorEditBox(this.font, 0, 0, EDIT_BOX_WIDTH - 22, Button.DEFAULT_HEIGHT, this.heartType));
                                 this.hasChanged = this.haveValuesChanged();
                                 this.rebuildWidgets();
-                            }).pos(x, 0).size(BUTTON_DIMS, BUTTON_DIMS).build();
+                            }
+                    ).pos(x, 0).size(BUTTON_DIMS, BUTTON_DIMS).build();
                     widgets.add(addButton);
                 }
                 this.colorSelectionList.addEntry(new ScrollableWidgetList.Entry(widgets));
             }
         }
 
-        if (this.editBoxes.size() == 0) {
+        if (this.editBoxes.isEmpty()) {
             int x = startX + EDIT_BOX_WIDTH + BUTTON_DIMS + ELEMENT_SPACING + BUTTON_SPACING;
-            final Button addButton = Button.builder(Component.literal("+").withStyle(ChatFormatting.GREEN),
+            final Button addButton = Button.builder(
+                    Component.literal("+").withStyle(ChatFormatting.GREEN),
                     (btn) -> {
-                        this.editBoxes.add(new HeartColorEditBox(this.font,
-                                0, 0,
-                                EDIT_BOX_WIDTH - 22, Button.DEFAULT_HEIGHT,
-                                Component.empty(),
-                                this.heartType,
-                                this.health));
-                        // not required as the widgets are rebuilt anyway
-                        //this.hasChanged = this.haveValuesChanged();
+                        this.editBoxes.add(new HeartColorEditBox(this.font, 0, 0, EDIT_BOX_WIDTH - 22, Button.DEFAULT_HEIGHT, this.heartType));
                         this.rebuildWidgets();
-                    }).pos(x, 0).size(BUTTON_DIMS, BUTTON_DIMS).build();
+                    }
+            ).pos(x, 0).size(BUTTON_DIMS, BUTTON_DIMS).build();
             widgets.add(addButton);
             this.colorSelectionList.addEntry(new ScrollableWidgetList.Entry(widgets));
         }
     }
 
-    @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (this.hasChanged) {
-            this.heartTypeButtons.forEach(btn -> btn.active = false);
-            this.saveButton.active = this.canSave();
-        } else if (this.saveButton.active) {
-            this.rebuildWidgets();
-        }
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    public boolean hasEnoughColors() {
+        // at least 1 color for all health and normal absorbing variants
+        // exactly 2 colors for absorbing effect variants
+        int count = this.editBoxes.size();
+        return count > 0 &&
+                (this.heartType.isHealth() && (this.heartType == CHeartType.HEALTH || this.vanillaHeart || count == 2)) // health
+                || (!this.heartType.isHealth() && (this.heartType == CHeartType.ABSORBING || count == 2)); // absorbing
     }
 
-    @Override
-    public void onClose() {
-        assert this.minecraft != null;
-        this.minecraft.setScreen(this.lastScreen);
+    public boolean canApplyChanges() {
+        if (this.editBoxes.stream().anyMatch(HeartColorEditBox::isInvalid)) return false;
+        return this.hasChanged && this.hasEnoughColors();
+    }
+
+    private boolean haveValuesChanged() {
+        if (this.editBoxes.stream().anyMatch(HeartColorEditBox::isInvalid)) return true;
+
+        final Integer[] currentColors = this.heartType.getColors();
+        assert currentColors != null;
+
+        boolean vanillaOptionChanged = this.vanillaHeart != (currentColors[0] == null);
+        if (vanillaOptionChanged) return true;
+
+        final Integer[] newColors;
+        if (this.vanillaHeart) {
+            List<Integer> list = this.editBoxes.stream().map(HeartColorEditBox::getColor).collect(Collectors.toList());
+            list.add(0, null);
+            newColors = list.toArray(Integer[]::new);
+        } else {
+            newColors = this.editBoxes.stream().map(HeartColorEditBox::getColor).toArray(Integer[]::new);
+        }
+
+        if (currentColors.length != newColors.length) return true;
+
+        for (int i = 0; i < currentColors.length; i++) {
+            Integer currentColor = currentColors[i];
+            Integer newColor = newColors[i];
+            if (!Objects.equals(currentColor, newColor)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private ConfigOption<List<String>> getConfigColors() {
+        return switch (this.heartType) {
+            case HEALTH -> Configuration.HEALTH.colors;
+            case HEALTH_POISONED -> Configuration.HEALTH.poisonedColors;
+            case HEALTH_WITHERED -> Configuration.HEALTH.witheredColors;
+            case HEALTH_FROZEN -> Configuration.HEALTH.frozenColors;
+            case ABSORBING -> Configuration.ABSORPTION.colors;
+            case ABSORBING_POISONED -> Configuration.ABSORPTION.poisonedColors;
+            case ABSORBING_WITHERED -> Configuration.ABSORPTION.witheredColors;
+            case ABSORBING_FROZEN -> Configuration.ABSORPTION.frozenColors;
+            default -> null;
+        };
+    }
+
+    private ConfigOption<Boolean> getConfigVanilla() {
+        return switch (this.heartType) {
+            case HEALTH -> Configuration.HEALTH.vanillaHearts;
+            case ABSORBING -> Configuration.ABSORPTION.vanillaHearts;
+            default -> null;
+        };
+    }
+
+    private void saveConfig() {
+        ConfigOption<List<String>> configColors = this.getConfigColors();
+        ConfigOption<Boolean> configVanilla = this.getConfigVanilla();
+        assert configColors != null && configVanilla != null;
+
+        // save only valid color fields
+        if (this.hasVanillaVariant() && !this.heartType.isEffect() && this.vanillaHeart != configVanilla.get()) {
+            configVanilla.set(this.vanillaHeart);
+        }
+
+        List<String> previousValues = configColors.get().stream().map(String::toUpperCase).toList();
+        final List<String> colors = this.editBoxes.stream().map(HeartColorEditBox::getColor).map(i -> "#" + HexFormat.of().toHexDigits(i, 6).toUpperCase()).toList();
+        if (!previousValues.equals(colors)) {
+            configColors.set(colors);
+            this.colorsChanged = true;
+        }
+        LoaderExpectPlatform.applyConfig();
     }
 }

@@ -3,6 +3,11 @@
   "package": "terrails.colorfulhearts.mixin",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
-  "client": [ "PlayerTabOverlayMixin" ],
-  "injectors": { "defaultRequire": 1 }
+  "client": [
+    "PlayerTabOverlayMixin",
+    "MinecraftMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

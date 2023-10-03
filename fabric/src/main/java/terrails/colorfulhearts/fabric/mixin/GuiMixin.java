@@ -23,20 +23,12 @@ public abstract class GuiMixin {
      * Disables the default heart renderer by setting for-loop index to -1 resulting in it never executing
      * Also injects own heart render
      */
-    @ModifyVariable(method = "renderHearts", at = @At("STORE"), ordinal = 11)
-    private int cancelLoopAndRender(
-            int defaultIndexVal,
-            GuiGraphics guiGraphics,
-            Player player,
-            int x,
-            int y,
-            int height,
-            int regenIndex,
-            float maxHealth,
-            int currentHealth,
-            int displayHealth,
-            int absorptionAmount,
-            boolean blinking) {
+    @ModifyVariable(method = "renderHearts", at = @At("STORE"), ordinal = 10)
+    private int colorfulhearts_renderHearts(
+            int defaultIndexVal, GuiGraphics guiGraphics, Player player,
+            int x, int y, int height, int regenIndex, float maxHealth,
+            int currentHealth, int displayHealth, int absorptionAmount, boolean blinking
+    ) {
         HeartRenderer.INSTANCE.renderPlayerHearts(guiGraphics, player, x, y, Mth.ceil(maxHealth), currentHealth, displayHealth, absorptionAmount, blinking);
         return -1;
     }
@@ -46,7 +38,7 @@ public abstract class GuiMixin {
      * Required for armor bar to render at correct height when there are multiple heart rows
      */
     @ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 7)
-    private int modifyRows(int defaultValue) {
+    private int colorfulhearts_renderPlayerHealth(int defaultValue) {
         int absorption = Mth.ceil(this.getCameraPlayer().getAbsorptionAmount());
         return (!Configuration.ABSORPTION.renderOverHealth.get() && absorption > 0) ? 2 : 1;
     }

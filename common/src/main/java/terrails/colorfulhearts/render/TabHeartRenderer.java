@@ -1,17 +1,14 @@
 package terrails.colorfulhearts.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.util.Mth;
-import terrails.colorfulhearts.CColorfulHearts;
+import terrails.colorfulhearts.LoaderExpectPlatform;
+import terrails.colorfulhearts.heart.CHeartType;
 import terrails.colorfulhearts.heart.Heart;
-import terrails.colorfulhearts.heart.HeartPiece;
-import terrails.colorfulhearts.heart.HeartType;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
@@ -24,14 +21,12 @@ public class TabHeartRenderer {
     private Heart[] hearts;
     private int lastHealth, lastDisplayHealth;
 
-    public void renderPlayerListHud(int y, int x, int offset, PoseStack poseStack, int health, PlayerTabOverlay.HealthState healthState) {
+    public void renderPlayerListHud(int y, int x, int offset, GuiGraphics guiGraphics, int health, PlayerTabOverlay.HealthState healthState) {
         if (health != this.lastHealth || healthState.displayedValue() != this.lastDisplayHealth || this.hearts == null) {
             // Use higher value to calculate hearts
             int value = Math.max(health, healthState.displayedValue());
             // Fixed maxHealth value as it is not possible to attain it via the leaderboard.
-            List<HeartPiece> healthColors = HeartPiece.getHeartPiecesForType(HeartType.NORMAL, false);
-            List<HeartPiece> absorptionColors = HeartPiece.getHeartPiecesForType(HeartType.NORMAL, true);
-            this.hearts = Heart.calculateHearts(0, value, value, healthColors, absorptionColors, false);
+            this.hearts = Heart.calculateHearts(0, value, value, CHeartType.HEALTH, CHeartType.ABSORBING, false);
             this.lastHealth = health;
             this.lastDisplayHealth = healthState.displayedValue();
             LOGGER.debug("Successfully updated tab hearts.\n{}", Arrays.toString(this.hearts));
@@ -47,8 +42,8 @@ public class TabHeartRenderer {
         // Adds space between hearts when there are less than 10
         int spacingMultiplier = Mth.floor(Math.min((float) (offset - x - 4) / (float) spacingDivisor, 9.0F));
 
-        RenderSystem.setShaderTexture(0, CColorfulHearts.GUI_ICONS_LOCATION);
-        RenderSystem.enableBlend();
+        boolean hardcore = LoaderExpectPlatform.forcedHardcoreHearts() || (this.client.level != null && this.client.level.getLevelData().isHardcore());
+
         for (int i = 0; i < this.hearts.length; i++) {
             Heart heart = this.hearts[i];
             if (heart == null) continue;
@@ -59,8 +54,7 @@ public class TabHeartRenderer {
             // therefore both should be passed through to draw
             boolean blinkingHeart = blinking && i < displayHealthHearts;
 
-            heart.draw(poseStack, xPos, y, blinking, blinkingHeart, HeartType.NORMAL);
+            heart.draw(guiGraphics, xPos, y, hardcore, blinking, blinkingHeart);
         }
-        RenderSystem.disableBlend();
     }
 }
