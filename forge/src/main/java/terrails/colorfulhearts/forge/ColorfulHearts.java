@@ -52,7 +52,6 @@ public class ColorfulHearts {
 
     private void setup(final FMLClientSetupEvent event) {
         setupConfig();
-        CColorfulHearts.setupCommon();
     }
 
     private static void setupConfig() {
@@ -83,8 +82,7 @@ public class ColorfulHearts {
                     }
 
                 } catch (Exception e) {
-                    LOGGER.error("Could not process {} in {}", field.getName(), configObjects);
-                    e.printStackTrace();
+                    LOGGER.error("Could not process {} in {}", field.getName(), configObjects, e);
                 }
             }
         }
@@ -110,8 +108,7 @@ public class ColorfulHearts {
                     }
 
                 } catch (Exception e) {
-                    LOGGER.error("Could not process {} in {}", field.getName(), configObjects);
-                    e.printStackTrace();
+                    LOGGER.error("Could not process {} in {}", field.getName(), configObjects, e);
                 }
             }
         }

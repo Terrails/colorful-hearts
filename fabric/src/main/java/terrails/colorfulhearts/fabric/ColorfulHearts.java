@@ -31,7 +31,6 @@ public class ColorfulHearts implements ClientModInitializer {
     public void onInitializeClient() {
         setupConfig();
         setupObjectShare();
-        CColorfulHearts.setupCommon();
     }
 
     private static void setupConfig() {
@@ -57,8 +56,7 @@ public class ColorfulHearts implements ClientModInitializer {
                     }
 
                 } catch (Exception e) {
-                    LOGGER.error("Could not process {} in {}", field.getName(), configObjects);
-                    e.printStackTrace();
+                    LOGGER.error("Could not process {} in {}", field.getName(), configObjects, e);
                 }
             }
         }
@@ -112,8 +110,7 @@ public class ColorfulHearts implements ClientModInitializer {
                                 option.initialize(() -> config.get(option.getPath()), (val) -> config.set(option.getPath(), val));
                             }
                         } catch (Exception e) {
-                            LOGGER.error("Could not process {} in {}", field.getName(), configObjects);
-                            e.printStackTrace();
+                            LOGGER.error("Could not process {} in {}", field.getName(), configObjects, e);
                         }
                     }
                 }
@@ -126,17 +123,14 @@ public class ColorfulHearts implements ClientModInitializer {
                 break;
             } catch (ParsingException e) {
                 config.close();
-
-                LOGGER.error("Failed to load '{}' due to a parsing error.", fileName);
-                e.printStackTrace();
+                LOGGER.error("Failed to load '{}' due to a parsing error.", fileName, e);
 
                 String deformedFile = (CColorfulHearts.MOD_ID + "-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss")) + ".toml");
                 try {
                     Files.move(configPath, configDir.resolve(deformedFile));
                     LOGGER.error("Deformed config file renamed to '{}'", deformedFile);
                 } catch (IOException ee) {
-                    LOGGER.error("Moving deformed config file failed...");
-                    ee.printStackTrace();
+                    LOGGER.error("Moving deformed config file failed...", ee);
                 }
             }
         }

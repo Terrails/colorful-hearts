@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
-public class ConfigOption<T> {
+public class ConfigOption<T> implements Supplier<T> {
 
     // Common night-config data
     private final String path;
@@ -61,6 +61,7 @@ public class ConfigOption<T> {
         return this.defaultValue;
     }
 
+    @Override
     public T get() {
         if (!this.isInitialized()) {
             LOGGER.error("ConfigOption {} has not yet been initialized. Returning default value...", this.path);
