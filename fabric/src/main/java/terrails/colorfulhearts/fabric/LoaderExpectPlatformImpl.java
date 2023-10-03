@@ -18,7 +18,4 @@ public class LoaderExpectPlatformImpl {
         } else return false;
     }
 
-    public static boolean inDevEnvironment() {
-        return FabricLoader.getInstance().isDevelopmentEnvironment();
-    }
 }

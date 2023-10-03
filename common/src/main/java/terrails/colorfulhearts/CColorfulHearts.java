@@ -3,7 +3,6 @@ package terrails.colorfulhearts;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import terrails.colorfulhearts.heart.HeartTests;
 
 public class CColorfulHearts {
 
@@ -15,10 +14,4 @@ public class CColorfulHearts {
     public static final ResourceLocation ABSORPTION_ICONS_LOCATION = new ResourceLocation(MOD_ID, "textures/absorption.png");
     public static final ResourceLocation HALF_HEART_ICONS_LOCATION = new ResourceLocation(MOD_ID, "textures/half_heart.png");
     public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
-
-    public static void setupCommon() {
-        if (LoaderExpectPlatform.inDevEnvironment()) {
-            HeartTests.runTests();
-        }
-    }
 }

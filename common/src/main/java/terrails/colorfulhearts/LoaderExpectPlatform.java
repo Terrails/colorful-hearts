@@ -17,9 +17,5 @@ public class LoaderExpectPlatform {
      * @return if hardcore textures should be used even if a world is not hardcore
      */
     @ExpectPlatform
-    public static boolean forcedHardcoreHearts() { return false; }
-
-    @ExpectPlatform
-    public static boolean inDevEnvironment() { return false; }
-
+    public static boolean forcedHardcoreHearts() { throw new AssertionError(); }
 }
