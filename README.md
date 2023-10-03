@@ -10,6 +10,8 @@ Also adds half heart bordered background textures. This means that if there is o
 
 While the mod replicates default vanilla behavior of absorption being rendered a row above health, there is a toggle that instead moves absorption to the same row as health. Absorption icons then start to render in the same way as health.
 
+## NOTE: Everything below is outdated and will be up-to-date with 1.20.2 and the new atlas system in a few days
+
 ### Resource Packs
 Due to user configurable heart colors, textures have to be in layers instead of a single texture like with vanilla hearts. If anyone wants to create a resource pack for this mod there are a few things that have to be known.
 - Hearts are drawn in 3 layers.
