@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import terrails.colorfulhearts.config.Configuration;
@@ -72,5 +73,8 @@ public class RenderEventHandler {
         client.getProfiler().pop();
 
         event.setCanceled(true);
+
+        // fire the post event for mod compatibility
+        MinecraftForge.EVENT_BUS.post(new RenderGuiOverlayEvent.Post(event.getWindow(), event.getGuiGraphics(), event.getPartialTick(), event.getOverlay()));
     }
 }
