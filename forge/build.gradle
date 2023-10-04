@@ -33,6 +33,9 @@ dependencies {
     // Forge
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
+    // Farmer's Delight
+    modImplementation "curse.maven:farmers-delight-398521:${rootProject.forge_farmersdelight_version}"
+
     // Common
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }

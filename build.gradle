@@ -19,6 +19,13 @@ subprojects {
 
     repositories {
         maven { url = "https://maven.parchmentmc.org" }
+        maven {
+            name 'Curse Maven'
+            url "https://cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
     }
 
     dependencies {
