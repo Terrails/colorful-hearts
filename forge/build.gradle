@@ -14,7 +14,7 @@ loom {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
-        mixinConfig "colorfulhearts-common.mixins.json"
+        mixinConfig "colorfulhearts-common.mixins.json", "colorfulhearts-forge.mixins.json"
     }
 
     // change server run directory
