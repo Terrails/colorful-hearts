@@ -3,6 +3,7 @@ package terrails.colorfulhearts.heart;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Mth;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.LoaderExpectPlatform;
 import terrails.colorfulhearts.config.Configuration;
@@ -166,26 +167,19 @@ public class Heart {
                 healthPieces,
                 absorptionPieces;
 
-        // Index for bottom color
-        final int healthColorIndex = Math.max((int) (health / 20.0) % healthColors.size() - 1, 0);
-        // Can there be a top color?
-        final boolean hasTopHealth = (health % 20 != 0 && health > 20);
-
+        final int bottomHealthRow = Math.max(0, Mth.floor(health / 20.0f) - 1);
+        final int healthColorIndex = bottomHealthRow % healthColors.size();
         healthPieces = new HeartPiece[]{
-                hasTopHealth ? healthColors.get((healthColorIndex + 1) % healthColors.size()) : null,
+                healthColors.get((healthColorIndex + 1) % healthColors.size()),
                 healthColors.get(healthColorIndex)
         };
 
         // Usually there are only 10 absorption hearts, but there is a special case when there are more (when there are less than 10 health hearts)
         final int maxAbsorptionHearts = absorptionSameRow ? 20 : (maxHealth >= 19 ? 20 : 40 - maxHealth - (maxHealth % 2));
-
-        // Index for bottom color
-        final int absorptionColorIndex = Math.max((absorption / maxAbsorptionHearts) % absorptionColors.size() - 1, 0);
-        // Can there be a top color?
-        final boolean hasTopAbsorption = (absorption % maxAbsorptionHearts != 0 && absorption > maxAbsorptionHearts);
-
+        final int bottomAbsorptionRow = Math.max(0, Mth.floor(absorption / (float) maxAbsorptionHearts) - 1);
+        final int absorptionColorIndex = bottomAbsorptionRow % absorptionColors.size();
         absorptionPieces = new HeartPiece[]{
-                hasTopAbsorption ? absorptionColors.get((absorptionColorIndex + 1) % absorptionColors.size()) : null,
+                absorptionColors.get((absorptionColorIndex + 1) % absorptionColors.size()),
                 absorptionColors.get(absorptionColorIndex)
         };
 
