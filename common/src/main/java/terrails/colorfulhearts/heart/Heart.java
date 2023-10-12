@@ -2,6 +2,7 @@ package terrails.colorfulhearts.heart;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -115,26 +116,19 @@ public class Heart {
         final Integer[] absorbingColors = absorption > 0 ? absorbingType.getColors() : new Integer[2];
         assert healthColors != null && absorbingColors != null;
 
-        // Index for bottom color
-        final int healthColorIndex = Math.max((int) (health / 20.0) % healthColors.length - 1, 0);
-        // Can there be a top color?
-        final boolean hasTopHealth = (health % 20 != 0 && health > 20);
-
+        final int bottomHealthRow = Math.max(0, Mth.floor(health / 20.0f) - 1);
+        final int healthColorIndex = bottomHealthRow % healthColors.length;
         healthPieces = new Integer[]{
-                hasTopHealth ? healthColors[(healthColorIndex + 1) % healthColors.length] : 0,
+                healthColors[(healthColorIndex + 1) % healthColors.length],
                 healthColors[healthColorIndex]
         };
 
         // Usually there are only 10 absorption hearts, but there is a special case when there are more (when there are less than 10 health hearts)
-        final int maxAbsorptionHearts = absorptionSameRow ? 20 : (maxHealth >= 19 ? 20 : 40 - maxHealth - (maxHealth % 2));
-
-        // Index for bottom color
-        final int absorptionColorIndex = Math.max((absorption / maxAbsorptionHearts) % absorbingColors.length - 1, 0);
-        // Can there be a top color?
-        final boolean hasTopAbsorption = (absorption % maxAbsorptionHearts != 0 && absorption > maxAbsorptionHearts);
-
+        final int maxAbsorptionHearts = (absorptionSameRow ? 20 : (maxHealth >= 19 ? 20 : 40 - maxHealth - (maxHealth % 2)));
+        final int bottomAbsorptionRow = Math.max(0, Mth.floor(absorption / (float) maxAbsorptionHearts) - 1);
+        final int absorptionColorIndex = bottomAbsorptionRow % absorbingColors.length;
         absorptionPieces = new Integer[]{
-                hasTopAbsorption ? absorbingColors[(absorptionColorIndex + 1) % absorbingColors.length] : 0,
+                absorbingColors[(absorptionColorIndex + 1) % absorbingColors.length],
                 absorbingColors[absorptionColorIndex]
         };
 
