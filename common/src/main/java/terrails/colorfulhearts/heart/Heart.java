@@ -96,234 +96,84 @@ public class Heart {
         guiGraphics.blitSprite(spriteLocation, x, y, 9, 9);
     }
 
-    /**
-     * A very over-engineered way to render a heart bar
-     * <p>
-     * In case that health/absorption is some really high value I found it wasteful to draw rows of hearts over each other.
-     * Instead, I decided to write this monstrosity that is supposed to calculate the position of each heart when health/absorption/heart-type state changes
-     * <p>
-     * It might be overwhelming at first, but I have tried to document what the code is supposed to do at relevant parts.
-     *
-     * @return An array of Heart objects. The array length is 20 at most, with first 10 elements being in health row and latter 10 in absorption row
-     *          Only case where array length is 10 at most is when renderOverHealth config option is enabled as absorption has to be in the same row as health then
-     */
-    public static Heart[] calculateHearts(int absorption, int health, int maxHealth, CHeartType healthType, CHeartType absorbingType, boolean absorptionSameRow) {
-        final Integer[] // Indices: 0 == Top, 1 == Bottom
-                healthPieces,
-                absorptionPieces;
-
-        final Integer[] healthColors = healthType.getColors();
-        final Integer[] absorbingColors = absorption > 0 ? absorbingType.getColors() : new Integer[2];
+    public static Heart[] calculateHearts(int health, int maxHealth, int absorbing, CHeartType healthType, CHeartType absorbingType) {
+        Integer[] healthColors = healthType.getColors();
+        Integer[] absorbingColors = absorbingType.getColors();
         assert healthColors != null && absorbingColors != null;
 
+        final int topHealth = health > 20 ? health % 20 : 0;
         final int bottomHealthRow = Math.max(0, Mth.floor(health / 20.0f) - 1);
         final int healthColorIndex = bottomHealthRow % healthColors.length;
-        healthPieces = new Integer[]{
+        healthColors = new Integer[]{
                 healthColors[(healthColorIndex + 1) % healthColors.length],
                 healthColors[healthColorIndex]
         };
 
-        // Usually there are only 10 absorption hearts, but there is a special case when there are more (when there are less than 10 health hearts)
-        final int maxAbsorptionHearts = (absorptionSameRow ? 20 : (maxHealth >= 19 ? 20 : 40 - maxHealth - (maxHealth % 2)));
-        final int bottomAbsorptionRow = Math.max(0, Mth.floor(absorption / (float) maxAbsorptionHearts) - 1);
+        // usually there are only 10 absorption hearts, but there is a special case when there are more (when there are less than 10 health hearts)
+        final int maxAbsorbing = maxHealth >= 19 ? 20 : 40 - maxHealth - (maxHealth % 2);
+
+        final int topAbsorbing = absorbing > maxAbsorbing ? absorbing % maxAbsorbing : 0;
+        final int bottomAbsorptionRow = Math.max(0, Mth.floor(absorbing / (float) maxAbsorbing) - 1);
         final int absorptionColorIndex = bottomAbsorptionRow % absorbingColors.length;
-        absorptionPieces = new Integer[]{
+        absorbingColors = new Integer[]{
                 absorbingColors[(absorptionColorIndex + 1) % absorbingColors.length],
                 absorbingColors[absorptionColorIndex]
         };
 
-        // Common counters
-        int topHealthCount = health > 20 ? (health % 20) : 0;
-        int bottomHealthCount = health <= 20 ? health : 20 - topHealthCount;
-        int emptyHealthCount = health < 20 ? Math.min(20, maxHealth) - bottomHealthCount : 0;
+        // offset added to index in for loop below to render absorbing hearts at correct positions
+        // needed in case where absorbing hearts are rendered in same row as health (when there are less than 10 health hearts)
+        final int absorbingOffset = Math.min(10, Mth.ceil(maxHealth / 2.0));
 
+        final int maxHealthHearts = Mth.ceil(maxHealth / 2.0);
+        final int maxAbsorbingHearts = Mth.ceil(maxAbsorbing / 2.0);
 
+        // first 10 elements are meant to be health and other 10 are meant to be absorption
+        final Heart[] hearts = new Heart[20];
+        for (int i = 0; i < Math.max(maxHealthHearts, maxAbsorbingHearts); i++) {
+            int value = i * 2;
 
-        final List<Heart> hearts = new ArrayList<>();
-        if (absorptionSameRow && absorption > 0 && absorption < 20) {
-            /* Same row style:
-             * 1. absorption == 0
-             *     Go to vanilla render style in else block
-             * 2. absorption >= 20
-             *     Go to vanilla render style in else block and set health counters to 0.
-             *       Results in absorption being in indices 0-9
-             * 3. (maxHealth + absorption) <= 20
-             *      Topmost Health -> Absorption -> Bottom health or empty containers
-             * 4. (maxHealth + absorption) > 20
-             *      Overflown Absorption -> Topmost Health -> Bottom Absorption
-             */
+            if (value < topHealth) {
+                boolean half = value + 1 == topHealth;
 
-            final int spaceAfterTopMostHealth = 20 - (health > 20 ? topHealthCount : bottomHealthCount);
-            int overflownAbsorptionCount = absorption > spaceAfterTopMostHealth ? absorption - spaceAfterTopMostHealth : 0;
-            int bottomAbsorptionCount = Math.min(absorption, spaceAfterTopMostHealth);
-
-            emptyHealthCount = Math.max(0, emptyHealthCount - bottomAbsorptionCount);
-            topHealthCount = Math.max(0, topHealthCount - overflownAbsorptionCount);
-            bottomHealthCount = Math.max(0, bottomHealthCount - (health > 20 ? bottomAbsorptionCount : overflownAbsorptionCount));
-
-            while ((topHealthCount + bottomHealthCount + overflownAbsorptionCount + bottomAbsorptionCount + emptyHealthCount) > 0) {
-
-                if (overflownAbsorptionCount > 0) {
-                    if (overflownAbsorptionCount > 1) {
-                        hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
-                        overflownAbsorptionCount -= 2;
-                    } else {
-                        if (topHealthCount > 0) {
-                            hearts.add(Heart.full(absorbingType, absorptionPieces[1], Heart.full(healthType, healthPieces[0])));
-                            overflownAbsorptionCount--;
-                            topHealthCount--;
-                        } else if (bottomHealthCount > 0) {
-                            hearts.add(Heart.full(absorbingType, absorptionPieces[1], Heart.full(healthType, healthPieces[1])));
-                            overflownAbsorptionCount--;
-                            bottomHealthCount--;
-                        } else {
-                            hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
-                            overflownAbsorptionCount--;
-                            emptyHealthCount--;
-                        }
-                    }
-                } else if (topHealthCount > 0) {
-                    if (topHealthCount > 1) {
-                        hearts.add(Heart.full(healthType, healthPieces[0]));
-                        topHealthCount -= 2;
-                    } else {
-                        hearts.add(Heart.full(healthType, healthPieces[0], Heart.full(absorbingType, absorptionPieces[1])));
-                        topHealthCount--;
-                        bottomAbsorptionCount--;
-                    }
-                } else if (health >= 20) {
-                    if (bottomAbsorptionCount > 0) {
-                        if (bottomAbsorptionCount > 1) {
-                            hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
-                            bottomAbsorptionCount -= 2;
-                        } else {
-                            if (bottomHealthCount > 0) {
-                                hearts.add(Heart.full(absorbingType, absorptionPieces[1], Heart.full(healthType, healthPieces[1])));
-                                bottomAbsorptionCount--;
-                                bottomHealthCount--;
-                            } else if (emptyHealthCount > 0) {
-                                hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
-                                bottomAbsorptionCount--;
-                                emptyHealthCount--;
-                            }
-                        }
-                    } else if (bottomHealthCount > 0) {
-                        hearts.add(Heart.full(healthType, healthPieces[1]));
-                        bottomHealthCount -= 2;
-                    }
+                if (half) {
+                    hearts[i] = Heart.full(healthType, healthColors[0], Heart.full(healthType, healthColors[1]));
                 } else {
-                    if (bottomHealthCount > 0) {
-                        if (bottomHealthCount > 1) {
-                            hearts.add(Heart.full(healthType, healthPieces[1]));
-                            bottomHealthCount -= 2;
-                        } else if (bottomAbsorptionCount > 0) {
-                            hearts.add(Heart.full(healthType, healthPieces[1], Heart.full(absorbingType, absorptionPieces[1])));
-                            bottomHealthCount--;
-                            bottomAbsorptionCount--;
-                        } else if (emptyHealthCount > 0) {
-                            hearts.add(Heart.full(healthType, healthPieces[1]));
-                            bottomHealthCount--;
-                            emptyHealthCount--;
-                        } else {
-                            hearts.add(Heart.half(healthType, healthPieces[1]));
-                            bottomHealthCount--;
-                        }
-                    } else if (bottomAbsorptionCount > 0) {
-                        if (bottomAbsorptionCount > 1) {
-                            hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
-                            bottomAbsorptionCount -= 2;
-                        } else if (emptyHealthCount > 0) {
-                            hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
-                            bottomAbsorptionCount--;
-                            emptyHealthCount--;
-                        } else {
-                            hearts.add(Heart.half(absorbingType, absorptionPieces[1]));
-                            bottomAbsorptionCount--;
-                        }
-                    } else if (emptyHealthCount > 0) {
-                        if (emptyHealthCount > 1) {
-                            hearts.add(Heart.CONTAINER_FULL);
-                            emptyHealthCount -= 2;
-                        } else {
-                            hearts.add(Heart.CONTAINER_HALF);
-                            emptyHealthCount--;
-                        }
-                    }
+                    hearts[i] = Heart.full(healthType, healthColors[0]);
                 }
-            }
-        } else {
-            /*
-             * Vanilla render style:
-             * 1. health >= 20 && absorption >= 0
-             *     Health in indices 0-9, absorption in indices 10-19
-             * 2. health < 19 && absorption > 0
-             *     There is one full heart of space left in health row
-             *     Health until N index (max 9), absorption goes from N+1 until 19
-             *     [Due to this behaviour, there can be more than 10 absorption hearts]
-             */
+            } else if (value < health) {
+                boolean halfBackground = value + 1 == maxHealth;
+                boolean half = value + 1 == health;
 
-            int topAbsorptionCount = absorption > maxAbsorptionHearts ? (absorption % maxAbsorptionHearts) : 0;
-            int bottomAbsorptionCount = absorption <= maxAbsorptionHearts ? absorption : maxAbsorptionHearts - topAbsorptionCount;
-
-            // Explained in "Same row style 2." above
-            if (absorptionSameRow && absorption >= 20) {
-                topHealthCount = 0;
-                bottomHealthCount = 0;
-                emptyHealthCount = 0;
+                if (halfBackground) {
+                    hearts[i] = Heart.half(healthType, healthColors[1]);
+                } else if (half) {
+                    hearts[i] = Heart.full(healthType, healthColors[1], CONTAINER_FULL);
+                } else {
+                    hearts[i] = Heart.full(healthType, healthColors[1]);
+                }
+            } else if (value < maxHealth) {
+                boolean halfBackground = value + 1 == maxHealth;
+                hearts[i] = halfBackground ? CONTAINER_HALF : CONTAINER_FULL;
             }
 
-            while ((topHealthCount + bottomHealthCount + emptyHealthCount + topAbsorptionCount + bottomAbsorptionCount) > 0) {
+            if (value < topAbsorbing) {
+                boolean half = value + 1 == topAbsorbing;
 
-                if (topHealthCount > 0) {
-                    if (topHealthCount > 1) {
-                        hearts.add(Heart.full(healthType, healthPieces[0]));
-                        topHealthCount -= 2;
-                    } else {
-                        hearts.add(Heart.full(healthType, healthPieces[0], Heart.full(healthType, healthPieces[1])));
-                        topHealthCount--;
-                        bottomHealthCount--;
-                    }
-                } else if (bottomHealthCount > 0) {
-                    if (bottomHealthCount > 1) {
-                        hearts.add(Heart.full(healthType, healthPieces[1]));
-                        bottomHealthCount -= 2;
-                    } else if (emptyHealthCount > 0) {
-                        hearts.add(Heart.full(healthType, healthPieces[1], Heart.CONTAINER_FULL));
-                        bottomHealthCount--;
-                        emptyHealthCount--;
-                    } else {
-                        hearts.add(Heart.half(healthType, healthPieces[1]));
-                        bottomHealthCount--;
-                    }
-                } else if (emptyHealthCount > 0) {
-                    if (emptyHealthCount > 1) {
-                        hearts.add(Heart.CONTAINER_FULL);
-                        emptyHealthCount -= 2;
-                    } else {
-                        hearts.add(Heart.CONTAINER_HALF);
-                        emptyHealthCount--;
-                    }
-                } else if (topAbsorptionCount > 0) {
-                    if (topAbsorptionCount > 1) {
-                        hearts.add(Heart.full(absorbingType, absorptionPieces[0]));
-                        topAbsorptionCount -= 2;
-                    } else {
-                        hearts.add(Heart.full(absorbingType, absorptionPieces[0], Heart.full(absorbingType, absorptionPieces[1])));
-                        topAbsorptionCount--;
-                        bottomAbsorptionCount--;
-                    }
-                } else if (bottomAbsorptionCount > 0) {
-                    if (bottomAbsorptionCount > 1) {
-                        hearts.add(Heart.full(absorbingType, absorptionPieces[1]));
-                        bottomAbsorptionCount -= 2;
-                    } else {
-                        hearts.add(Heart.half(absorbingType, absorptionPieces[1]));
-                        bottomAbsorptionCount--;
-                    }
+                if (half) {
+                    hearts[i + absorbingOffset] = Heart.full(absorbingType, absorbingColors[0], Heart.full(absorbingType, absorbingColors[1]));
+                } else {
+                    hearts[i + absorbingOffset] = Heart.full(absorbingType, absorbingColors[0]);
+                }
+            } else if (value < absorbing) {
+                boolean half = value + 1 == absorbing;
+
+                if (half) {
+                    hearts[i + absorbingOffset] = Heart.half(absorbingType, absorbingColors[1]);
+                } else {
+                    hearts[i + absorbingOffset] = Heart.full(absorbingType, absorbingColors[1]);
                 }
             }
         }
-
-        return hearts.toArray(Heart[]::new);
+        return hearts;
     }
 }

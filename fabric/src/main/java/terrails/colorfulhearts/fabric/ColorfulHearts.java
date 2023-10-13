@@ -140,7 +140,8 @@ public class ColorfulHearts implements ClientModInitializer {
         final ObjectShare objectShare = FabricLoader.getInstance().getObjectShare();
 
         // Absorption
-        objectShare.putIfAbsent("colorfulhearts:absorption_over_health", Configuration.ABSORPTION.renderOverHealth.get());
+        // keep this for now in case some mods depended on it
+        objectShare.putIfAbsent("colorfulhearts:absorption_over_health", false);
 
         // Allows other mods to force use of hardcore heart textures
         // Default vanilla behaviour (hardcore world) if false

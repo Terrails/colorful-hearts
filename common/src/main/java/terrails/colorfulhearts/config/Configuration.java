@@ -58,12 +58,6 @@ public class Configuration {
                 "absorption.vanillaHearts",
                 "Render vanilla hearts",
                 true
-        ), renderOverHealth = new ConfigOption<>(
-                "absorption.sameRow",
-                """
-                        Render absorption in the same row as health
-                        Absorption hearts start directly after max health""",
-                false
         );
 
         public final ConfigOption<List<String>> colors = new ConfigOption<>(

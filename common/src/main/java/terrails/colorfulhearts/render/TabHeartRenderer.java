@@ -26,7 +26,7 @@ public class TabHeartRenderer {
             // Use higher value to calculate hearts
             int value = Math.max(health, healthState.displayedValue());
             // Fixed maxHealth value as it is not possible to attain it via the leaderboard.
-            this.hearts = Heart.calculateHearts(0, value, value, CHeartType.HEALTH, CHeartType.ABSORBING, false);
+            this.hearts = Heart.calculateHearts(value, value, 0, CHeartType.HEALTH, CHeartType.ABSORBING);
             this.lastHealth = health;
             this.lastDisplayHealth = healthState.displayedValue();
             LOGGER.debug("Successfully updated tab hearts.\n{}", Arrays.toString(this.hearts));

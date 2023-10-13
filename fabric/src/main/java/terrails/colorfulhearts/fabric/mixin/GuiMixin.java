@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.render.HeartRenderer;
 
 /**
@@ -40,6 +39,6 @@ public abstract class GuiMixin {
     @ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 7)
     private int colorfulhearts_renderPlayerHealth(int defaultValue) {
         int absorption = Mth.ceil(this.getCameraPlayer().getAbsorptionAmount());
-        return (!Configuration.ABSORPTION.renderOverHealth.get() && absorption > 0) ? 2 : 1;
+        return absorption > 0 ? 2 : 1;
     }
 }

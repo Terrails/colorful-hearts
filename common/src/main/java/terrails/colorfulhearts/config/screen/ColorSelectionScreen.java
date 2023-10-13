@@ -12,6 +12,7 @@ import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.config.screen.base.ScrollableWidgetList;
 import terrails.colorfulhearts.config.screen.widgets.HeartColorEditBox;
 import terrails.colorfulhearts.heart.CHeartType;
+import terrails.colorfulhearts.render.HeartRenderer;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -147,7 +148,10 @@ public class ColorSelectionScreen extends Screen {
         assert this.minecraft != null;
         this.minecraft.setScreen(this.lastScreen);
         if (this.colorsChanged) {
+            // recreates texture atlas
             this.minecraft.reloadResourcePacks();
+            // forces a heart update in renderer
+            HeartRenderer.INSTANCE.lastHealthType = null;
         }
     }
 
@@ -214,7 +218,6 @@ public class ColorSelectionScreen extends Screen {
         for (int i = 0; i < elementCount; i++) {
 
             // if not normal variant and if there's vanilla and 1 color OR 2 colors
-//            boolean stop = this.heartType.isEffect() && ((i > 0 && this.vanillaHeart) || i > 1);
             boolean stop = this.heartType.isHealth() && this.heartType != CHeartType.HEALTH && ((i > 0 && this.vanillaHeart) || i > 1);
             if (stop) {
                 this.colorSelectionList.addEntry(new ScrollableWidgetList.Entry(widgets));

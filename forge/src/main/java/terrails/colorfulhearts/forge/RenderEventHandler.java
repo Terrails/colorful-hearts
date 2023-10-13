@@ -11,7 +11,6 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.render.HeartRenderer;
 
 public class RenderEventHandler {
@@ -64,7 +63,7 @@ public class RenderEventHandler {
         int left = width / 2 - 91;
         int top = height - gui.leftHeight;
 
-        int offset = 10 + (absorption > 0 && !Configuration.ABSORPTION.renderOverHealth.get() ? 10 : 0);
+        int offset = 10 + (absorption > 0 ? 10 : 0);
         gui.leftHeight += offset;
 
         HeartRenderer.INSTANCE.renderPlayerHearts(event.getGuiGraphics(), player, left, top, healthMax, health, this.displayHealth, absorption, highlight);
