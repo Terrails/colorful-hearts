@@ -3,20 +3,19 @@ package terrails.colorfulhearts.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import terrails.colorfulhearts.LoaderExpectPlatform;
 import terrails.colorfulhearts.heart.CHeartType;
 import terrails.colorfulhearts.heart.Heart;
 
-import java.util.Random;
-
 public class HeartRenderer {
 
     public static final HeartRenderer INSTANCE = new HeartRenderer();
 
     private final Minecraft client = Minecraft.getInstance();
-    private final Random random = new Random();
+    private final RandomSource random = RandomSource.create();
 
     private boolean lastHardcore;
     private int lastHealth, lastMaxHealth, lastAbsorption;
@@ -33,6 +32,9 @@ public class HeartRenderer {
             int displayHealth,
             int absorption,
             boolean renderHighlight) {
+
+        // synchronize random with vanilla
+        this.random.setSeed(client.gui.getGuiTicks() * 312871L);
 
         int healthHearts = Mth.ceil(Math.min(maxHealth, 20) / 2.0);
         int displayHealthHearts = Mth.ceil(Math.min(displayHealth, 20) / 2.0);
