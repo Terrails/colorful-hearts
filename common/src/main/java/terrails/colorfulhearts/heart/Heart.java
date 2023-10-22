@@ -15,11 +15,12 @@ public class Heart {
      */
     private static final Set<Heart> CACHE = new HashSet<>();
 
-    public static final Heart CONTAINER_FULL, CONTAINER_HALF;
+    public static final Heart CONTAINER_FULL, CONTAINER_HALF, CONTAINER_NONE;
 
     static {
         CONTAINER_FULL = new Heart(CHeartType.CONTAINER, null, false, null);
         CONTAINER_HALF = new Heart(CHeartType.CONTAINER, null, true, null);
+        CONTAINER_NONE = new Heart(null, null, false, null);
     }
 
     private final CHeartType heartType;
@@ -47,27 +48,24 @@ public class Heart {
                 });
     }
 
-    public static Heart full(@NotNull CHeartType heartType, Integer color, @NotNull Heart background) {
+    public static Heart full(@NotNull CHeartType heartType, Integer color, boolean half, @NotNull Heart background) {
         // comparing backgroundHeart by just == should work since there will always be a single instance of that specific type
         return CACHE.stream()
-                .filter(h -> h.half && Objects.equals(h.color, color) && Objects.equals(h.heartType, heartType) && h.backgroundHeart == background)
+                .filter(h -> h.half == half && Objects.equals(h.color, color) && Objects.equals(h.heartType, heartType) && h.backgroundHeart == background)
                 .findAny()
                 .orElseGet(() -> {
-                    Heart heart = new Heart(heartType, color, true, background);
+                    Heart heart = new Heart(heartType, color, half, background);
                     CACHE.add(heart);
                     return heart;
                 });
     }
 
+    public static Heart full(@NotNull CHeartType heartType, Integer color, @NotNull Heart background) {
+        return full(heartType, color, true, background);
+    }
+
     public static Heart half(@NotNull CHeartType heartType, Integer color) {
-        return CACHE.stream()
-                .filter(h -> h.half && Objects.equals(h.color, color) && Objects.equals(h.heartType, heartType) && h.backgroundHeart == CONTAINER_HALF)
-                .findAny()
-                .orElseGet(() -> {
-                    Heart heart = new Heart(heartType, color, true, CONTAINER_HALF);
-                    CACHE.add(heart);
-                    return heart;
-                });
+        return full(heartType, color, true, CONTAINER_HALF);
     }
 
     @Override
@@ -88,7 +86,12 @@ public class Heart {
         return (this == CONTAINER_FULL || this == CONTAINER_HALF);
     }
 
+    public boolean isEmpty() {
+        return this == CONTAINER_NONE;
+    }
+
     public void draw(GuiGraphics guiGraphics, int x, int y, boolean hardcore, boolean highlightContainer, boolean highlightHeart) {
+        if (this.isEmpty()) return;
         if (this.backgroundHeart != null) this.backgroundHeart.draw(guiGraphics, x, y, hardcore, highlightContainer, highlightHeart);
 
         boolean highlight = this.isContainer() ? highlightContainer : highlightHeart;
