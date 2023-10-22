@@ -32,7 +32,7 @@ public class HeartRenderer {
             int currentHealth,
             int displayHealth,
             int absorption,
-            boolean renderHighlight) {
+            boolean blinking) {
 
         long tickCount = this.client.gui.getGuiTicks();
         // synchronize random with vanilla
@@ -91,9 +91,9 @@ public class HeartRenderer {
 
             // vanilla seems to highlight all background borders and only some hearts,
             // therefore both should be passed through to draw
-            boolean highlightHeart = renderHighlight && index < displayHealthHearts;
+            boolean blinkingHeart = blinking && index < displayHealthHearts;
 
-            heart.draw(guiGraphics, xPos, yPos, hardcore, renderHighlight, highlightHeart);
+            heart.draw(guiGraphics, xPos, yPos, hardcore, blinking, blinkingHeart);
         }
 
         LoaderExpectPlatform.postRenderEvent(guiGraphics, x, y, blinking, hardcore, healthType, absorbingType);
