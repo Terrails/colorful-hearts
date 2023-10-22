@@ -34,8 +34,9 @@ public class HeartRenderer {
             int absorption,
             boolean renderHighlight) {
 
+        long tickCount = this.client.gui.getGuiTicks();
         // synchronize random with vanilla
-        this.random.setSeed(client.gui.getGuiTicks() * 312871L);
+        this.random.setSeed(tickCount * 312871);
 
         int healthHearts = Mth.ceil(Math.min(maxHealth, 20) / 2.0);
         int displayHealthHearts = Mth.ceil(Math.min(displayHealth, 20) / 2.0);
@@ -44,7 +45,6 @@ public class HeartRenderer {
 
         int regenIndex = -1;
         if (player.hasEffect(MobEffects.REGENERATION)) {
-            long tickCount = this.client.gui.getGuiTicks();
             regenIndex = (int) tickCount % Mth.ceil(Math.min(maxHealth, 20) + 5);
         }
 
@@ -74,8 +74,6 @@ public class HeartRenderer {
 
         for (int index = 0; index < this.hearts.length; index++) {
             Heart heart = this.hearts[index];
-            if (heart == null) continue;
-
             int xPos = x + (index % 10) * 8;
             int yPos = y - (index > 9 ? 10 : 0);
 
@@ -83,6 +81,8 @@ public class HeartRenderer {
             if (currentHealth + absorption <= 4) {
                 yPos += this.random.nextInt(2);
             }
+
+            if (heart == null) continue;
 
             // move up and down while under regeneration status effect.
             if (index < healthHearts && index == regenIndex) {
