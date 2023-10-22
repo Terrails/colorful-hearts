@@ -20,7 +20,7 @@ public class RenderEventHandler {
     private long lastHealthTime, healthBlinkTime;
     private int displayHealth, lastHealth;
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void renderHearts(RenderGuiOverlayEvent.Pre event) {
         if (event.isCanceled()
                 || client.options.hideGui

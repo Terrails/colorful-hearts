@@ -50,6 +50,7 @@ dependencies {
     modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.fabric_clothconfig_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
+    modRuntimeOnly("maven.modrinth:raised:${rootProject.fabric_raised_version}")
 }
 
 processResources {
