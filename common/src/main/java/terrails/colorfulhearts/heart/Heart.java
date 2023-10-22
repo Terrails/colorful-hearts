@@ -123,6 +123,9 @@ public class Heart {
                 absorbingColors[absorptionColorIndex]
         };
 
+        maxHealth = Math.min(20, maxHealth);
+        absorbing = Math.min(maxAbsorbing, absorbing);
+
         // offset added to index in for loop below to render absorbing hearts at correct positions
         // needed in case where absorbing hearts are rendered in same row as health (when there are less than 10 health hearts)
         final int absorbingOffset = Math.min(10, Mth.ceil(maxHealth / 2.0));
