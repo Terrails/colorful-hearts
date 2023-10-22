@@ -7,6 +7,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import terrails.colorfulhearts.LoaderExpectPlatform;
+import terrails.colorfulhearts.api.event.HeartOverlayEvent;
 import terrails.colorfulhearts.heart.CHeartType;
 import terrails.colorfulhearts.heart.Heart;
 
@@ -50,6 +51,16 @@ public class HeartRenderer {
         CHeartType healthType = CHeartType.forPlayer(player, true);
         CHeartType absorbingType = CHeartType.forPlayer(player, false);
 
+        HeartOverlayEvent.Pre event = LoaderExpectPlatform.preRenderEvent(guiGraphics, x, y, blinking, hardcore, healthType, absorbingType);
+        if (event.isCancelled()) return;
+
+        x = event.getX();
+        y = event.getY();
+        blinking = event.isBlinking();
+        hardcore = event.isHardcore();
+        healthType = event.getHealthType();
+        absorbingType = event.getAbsorbingType();
+
         if (this.lastHardcore != hardcore || this.lastHealth != currentHealth || this.lastMaxHealth != maxHealth || this.lastAbsorption != absorption
                 || this.lastHealthType != healthType || this.lastAbsorbingType != absorbingType || this.hearts == null) {
             this.hearts = Heart.calculateHearts(currentHealth, maxHealth, absorption, healthType, absorbingType);
@@ -84,5 +95,7 @@ public class HeartRenderer {
 
             heart.draw(guiGraphics, xPos, yPos, hardcore, renderHighlight, highlightHeart);
         }
+
+        LoaderExpectPlatform.postRenderEvent(guiGraphics, x, y, blinking, hardcore, healthType, absorbingType);
     }
 }
