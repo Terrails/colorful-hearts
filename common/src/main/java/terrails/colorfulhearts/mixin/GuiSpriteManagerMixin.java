@@ -1,7 +1,7 @@
 package terrails.colorfulhearts.mixin;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiSpriteManager;
 import net.minecraft.client.renderer.texture.atlas.SpriteSources;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.render.atlas.sources.ColoredHearts;
 
-@Mixin(Minecraft.class)
-public class MinecraftMixin {
+@Mixin(GuiSpriteManager.class)
+public class GuiSpriteManagerMixin {
 
     /**
      * Registers custom SpriteSource in order to be able to add dynamically colored hearts to vanilla gui atlas
