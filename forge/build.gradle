@@ -14,7 +14,7 @@ loom {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
-        mixinConfig "colorfulhearts-common.mixins.json"
+        mixinConfig("colorfulhearts-common.mixins.json", "colorfulhearts.mixins.json")
     }
 
     // change server run directory
@@ -36,6 +36,12 @@ dependencies {
     // Common
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+
+    // Optional Dependencies
+    modImplementation("squeek.appleskin:appleskin-forge:${rootProject.forge_appleskin_version}") {
+        exclude module: 'modmenu'
+    }
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-forge:${rootProject.forge_clothconfig_version}")
 }
 
 processResources {

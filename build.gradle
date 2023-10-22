@@ -19,6 +19,8 @@ subprojects {
 
     repositories {
         maven { url = "https://maven.parchmentmc.org" }
+        maven { url "https://maven.ryanliptak.com/" }
+        maven { url "https://maven.shedaniel.me/" }
     }
 
     dependencies {

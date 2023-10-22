@@ -8,6 +8,7 @@ import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -21,8 +22,10 @@ import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.config.screen.ConfigurationScreen;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
@@ -33,6 +36,10 @@ public class ColorfulHearts {
     public static final ForgeConfigSpec CONFIG_SPEC;
 
     private static final String CONFIG_FILE = CColorfulHearts.MOD_ID + ".toml";
+
+    private static final Map<String, String> COMPAT = Map.of(
+            "appleskin", "AppleSkinEventCompat"
+    );
 
     public ColorfulHearts() {
         if (FMLLoader.getDist() == Dist.CLIENT) {
@@ -52,6 +59,35 @@ public class ColorfulHearts {
 
     private void setup(final FMLClientSetupEvent event) {
         setupConfig();
+        setupCompat();
+    }
+
+    private void setupCompat() {
+        final String basePackage = "terrails.colorfulhearts.forge.compat";
+
+        for (Map.Entry<String, String> entry : COMPAT.entrySet()) {
+            String id = entry.getKey();
+            if (ModList.get().isLoaded(id)) {
+                String className = basePackage + "." + entry.getValue();
+                LOGGER.info("Loading compat for mod {}.", id);
+                try {
+                    Class<?> compatClass = Class.forName(className);
+                    compatClass.getDeclaredConstructor().newInstance();
+                } catch (ClassNotFoundException e) {
+                    LOGGER.error("Failed to load compat as {} does not exist", className, e);
+                } catch (NoSuchMethodException e) {
+                    LOGGER.error("Failed to load compat as {} does not have an empty constructor", className, e);
+                } catch (IllegalAccessException e) {
+                    LOGGER.error("Failed to load compat as {} does not have an empty public constructor", className, e);
+                } catch (InstantiationException e) {
+                    LOGGER.error("Failed to load compat as {} is an abstract class", className, e);
+                } catch (InvocationTargetException e) {
+                    LOGGER.error("Failed to load compat {} as an unknown error was thrown", className, e);
+                }
+            } else {
+                LOGGER.debug("Skipped loading compat for mod {} as it is not present", id);
+            }
+        }
     }
 
     private static void setupConfig() {

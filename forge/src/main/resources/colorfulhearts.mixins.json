@@ -1,11 +1,10 @@
 {
   "required": true,
-  "package": "terrails.colorfulhearts.fabric.mixin",
+  "package": "terrails.colorfulhearts.forge.mixin",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
-  "plugin": "terrails.colorfulhearts.fabric.FabMixinPlugin",
+  "plugin": "terrails.colorfulhearts.forge.ForgeMixinPlugin",
   "client": [
-    "GuiMixin",
     "compat.appleskin.HUDOverlayHandlerAccessor"
   ],
   "injectors": {
