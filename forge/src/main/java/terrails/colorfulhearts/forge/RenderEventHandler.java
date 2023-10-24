@@ -57,7 +57,8 @@ public class RenderEventHandler {
         int left = width / 2 - 91;
         int top = height - gui.leftHeight;
 
-        boolean hasAbsorptionRow = (absorption + Math.min(20, maxHealth)) > 20;
+        // handle half heart requiring absorption to move one row up
+        boolean hasAbsorptionRow = (absorption + Math.min(20, maxHealth == 19 ? 20 : maxHealth)) > 20;
         int offset = 10 + (hasAbsorptionRow ? 10 : 0);
         gui.leftHeight += offset;
 

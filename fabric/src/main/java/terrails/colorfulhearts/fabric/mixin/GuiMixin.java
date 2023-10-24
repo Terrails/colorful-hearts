@@ -44,6 +44,9 @@ public abstract class GuiMixin {
         int absorption = Mth.ceil(this.getCameraPlayer().getAbsorptionAmount());
         int health = Mth.ceil(this.getCameraPlayer().getHealth());
         int maxHealth = Mth.ceil(Math.max((float) this.getCameraPlayer().getAttributeValue(Attributes.MAX_HEALTH), Math.max(this.displayHealth, health)));
+        // handle half heart requiring absorption to move one row up
+        if (maxHealth == 19) maxHealth = 20;
+
         boolean hasAbsorptionRow = (absorption + Math.min(20, maxHealth)) > 20;
 
         return hasAbsorptionRow ? 2 : 1;
