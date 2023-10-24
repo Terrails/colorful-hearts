@@ -3,6 +3,7 @@ package terrails.colorfulhearts.fabric.mixin;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,6 +18,8 @@ import terrails.colorfulhearts.render.HeartRenderer;
 public abstract class GuiMixin {
 
     @Shadow protected abstract Player getCameraPlayer();
+
+    @Shadow private int displayHealth;
 
     /**
      * Disables the default heart renderer by setting for-loop index to -1 resulting in it never executing
@@ -39,6 +42,10 @@ public abstract class GuiMixin {
     @ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 7)
     private int colorfulhearts_renderPlayerHealth(int defaultValue) {
         int absorption = Mth.ceil(this.getCameraPlayer().getAbsorptionAmount());
-        return absorption > 0 ? 2 : 1;
+        int health = Mth.ceil(this.getCameraPlayer().getHealth());
+        int maxHealth = Mth.ceil(Math.max((float) this.getCameraPlayer().getAttributeValue(Attributes.MAX_HEALTH), Math.max(this.displayHealth, health)));
+        boolean hasAbsorptionRow = (absorption + Math.min(20, maxHealth)) > 20;
+
+        return hasAbsorptionRow ? 2 : 1;
     }
 }

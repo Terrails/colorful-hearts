@@ -3,7 +3,6 @@ package terrails.colorfulhearts.forge;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
@@ -50,10 +49,7 @@ public class RenderEventHandler {
         }
 
         this.lastHealth = health;
-
-        AttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
-        assert attrMaxHealth != null;
-        int healthMax = Mth.ceil(Math.max((float) attrMaxHealth.getValue(), Math.max(this.displayHealth, health)));
+        int maxHealth = Mth.ceil(Math.max((float) player.getAttributeValue(Attributes.MAX_HEALTH), Math.max(this.displayHealth, health)));
 
         final ForgeGui gui = (ForgeGui) client.gui;
         int width = event.getWindow().getGuiScaledWidth();
@@ -61,10 +57,11 @@ public class RenderEventHandler {
         int left = width / 2 - 91;
         int top = height - gui.leftHeight;
 
-        int offset = 10 + (absorption > 0 ? 10 : 0);
+        boolean hasAbsorptionRow = (absorption + Math.min(20, maxHealth)) > 20;
+        int offset = 10 + (hasAbsorptionRow ? 10 : 0);
         gui.leftHeight += offset;
 
-        HeartRenderer.INSTANCE.renderPlayerHearts(event.getGuiGraphics(), player, left, top, healthMax, health, this.displayHealth, absorption, highlight);
+        HeartRenderer.INSTANCE.renderPlayerHearts(event.getGuiGraphics(), player, left, top, maxHealth, health, this.displayHealth, absorption, highlight);
 
         client.getProfiler().pop();
 
