@@ -7,7 +7,7 @@ import squeek.appleskin.api.AppleSkinApi;
 import squeek.appleskin.api.event.HUDOverlayEvent;
 import squeek.appleskin.client.HUDOverlayHandler;
 import terrails.colorfulhearts.compat.AppleSkinCompat;
-import terrails.colorfulhearts.fabric.api.event.FabHeartOverlayEvent;
+import terrails.colorfulhearts.fabric.api.event.FabHeartRenderEvent;
 import terrails.colorfulhearts.fabric.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
 public class AppleSkinEventCompat implements AppleSkinApi {
@@ -26,7 +26,7 @@ public class AppleSkinEventCompat implements AppleSkinApi {
             modifiedHealth = Mth.ceil(event.modifiedHealth);
         });
         // register own custom renderer and use modifiedHealth that AppleSkin's event provided
-        FabHeartOverlayEvent.POST.register(event -> {
+        FabHeartRenderEvent.POST.register(event -> {
             Player player = client.player;
             assert player != null;
 

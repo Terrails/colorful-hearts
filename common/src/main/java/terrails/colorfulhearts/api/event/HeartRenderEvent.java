@@ -6,12 +6,12 @@ import terrails.colorfulhearts.heart.CHeartType;
 /**
  * A set of events useful to render any overlays
  */
-public class HeartOverlayEvent {
+public class HeartRenderEvent {
 
     /**
      * Event executed before health renderer does anything
      */
-    public static class Pre extends HeartOverlayEvent {
+    public static class Pre extends HeartRenderEvent {
 
         private boolean cancelled = false;
 
@@ -35,7 +35,7 @@ public class HeartOverlayEvent {
     /**
      * Event executed after health renderer finished
      */
-    public static class Post extends HeartOverlayEvent {
+    public static class Post extends HeartRenderEvent {
 
         public Post(
                 GuiGraphics guiGraphics, int x, int y,
@@ -51,7 +51,7 @@ public class HeartOverlayEvent {
     private boolean blinking, hardcore;
     private CHeartType healthType, absorbingType;
 
-    public HeartOverlayEvent(
+    public HeartRenderEvent(
             GuiGraphics guiGraphics, int x, int y,
             boolean blinking, boolean hardcore,
             CHeartType healthType, CHeartType absorbingType

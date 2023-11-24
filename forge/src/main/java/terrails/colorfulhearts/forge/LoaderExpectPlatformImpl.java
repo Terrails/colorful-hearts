@@ -3,8 +3,8 @@ package terrails.colorfulhearts.forge;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.common.MinecraftForge;
 import terrails.colorfulhearts.CColorfulHearts;
-import terrails.colorfulhearts.api.event.HeartOverlayEvent;
-import terrails.colorfulhearts.forge.api.event.ForgeHeartOverlayEvent;
+import terrails.colorfulhearts.api.event.HeartRenderEvent;
+import terrails.colorfulhearts.forge.api.event.ForgeHeartRenderEvent;
 import terrails.colorfulhearts.heart.CHeartType;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
@@ -20,14 +20,14 @@ public class LoaderExpectPlatformImpl {
         return false;
     }
 
-    public static HeartOverlayEvent.Pre preRenderEvent(
+    public static HeartRenderEvent.Pre preRenderEvent(
             GuiGraphics guiGraphics, int x, int y,
             boolean blinking, boolean hardcore,
             CHeartType healthType, CHeartType absorbingType
     ) {
-        ForgeHeartOverlayEvent.Pre event = new ForgeHeartOverlayEvent.Pre(guiGraphics, x, y, blinking, hardcore, healthType, absorbingType);
+        ForgeHeartRenderEvent.Pre event = new ForgeHeartRenderEvent.Pre(guiGraphics, x, y, blinking, hardcore, healthType, absorbingType);
         MinecraftForge.EVENT_BUS.post(event);
-        return (HeartOverlayEvent.Pre) event.getEvent();
+        return event.getEvent();
     }
 
     public static void postRenderEvent(
@@ -35,7 +35,7 @@ public class LoaderExpectPlatformImpl {
             boolean blinking, boolean hardcore,
             CHeartType healthType, CHeartType absorbingType
     ) {
-        ForgeHeartOverlayEvent.Post event = new ForgeHeartOverlayEvent.Post(guiGraphics, x, y, blinking, hardcore, healthType, absorbingType);
+        ForgeHeartRenderEvent.Post event = new ForgeHeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, healthType, absorbingType);
         MinecraftForge.EVENT_BUS.post(event);
     }
 }

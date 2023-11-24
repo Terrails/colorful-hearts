@@ -12,7 +12,7 @@ import squeek.appleskin.api.food.FoodValues;
 import squeek.appleskin.client.HUDOverlayHandler;
 import squeek.appleskin.helpers.FoodHelper;
 import terrails.colorfulhearts.compat.AppleSkinCompat;
-import terrails.colorfulhearts.forge.api.event.ForgeHeartOverlayEvent;
+import terrails.colorfulhearts.forge.api.event.ForgeHeartRenderEvent;
 import terrails.colorfulhearts.forge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
 public class AppleSkinEventCompat {
@@ -37,7 +37,7 @@ public class AppleSkinEventCompat {
         event.setCanceled(true);
     }
 
-    private void onPostRender(ForgeHeartOverlayEvent.Post event) {
+    private void onPostRender(ForgeHeartRenderEvent.Post event) {
         Player player = client.player;
         assert player != null;
 
