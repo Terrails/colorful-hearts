@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "terrails.colorfulhearts.neoforge.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "plugin": "terrails.colorfulhearts.neoforge.ForgeMixinPlugin",
+  "client": [
+    "compat.appleskin.HUDOverlayHandlerAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

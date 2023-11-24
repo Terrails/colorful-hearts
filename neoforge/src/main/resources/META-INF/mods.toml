@@ -1,0 +1,34 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+issueTrackerURL = "https://github.com/Terrails/colorful-hearts"
+license = "MIT"
+
+[[mods]]
+modId = "colorfulhearts"
+version = "${version}"
+
+displayName = "Colorful Hearts"
+authors = "Terrails"
+description = ''' A simple renderer for colored hearts '''
+
+logoFile = "assets/colorfulhearts/icon.png"
+displayTest = "IGNORE_ALL_VERSION" # ignore everything since its a client only mod
+
+[[mixins]]
+config = "colorfulhearts.mixins.json"
+[[mixins]]
+config = "colorfulhearts-common.mixins.json"
+
+[[dependencies.colorfulhearts]]
+modId = "neoforge"
+mandatory = true
+versionRange = "[1,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.colorfulhearts]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.2,)"
+ordering = "NONE"
+side = "CLIENT"
