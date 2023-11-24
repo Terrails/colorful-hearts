@@ -11,10 +11,8 @@ loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
     forge {
-        convertAccessWideners = true
-        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-
-        mixinConfig("colorfulhearts-common.mixins.json", "colorfulhearts.mixins.json")
+        mixinConfig "colorfulhearts-common.mixins.json"
+        mixinConfig "colorfulhearts.mixins.json"
     }
 
     // change server run directory
@@ -58,17 +56,13 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
-}
-
-jar {
-    classifier "dev"
+    atAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
 }
 
 sourcesJar {
