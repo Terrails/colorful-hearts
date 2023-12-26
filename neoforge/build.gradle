@@ -82,6 +82,7 @@ unifiedPublishing {
         gameLoaders = ["neoforge"]
         changelog = fetchChangelog()
 
+        mainPublicationDepends(tasks.remapJar, tasks.sourcesJar)
         mainPublication tasks.remapJar.getArchiveFile() // main jar
         secondaryPublication tasks.sourcesJar.getArchiveFile() // sources jar
 

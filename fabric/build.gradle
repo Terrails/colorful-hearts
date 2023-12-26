@@ -94,6 +94,7 @@ unifiedPublishing {
         gameLoaders = ["fabric", "quilt"]
         changelog = fetchChangelog()
 
+        mainPublicationDepends(tasks.remapJar, tasks.sourcesJar)
         mainPublication tasks.remapJar.getArchiveFile() // main jar
         secondaryPublication tasks.sourcesJar.getArchiveFile() // sources jar
 
