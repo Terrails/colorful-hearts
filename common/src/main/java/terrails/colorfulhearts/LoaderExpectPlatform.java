@@ -7,6 +7,9 @@ import terrails.colorfulhearts.heart.CHeartType;
 
 public class LoaderExpectPlatform {
 
+    @ExpectPlatform
+    public static String getLoader() { throw new AssertionError(); }
+
     /**
      * Applies changes to night-config's FileConfig
      * Technically not needed if autosave were to be enabled

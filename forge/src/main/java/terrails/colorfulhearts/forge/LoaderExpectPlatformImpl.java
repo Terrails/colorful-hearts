@@ -11,6 +11,10 @@ import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
 public class LoaderExpectPlatformImpl {
 
+    public static String getLoader() {
+        return "forge";
+    }
+
     public static void applyConfig() {
         ColorfulHearts.CONFIG_SPEC.save();
         LOGGER.debug("Successfully saved changes to {} config file.", CColorfulHearts.MOD_ID + ".toml");
