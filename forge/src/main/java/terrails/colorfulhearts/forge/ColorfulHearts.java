@@ -35,7 +35,7 @@ public class ColorfulHearts {
     private static final String CONFIG_FILE = CColorfulHearts.MOD_ID + ".toml";
 
     private static final Map<String, String> COMPAT = Map.of(
-            "appleskin", "AppleSkinEventCompat"
+            "appleskin", "AppleSkinForgeCompat"
     );
 
     static void initialize() {

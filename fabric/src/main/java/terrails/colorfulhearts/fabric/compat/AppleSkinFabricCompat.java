@@ -1,6 +1,5 @@
 package terrails.colorfulhearts.fabric.compat;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import squeek.appleskin.api.AppleSkinApi;
@@ -10,10 +9,7 @@ import terrails.colorfulhearts.compat.AppleSkinCompat;
 import terrails.colorfulhearts.fabric.api.event.FabHeartRenderEvent;
 import terrails.colorfulhearts.fabric.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
-public class AppleSkinEventCompat implements AppleSkinApi {
-
-    private final AppleSkinCompat compatHandler = new AppleSkinCompat();
-    private final Minecraft client = Minecraft.getInstance();
+public class AppleSkinFabricCompat extends AppleSkinCompat implements AppleSkinApi {
 
     private int modifiedHealth;
 
@@ -41,7 +37,7 @@ public class AppleSkinEventCompat implements AppleSkinApi {
             // I'll leave this behaviour as is at it makes the differentiation easier
             float alpha = ((HUDOverlayHandlerAccessor) HUDOverlayHandler.INSTANCE).getFlashAlpha();
 
-            compatHandler.drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha);
+            drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha);
             // set value back to 0
             modifiedHealth = 0;
         });

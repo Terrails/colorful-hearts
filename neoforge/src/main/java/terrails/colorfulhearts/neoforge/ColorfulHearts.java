@@ -33,7 +33,7 @@ class ColorfulHearts {
     public static ModConfigSpec CONFIG_SPEC;
 
     private static final Map<String, String> COMPAT = Map.of(
-            "appleskin", "terrails.colorfulhearts.neoforge.compat.AppleSkinEventCompat"
+            "appleskin", "AppleSkinForgeCompat"
     );
 
     static void initialize() {
@@ -120,11 +120,13 @@ class ColorfulHearts {
     }
 
     private void setupCompat() {
+        final String basePackage = "terrails.colorfulhearts.neoforge.compat";
+
         for (Map.Entry<String, String> entry : COMPAT.entrySet()) {
             String id = entry.getKey();
             if (ModList.get().isLoaded(id)) {
+                String className = basePackage + "." + entry.getValue();
                 LOGGER.info("Loading compat for mod {}.", id);
-                String className = entry.getValue();
                 try {
                     Class<?> compatClass = Class.forName(className);
                     compatClass.getDeclaredConstructor().newInstance();

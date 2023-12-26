@@ -11,11 +11,11 @@ import terrails.colorfulhearts.heart.Heart;
 
 public class AppleSkinCompat {
 
+    public final Minecraft client = Minecraft.getInstance();
+    private final RandomSource random = RandomSource.create();
+
     private int lastHealth, lastModifiedHealth;
     private Heart[] hearts;
-
-    private final Minecraft client = Minecraft.getInstance();
-    private final RandomSource random = RandomSource.create();
 
     public void drawHealthOverlay(GuiGraphics guiGraphics, int x, int y, int absorbing, int health, int modifiedHealth, float alpha) {
         long tickCount = this.client.gui.getGuiTicks();

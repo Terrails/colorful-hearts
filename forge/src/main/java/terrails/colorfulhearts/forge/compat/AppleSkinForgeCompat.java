@@ -1,6 +1,5 @@
 package terrails.colorfulhearts.forge.compat;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -15,12 +14,9 @@ import terrails.colorfulhearts.compat.AppleSkinCompat;
 import terrails.colorfulhearts.forge.api.event.ForgeHeartRenderEvent;
 import terrails.colorfulhearts.forge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
-public class AppleSkinEventCompat {
+public class AppleSkinForgeCompat extends AppleSkinCompat {
 
-    private final AppleSkinCompat compatHandler = new AppleSkinCompat();
-    private final Minecraft client = Minecraft.getInstance();
-
-    public AppleSkinEventCompat() {
+    public AppleSkinForgeCompat() {
         MinecraftForge.EVENT_BUS.addListener(this::onDefaultRender);
         MinecraftForge.EVENT_BUS.addListener(this::onPostRender);
     }
@@ -73,6 +69,6 @@ public class AppleSkinEventCompat {
         // I'll leave this behaviour as is at it makes the differentiation easier
         float alpha = HUDOverlayHandlerAccessor.getFlashAlpha();
 
-        compatHandler.drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha);
+        drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha);
     }
 }
