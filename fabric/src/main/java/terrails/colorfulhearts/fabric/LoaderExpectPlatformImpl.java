@@ -2,12 +2,9 @@ package terrails.colorfulhearts.fabric;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.GuiGraphics;
-import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.fabric.api.event.FabHeartRenderEvent;
 import terrails.colorfulhearts.heart.CHeartType;
-
-import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
 public class LoaderExpectPlatformImpl {
 
