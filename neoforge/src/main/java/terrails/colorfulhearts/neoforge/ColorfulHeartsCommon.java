@@ -9,7 +9,7 @@ public class ColorfulHeartsCommon {
 
     public ColorfulHeartsCommon() {
         if (FMLLoader.getDist().isClient()) {
-            ColorfulHearts.initialize();
+            new ColorfulHearts();
         }
     }
 }

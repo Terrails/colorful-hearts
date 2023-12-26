@@ -36,11 +36,9 @@ class ColorfulHearts {
             "appleskin", "AppleSkinForgeCompat"
     );
 
-    static void initialize() {
-        final ColorfulHearts instance = new ColorfulHearts();
-
+    public ColorfulHearts() {
         final String configFile = CColorfulHearts.MOD_ID + ".toml";
-        CONFIG_SPEC = instance.setupConfig(configFile);
+        CONFIG_SPEC = this.setupConfig(configFile);
 
         final ModLoadingContext context = ModLoadingContext.get();
         context.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, configFile);
@@ -50,7 +48,7 @@ class ColorfulHearts {
         );
 
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(instance::setup);
+        bus.addListener(this::setup);
 
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, RenderEventHandler.INSTANCE::renderHearts);
     }

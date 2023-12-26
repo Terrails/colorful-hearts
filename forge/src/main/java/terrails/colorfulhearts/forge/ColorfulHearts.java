@@ -38,10 +38,8 @@ public class ColorfulHearts {
             "appleskin", "AppleSkinForgeCompat"
     );
 
-    static void initialize() {
-        final ColorfulHearts instance = new ColorfulHearts();
-
-        instance.setupConfig();
+    public ColorfulHearts() {
+        this.setupConfig();
         final ModLoadingContext context = ModLoadingContext.get();
         context.registerConfig(ModConfig.Type.CLIENT, CONFIG_SPEC, CONFIG_FILE);
         context.registerExtensionPoint(
@@ -50,7 +48,7 @@ public class ColorfulHearts {
         );
 
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(instance::setup);
+        bus.addListener(this::setup);
 
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, RenderEventHandler.INSTANCE::renderHearts);
     }
