@@ -9,7 +9,7 @@ import terrails.colorfulhearts.compat.AppleSkinCompat;
 import terrails.colorfulhearts.fabric.api.event.FabHeartRenderEvent;
 import terrails.colorfulhearts.fabric.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
-public class AppleSkinFabricCompat extends AppleSkinCompat implements AppleSkinApi {
+public class AppleSkinFabCompat extends AppleSkinCompat implements AppleSkinApi {
 
     private int modifiedHealth;
 
