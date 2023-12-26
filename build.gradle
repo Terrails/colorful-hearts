@@ -1,6 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.4-SNAPSHOT" apply false
+    id "me.shedaniel.unified-publishing" version "0.1.+" apply false
 }
 
 architectury {
@@ -59,5 +60,37 @@ allprojects {
 
     java {
         withSourcesJar()
+    }
+
+    task printChangelog {
+        doLast {
+            println(fetchChangelog())
+        }
+    }
+
+    ext {
+        fetchChangelog = {
+            def branch = "git rev-parse --abbrev-ref HEAD".execute().in.text.trim()
+            if (branch.isBlank() || branch == "HEAD") {
+                throw new GradleException("Branch name could not be fetched.")
+            }
+
+            def repoUrl = "https://github.com/terrails/colorful-hearts"
+            def changes = new StringBuilder("Latest changes ([See all](${repoUrl}/commits/${branch}))\n---")
+            def log = "git log --max-count=30 --pretty=format:\"* %s ([%h](${repoUrl}/commit/%H))\"".execute()
+            log.in.eachLine { line ->
+                if (!line.containsIgnoreCase("version")
+                        && !line.containsIgnoreCase("bump")
+                        && !line.containsIgnoreCase("update")) { // version change commits should be ignored
+                    changes << "\n${line}"
+                }
+            }
+
+            if (log.waitFor() == 0) {
+                return changes.toString()
+            } else {
+                throw new GradleException("Received an error while executing git log.")
+            }
+        }
     }
 }

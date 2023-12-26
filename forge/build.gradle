@@ -1,5 +1,6 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "me.shedaniel.unified-publishing"
 }
 
 architectury {
@@ -74,5 +75,34 @@ sourcesJar {
 components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
         skip()
+    }
+}
+
+unifiedPublishing {
+    project {
+        displayName = "[Forge] ${rootProject.minecraft_version}-v${project.version}"
+        gameVersions = [rootProject.minecraft_version]
+        gameLoaders = ["forge"]
+        changelog = fetchChangelog()
+
+        mainPublication tasks.remapJar.getArchiveFile() // main jar
+        secondaryPublication tasks.sourcesJar.getArchiveFile() // sources jar
+
+        var CURSEFORGE_TOKEN = System.getenv("CURSEFORGE_TOKEN")
+        if (CURSEFORGE_TOKEN != null) {
+            curseforge {
+                token = CURSEFORGE_TOKEN
+                id = rootProject.curseforge_id
+                gameVersions.addAll("Client")
+            }
+        }
+
+        var MODRINTH_TOKEN = System.getenv("MODRINTH_TOKEN")
+        if (MODRINTH_TOKEN != null) {
+            modrinth {
+                token = MODRINTH_TOKEN
+                id = rootProject.modrinth_id
+            }
+        }
     }
 }
