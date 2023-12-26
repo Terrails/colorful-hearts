@@ -11,7 +11,7 @@ displayName = "Colorful Hearts"
 authors = "Terrails"
 description = ''' A simple renderer for colored hearts '''
 
-logoFile = "assets/colorfulhearts/icon.png"
+logoFile = "icon.png"
 displayTest = "IGNORE_ALL_VERSION" # ignore everything since its a client only mod
 
 [[mixins]]
