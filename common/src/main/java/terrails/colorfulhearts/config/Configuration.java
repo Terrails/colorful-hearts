@@ -13,13 +13,13 @@ public class Configuration {
 
     public static class Health {
 
-        public final ConfigOption<Boolean> vanillaHearts = new ConfigOption<>(
+        public final SimpleConfigOption<Boolean> vanillaHearts = new SimpleConfigOption<>(
                 "health.vanillaHearts",
                 "Render vanilla hearts",
                 true
         );
 
-        public final ConfigOption<List<String>> colors = new ConfigOption<>(
+        public final SimpleConfigOption<List<String>> colors = new SimpleConfigOption<>(
                 "health.colors",
                 """
                         Colors for every 10 hearts (not counting the default red)
@@ -29,21 +29,21 @@ public class Configuration {
                         "#FA7DEB", "#EB375A", "#FF8278", "#AAFFFA", "#EBEBFF"
                 ), HEX_COLOR_STRING
         );
-        public ConfigOption<List<String>> poisonedColors = new ConfigOption<>(
+        public SimpleConfigOption<List<String>> poisonedColors = new SimpleConfigOption<>(
                 "health.poisonedColors",
                 """
                         Two alternating colors while poisoned
                         There can be one color in case vanilla poisoned heart is wanted""",
                 List.of("#739B00"), HEX_COLOR_STRING
         );
-        public ConfigOption<List<String>> witheredColors = new ConfigOption<>(
+        public SimpleConfigOption<List<String>> witheredColors = new SimpleConfigOption<>(
                 "health.witheredColors",
                 """
                         Two alternating colors while withered
                         There can be one color in case vanilla withered heart is wanted""",
                 List.of("#0F0F0F"), HEX_COLOR_STRING
         );
-        public ConfigOption<List<String>> frozenColors = new ConfigOption<>(
+        public SimpleConfigOption<List<String>> frozenColors = new SimpleConfigOption<>(
                 "health.frozenColors",
                 """
                         Two alternating colors while freezing
@@ -54,13 +54,13 @@ public class Configuration {
 
     public static class Absorption {
 
-        public ConfigOption<Boolean> vanillaHearts = new ConfigOption<>(
+        public SimpleConfigOption<Boolean> vanillaHearts = new SimpleConfigOption<>(
                 "absorption.vanillaHearts",
                 "Render vanilla hearts",
                 true
         );
 
-        public final ConfigOption<List<String>> colors = new ConfigOption<>(
+        public final SimpleConfigOption<List<String>> colors = new SimpleConfigOption<>(
                 "absorption.colors",
                 """
                         Colors for every 10 hearts (not counting the default red)
@@ -70,17 +70,17 @@ public class Configuration {
                         "#FAA5FF", "#FFB4B4", "#FFAA7D", "#D7F0FF", "#EBFFFA"
                 ), HEX_COLOR_STRING
         );
-        public ConfigOption<List<String>> poisonedColors = new ConfigOption<>(
+        public SimpleConfigOption<List<String>> poisonedColors = new SimpleConfigOption<>(
                 "absorption.poisonedColors",
                 "Two alternating colors while poisoned",
                 Arrays.asList("#BFF230", "#7AA15A"), HEX_COLOR_STRING
         );
-        public ConfigOption<List<String>> witheredColors = new ConfigOption<>(
+        public SimpleConfigOption<List<String>> witheredColors = new SimpleConfigOption<>(
                 "absorption.witheredColors",
                 "Two alternating colors while withered",
                 Arrays.asList("#787061", "#73625C"), HEX_COLOR_STRING
         );
-        public ConfigOption<List<String>> frozenColors = new ConfigOption<>(
+        public SimpleConfigOption<List<String>> frozenColors = new SimpleConfigOption<>(
                 "absorption.frozenColors",
                 "Two alternating colors while freezing",
                 Arrays.asList("#90D136", "#36D183"), HEX_COLOR_STRING

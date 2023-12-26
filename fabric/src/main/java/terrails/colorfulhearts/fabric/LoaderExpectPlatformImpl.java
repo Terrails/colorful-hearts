@@ -16,8 +16,7 @@ public class LoaderExpectPlatformImpl {
     }
 
     public static void applyConfig() {
-        ColorfulHearts.FILE_CONFIG.save();
-        LOGGER.debug("Successfully saved changes to {} config file.", CColorfulHearts.MOD_ID + ".toml");
+        ColorfulHearts.CONFIG.save();
     }
 
     public static boolean forcedHardcoreHearts() {

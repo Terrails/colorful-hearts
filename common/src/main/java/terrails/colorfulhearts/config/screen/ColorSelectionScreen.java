@@ -7,7 +7,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import terrails.colorfulhearts.LoaderExpectPlatform;
-import terrails.colorfulhearts.config.ConfigOption;
+import terrails.colorfulhearts.config.SimpleConfigOption;
 import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.config.screen.base.ScrollableWidgetList;
 import terrails.colorfulhearts.config.screen.widgets.HeartColorEditBox;
@@ -331,7 +331,7 @@ public class ColorSelectionScreen extends Screen {
         return false;
     }
 
-    private ConfigOption<List<String>> getConfigColors() {
+    private SimpleConfigOption<List<String>> getConfigColors() {
         return switch (this.heartType) {
             case HEALTH -> Configuration.HEALTH.colors;
             case HEALTH_POISONED -> Configuration.HEALTH.poisonedColors;
@@ -345,7 +345,7 @@ public class ColorSelectionScreen extends Screen {
         };
     }
 
-    private ConfigOption<Boolean> getConfigVanilla() {
+    private SimpleConfigOption<Boolean> getConfigVanilla() {
         return switch (this.heartType) {
             case HEALTH -> Configuration.HEALTH.vanillaHearts;
             case ABSORBING -> Configuration.ABSORPTION.vanillaHearts;
@@ -354,8 +354,8 @@ public class ColorSelectionScreen extends Screen {
     }
 
     private void saveConfig() {
-        ConfigOption<List<String>> configColors = this.getConfigColors();
-        ConfigOption<Boolean> configVanilla = this.getConfigVanilla();
+        SimpleConfigOption<List<String>> configColors = this.getConfigColors();
+        SimpleConfigOption<Boolean> configVanilla = this.getConfigVanilla();
         assert configColors != null && configVanilla != null;
 
         // save only valid color fields
