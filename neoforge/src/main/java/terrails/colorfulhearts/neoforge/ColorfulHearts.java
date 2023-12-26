@@ -12,12 +12,14 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.ConfigScreenHandler;
+import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.config.ConfigOption;
 import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.config.screen.ConfigurationScreen;
+import terrails.colorfulhearts.render.atlas.sources.ColoredHearts;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -49,12 +51,17 @@ class ColorfulHearts {
 
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::setup);
+        bus.addListener(this::registerSprites);
 
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, RenderEventHandler.INSTANCE::renderHearts);
     }
 
     private void setup(final FMLClientSetupEvent event) {
         this.setupCompat();
+    }
+
+    private void registerSprites(final RegisterSpriteSourceTypesEvent event) {
+        event.register(CColorfulHearts.SPRITE_NAME, ColoredHearts.CODEC);
     }
 
     private ModConfigSpec setupConfig(String configFile) {

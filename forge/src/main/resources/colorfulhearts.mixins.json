@@ -5,6 +5,7 @@
   "minVersion": "0.8",
   "plugin": "terrails.colorfulhearts.forge.ForgeMixinPlugin",
   "client": [
+    "SpriteSourcesMixin",
     "compat.appleskin.HUDOverlayHandlerAccessor"
   ],
   "injectors": {
