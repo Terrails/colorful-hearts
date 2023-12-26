@@ -7,11 +7,13 @@ import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.heart.CHeartType;
 import terrails.colorfulhearts.neoforge.api.event.ForgeHeartRenderEvent;
 
+import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
+
 public class LoaderExpectPlatformImpl {
 
     public static void applyConfig() {
         ColorfulHearts.CONFIG_SPEC.save();
-        CColorfulHearts.LOGGER.debug("Successfully saved changes to {} config file.", CColorfulHearts.MOD_ID + ".toml");
+        LOGGER.debug("Successfully saved changes to {} config file.", CColorfulHearts.MOD_ID + ".toml");
     }
 
     public static boolean forcedHardcoreHearts() {
