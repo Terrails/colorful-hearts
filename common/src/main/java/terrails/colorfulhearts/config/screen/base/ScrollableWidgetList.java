@@ -16,8 +16,8 @@ import java.util.List;
 
 public class ScrollableWidgetList extends ContainerObjectSelectionList<ScrollableWidgetList.Entry> {
 
-    public ScrollableWidgetList(Minecraft minecraft, int width, int height, int y0, int y1, int entryHeight) {
-        super(minecraft, width, height, y0, y1, entryHeight);
+    public ScrollableWidgetList(Minecraft minecraft, int width, int height, int y, int entryHeight) {
+        super(minecraft, width, height, y, entryHeight);
     }
 
     public void removeEntries() {

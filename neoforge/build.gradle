@@ -35,10 +35,7 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
     // Optional Dependencies
-    modImplementation("squeek.appleskin:appleskin-neoforge:${rootProject.neoforge_appleskin_version}") {
-        exclude module: 'modmenu'
-    }
-//    modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${rootProject.neoforge_clothconfig_version}")
+    modCompileOnly("maven.modrinth:appleskin:${neoforge_appleskin_version}")
 }
 
 processResources {
