@@ -94,16 +94,17 @@ unifiedPublishing {
         gameLoaders = ["fabric", "quilt"]
         changelog = fetchChangelog()
 
-        mainPublicationDepends(tasks.remapJar, tasks.sourcesJar)
-        mainPublication tasks.remapJar.getArchiveFile() // main jar
-        secondaryPublication tasks.sourcesJar.getArchiveFile() // sources jar
+        mainPublication(tasks.remapJar)
+//        mainPublicationDepends(tasks.remapJar, tasks.sourcesJar)
+//        mainPublication tasks.remapJar.getArchiveFile() // main jar
+//        secondaryPublication tasks.sourcesJar.getArchiveFile() // sources jar
 
         var CURSEFORGE_TOKEN = System.getenv("CURSEFORGE_TOKEN")
         if (CURSEFORGE_TOKEN != null) {
             curseforge {
                 token = CURSEFORGE_TOKEN
                 id = rootProject.curseforge_id
-                gameVersions.addAll("Client")
+//                gameVersions.addAll("Client")
                 relations {
                     depends "fabric-api"
                 }
