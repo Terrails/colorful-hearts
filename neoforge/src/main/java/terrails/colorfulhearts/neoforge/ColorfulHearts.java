@@ -6,6 +6,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.client.ConfigScreenHandler;
 import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -27,7 +28,7 @@ public class ColorfulHearts {
             "appleskin", "AppleSkinForgeCompat"
     );
 
-    public ColorfulHearts(final IEventBus bus) {
+    public ColorfulHearts() {
         final String fileName = CColorfulHearts.MOD_ID + ".toml";
         CONFIG_SPEC = ForgeConfig.setup(fileName);
 
@@ -38,6 +39,7 @@ public class ColorfulHearts {
                 () -> new ConfigScreenHandler.ConfigScreenFactory((mc, lastScreen) -> new ConfigurationScreen(lastScreen))
         );
 
+        final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(ForgeConfig::load);
         bus.addListener(ForgeConfig::reload);
         bus.addListener(this::setup);
