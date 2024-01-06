@@ -1,10 +1,10 @@
 package terrails.colorfulhearts.fabric;
 
 import net.fabricmc.loader.api.FabricLoader;
+import org.apache.logging.log4j.LogManager;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
-import terrails.colorfulhearts.CColorfulHearts;
 
 import java.util.List;
 import java.util.Set;
@@ -22,10 +22,10 @@ public class FabMixinPlugin implements IMixinConfigPlugin {
             String modid = matcher.group(1);
             String className = matcher.group(2);
             if (FabricLoader.getInstance().isModLoaded(modid)) {
-                CColorfulHearts.LOGGER.info("Applying mixin {} as mod {} is present.", className, modid);
+                LogManager.getLogger("Colorful Hearts").info("Applying mixin {} as mod {} is present.", className, modid);
                 return true;
             } else {
-                CColorfulHearts.LOGGER.debug("Skipped applying mixin {} as mod {} is not present.", className, modid);
+                LogManager.getLogger("Colorful Hearts").info("Skipped applying mixin {} as mod {} is not present.", className, modid);
                 return false;
             }
         }
