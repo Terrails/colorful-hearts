@@ -25,7 +25,7 @@ public class FabMixinPlugin implements IMixinConfigPlugin {
                 LogManager.getLogger("Colorful Hearts").info("Applying mixin {} as mod {} is present.", className, modid);
                 return true;
             } else {
-                LogManager.getLogger("Colorful Hearts").info("Applying mixin {} as mod {} is present.", className, modid);
+                LogManager.getLogger("Colorful Hearts").info("Skipped applying mixin {} as mod {} is not present.", className, modid);
                 return false;
             }
         }
