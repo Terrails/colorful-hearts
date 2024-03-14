@@ -29,6 +29,6 @@ side = "CLIENT"
 [[dependencies.colorfulhearts]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.20.2,)"
+versionRange = "[1.20.4,)"
 ordering = "NONE"
 side = "CLIENT"
