@@ -1,7 +1,9 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
-    id "me.shedaniel.unified-publishing"
 }
+
+apply plugin: "com.modrinth.minotaur"
+apply plugin: "net.darkhax.curseforgegradle"
 
 architectury {
     platformSetupLoomIde()
@@ -72,33 +74,33 @@ components.java {
     }
 }
 
-unifiedPublishing {
-    project {
-        displayName = "[NeoForge] ${rootProject.minecraft_version}-v${project.version}"
-        gameVersions = [rootProject.minecraft_version]
-        gameLoaders = ["neoforge"]
-        changelog = fetchChangelog()
-
-        mainPublication(tasks.remapJar)
-//        mainPublicationDepends(tasks.remapJar, tasks.sourcesJar)
-//        mainPublication tasks.remapJar.getArchiveFile() // main jar
-//        secondaryPublication tasks.sourcesJar.getArchiveFile() // sources jar
-
-        var CURSEFORGE_TOKEN = System.getenv("CURSEFORGE_TOKEN")
-        if (CURSEFORGE_TOKEN != null) {
-            curseforge {
-                token = CURSEFORGE_TOKEN
-                id = rootProject.curseforge_id
-//                gameVersions.add("Client")
-            }
-        }
-
-        var MODRINTH_TOKEN = System.getenv("MODRINTH_TOKEN")
-        if (MODRINTH_TOKEN != null) {
-            modrinth {
-                token = MODRINTH_TOKEN
-                id = rootProject.modrinth_id
-            }
-        }
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "${rootProject.modrinth_id}"
+    versionNumber = "${project.version}"
+    versionName = "[NeoForge] ${rootProject.minecraft_version}-v${project.version}"
+    uploadFile = remapJar
+    gameVersions = [rootProject.minecraft_version]
+    loaders = ["neoforge"]
+    dependencies {
+        incompatible.project "overflowing-bars"
     }
+    changelog = fetchChangelog()
+    additionalFiles = [tasks.sourcesJar]
+}
+
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
+    apiToken = System.getenv("CURSEFORGE_TOKEN")
+    disableVersionDetection()
+
+    def mainFile = upload(rootProject.curseforge_id, remapJar)
+    mainFile.displayName = "[NeoForge] ${rootProject.minecraft_version}-v${project.version}"
+    mainFile.releaseType = "release"
+    mainFile.changelog = fetchChangelog()
+    mainFile.changelogType = "markdown"
+    mainFile.addGameVersion("Client", rootProject.minecraft_version)
+    mainFile.addModLoader("neoforge")
+    mainFile.addIncompatibility("overflowing-bars")
+    mainFile.withAdditionalFile(tasks.sourcesJar)
 }

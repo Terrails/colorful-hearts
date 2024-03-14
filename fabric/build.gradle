@@ -1,7 +1,9 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
-    id "me.shedaniel.unified-publishing"
 }
+
+apply plugin: "com.modrinth.minotaur"
+apply plugin: "net.darkhax.curseforgegradle"
 
 architectury {
     platformSetupLoomIde()
@@ -83,39 +85,35 @@ components.java {
     }
 }
 
-unifiedPublishing {
-    project {
-        displayName = "[Fabric] ${rootProject.minecraft_version}-v${project.version}"
-        gameVersions = [rootProject.minecraft_version]
-        gameLoaders = ["fabric", "quilt"]
-        changelog = fetchChangelog()
-
-        mainPublication(tasks.remapJar)
-//        mainPublicationDepends(tasks.remapJar, tasks.sourcesJar)
-//        mainPublication tasks.remapJar.getArchiveFile() // main jar
-//        secondaryPublication tasks.sourcesJar.getArchiveFile() // sources jar
-
-        var CURSEFORGE_TOKEN = System.getenv("CURSEFORGE_TOKEN")
-        if (CURSEFORGE_TOKEN != null) {
-            curseforge {
-                token = CURSEFORGE_TOKEN
-                id = rootProject.curseforge_id
-//                gameVersions.addAll("Client")
-                relations {
-                    depends "fabric-api"
-                }
-            }
-        }
-
-        var MODRINTH_TOKEN = System.getenv("MODRINTH_TOKEN")
-        if (MODRINTH_TOKEN != null) {
-            modrinth {
-                token = MODRINTH_TOKEN
-                id = rootProject.modrinth_id
-                relations {
-                    depends "fabric-api"
-                }
-            }
-        }
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "${rootProject.modrinth_id}"
+    versionNumber = "${project.version}"
+    versionName = "[Fabric] ${rootProject.minecraft_version}-v${project.version}"
+    uploadFile = remapJar
+    gameVersions = [rootProject.minecraft_version]
+    loaders = ["fabric", "quilt"]
+    dependencies {
+        required.project "fabric-api"
+        incompatible.project "overflowing-bars"
     }
+    changelog = fetchChangelog()
+    additionalFiles = [tasks.sourcesJar]
+}
+
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
+    apiToken = System.getenv("CURSEFORGE_TOKEN")
+    disableVersionDetection()
+
+    def mainFile = upload(rootProject.curseforge_id, remapJar)
+    mainFile.displayName = "[Fabric] ${rootProject.minecraft_version}-v${project.version}"
+    mainFile.releaseType = "release"
+    mainFile.changelog = fetchChangelog()
+    mainFile.changelogType = "markdown"
+    mainFile.addGameVersion("Client", rootProject.minecraft_version)
+    mainFile.addRequirement("fabric-api")
+    mainFile.addModLoader("fabric", "quilt")
+    mainFile.addIncompatibility("overflowing-bars")
+    mainFile.withAdditionalFile(tasks.sourcesJar)
 }
