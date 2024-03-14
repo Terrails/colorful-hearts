@@ -32,7 +32,7 @@ dependencies {
 
     // Common
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 
     // Optional Dependencies
     modCompileOnly("maven.modrinth:appleskin:${neoforge_appleskin_version}")
