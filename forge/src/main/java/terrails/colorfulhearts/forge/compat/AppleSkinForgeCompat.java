@@ -1,7 +1,10 @@
 package terrails.colorfulhearts.forge.compat;
 
 import net.minecraft.util.Mth;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import squeek.appleskin.ModConfig;
@@ -14,6 +17,7 @@ import terrails.colorfulhearts.compat.AppleSkinCompat;
 import terrails.colorfulhearts.forge.api.event.ForgeHeartChangeEvent;
 import terrails.colorfulhearts.forge.api.event.ForgeHeartRenderEvent;
 import terrails.colorfulhearts.forge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
+import terrails.colorfulhearts.heart.CHeartType;
 
 public class AppleSkinForgeCompat extends AppleSkinCompat {
 
@@ -38,6 +42,10 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
     private void onPostRender(ForgeHeartRenderEvent.Post event) {
         Player player = client.player;
         assert player != null;
+
+        if (!shouldDrawOverlay(event.getHealthType(), player)) {
+            return;
+        }
 
         /* copied from HUDOverlayHandler */
 
