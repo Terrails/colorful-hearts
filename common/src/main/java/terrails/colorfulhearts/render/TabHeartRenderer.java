@@ -19,7 +19,7 @@ public class TabHeartRenderer {
     private final Minecraft client = Minecraft.getInstance();
 
     private Heart[] hearts;
-    private int lastHealth, lastDisplayHealth;
+    public int lastHealth, lastDisplayHealth;
 
     public void renderPlayerListHud(int y, int x, int offset, GuiGraphics guiGraphics, int health, PlayerTabOverlay.HealthState healthState) {
         if (health != this.lastHealth || healthState.displayedValue() != this.lastDisplayHealth || this.hearts == null) {

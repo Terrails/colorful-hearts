@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.common.MinecraftForge;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
+import terrails.colorfulhearts.forge.api.event.ForgeHeartChangeEvent;
 import terrails.colorfulhearts.forge.api.event.ForgeHeartRenderEvent;
 import terrails.colorfulhearts.heart.CHeartType;
 
@@ -41,5 +42,9 @@ public class LoaderExpectPlatformImpl {
     ) {
         ForgeHeartRenderEvent.Post event = new ForgeHeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, healthType, absorbingType);
         MinecraftForge.EVENT_BUS.post(event);
+    }
+
+    public static void heartChangeEvent() {
+        MinecraftForge.EVENT_BUS.post(new ForgeHeartChangeEvent());
     }
 }

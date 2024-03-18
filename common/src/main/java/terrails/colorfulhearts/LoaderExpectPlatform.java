@@ -42,4 +42,9 @@ public class LoaderExpectPlatform {
     ) {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static void heartChangeEvent() {
+        throw new AssertionError();
+    }
 }

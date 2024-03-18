@@ -3,6 +3,7 @@ package terrails.colorfulhearts.fabric;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.GuiGraphics;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
+import terrails.colorfulhearts.fabric.api.event.FabHeartChangeEvent;
 import terrails.colorfulhearts.fabric.api.event.FabHeartRenderEvent;
 import terrails.colorfulhearts.heart.CHeartType;
 
@@ -41,4 +42,7 @@ public class LoaderExpectPlatformImpl {
         FabHeartRenderEvent.POST.invoker().accept(event);
     }
 
+    public static void heartChangeEvent() {
+        FabHeartChangeEvent.EVENT.invoker().run();
+    }
 }
