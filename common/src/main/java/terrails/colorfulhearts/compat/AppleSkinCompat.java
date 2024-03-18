@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import org.lwjgl.opengl.GL11;
+import terrails.colorfulhearts.LoaderExpectPlatform;
 import terrails.colorfulhearts.heart.CHeartType;
 import terrails.colorfulhearts.heart.Heart;
 
@@ -32,6 +33,8 @@ public class AppleSkinCompat {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
+        boolean hardcore = LoaderExpectPlatform.forcedHardcoreHearts() || (client.level.getLevelData().isHardcore());
+
         for (int index = 0; index < this.hearts.length; index++) {
             Heart heart = this.hearts[index];
             int xPos = x + (index % 10) * 8;
@@ -44,7 +47,7 @@ public class AppleSkinCompat {
 
             if (heart == null) continue;
 
-            heart.draw(guiGraphics, xPos, yPos, false, false, false);
+            heart.draw(guiGraphics, xPos, yPos, hardcore, false, false);
         }
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
