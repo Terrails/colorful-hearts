@@ -6,17 +6,16 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import org.lwjgl.opengl.GL11;
-import terrails.colorfulhearts.LoaderExpectPlatform;
 import terrails.colorfulhearts.heart.CHeartType;
 import terrails.colorfulhearts.heart.Heart;
 
-public class AppleSkinCompat {
+public abstract class AppleSkinCompat {
 
     public final Minecraft client = Minecraft.getInstance();
     private final RandomSource random = RandomSource.create();
 
-    private int lastHealth, lastModifiedHealth;
-    private Heart[] hearts;
+    protected int lastHealth, lastModifiedHealth;
+    protected Heart[] hearts;
 
     public void drawHealthOverlay(GuiGraphics guiGraphics, int x, int y, int absorbing, int health, int modifiedHealth, float alpha, boolean hardcore) {
         long tickCount = this.client.gui.getGuiTicks();

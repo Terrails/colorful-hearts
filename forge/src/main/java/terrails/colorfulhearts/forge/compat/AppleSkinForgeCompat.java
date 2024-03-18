@@ -11,6 +11,7 @@ import squeek.appleskin.api.food.FoodValues;
 import squeek.appleskin.client.HUDOverlayHandler;
 import squeek.appleskin.helpers.FoodHelper;
 import terrails.colorfulhearts.compat.AppleSkinCompat;
+import terrails.colorfulhearts.forge.api.event.ForgeHeartChangeEvent;
 import terrails.colorfulhearts.forge.api.event.ForgeHeartRenderEvent;
 import terrails.colorfulhearts.forge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
@@ -19,6 +20,7 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
     public AppleSkinForgeCompat() {
         MinecraftForge.EVENT_BUS.addListener(this::onDefaultRender);
         MinecraftForge.EVENT_BUS.addListener(this::onPostRender);
+        MinecraftForge.EVENT_BUS.addListener(this::heartChanged);
     }
 
     /**
@@ -70,5 +72,36 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
         float alpha = HUDOverlayHandlerAccessor.getFlashAlpha();
 
         drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha, event.isHardcore());
+    }
+
+    private void heartChanged(ForgeHeartChangeEvent event) {
+        this.lastHealth = 0;
+    }
+
+    public boolean shouldDrawOverlay(CHeartType heartType, Player player) {
+        if (heartType != CHeartType.HEALTH) {
+            return false; // AppleSkin usually checks the effect, but we'll do it this way
+        }
+
+        /* copied from HUDOverlayHandler */
+        if (!ModConfig.SHOW_FOOD_HEALTH_HUD_OVERLAY.get()) {
+            return false;
+        }
+
+        // in the `PEACEFUL` mode, health will restore faster
+        if (player.level().getDifficulty() == Difficulty.PEACEFUL)
+            return false;
+
+        FoodData stats = player.getFoodData();
+
+        // when player has any changes health amount by any case can't show estimated health
+        // because player will confused how much of restored/damaged healths
+        if (stats.getFoodLevel() >= 18)
+            return false;
+
+        if (player.hasEffect(MobEffects.REGENERATION))
+            return false;
+
+        return true;
     }
 }

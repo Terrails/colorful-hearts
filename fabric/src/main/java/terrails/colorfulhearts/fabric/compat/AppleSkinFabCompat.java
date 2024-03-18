@@ -6,6 +6,7 @@ import squeek.appleskin.api.AppleSkinApi;
 import squeek.appleskin.api.event.HUDOverlayEvent;
 import squeek.appleskin.client.HUDOverlayHandler;
 import terrails.colorfulhearts.compat.AppleSkinCompat;
+import terrails.colorfulhearts.fabric.api.event.FabHeartChangeEvent;
 import terrails.colorfulhearts.fabric.api.event.FabHeartRenderEvent;
 import terrails.colorfulhearts.fabric.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
@@ -41,5 +42,7 @@ public class AppleSkinFabCompat extends AppleSkinCompat implements AppleSkinApi 
             // set value back to 0
             modifiedHealth = 0;
         });
+
+        FabHeartChangeEvent.EVENT.register(() -> this.lastHealth = 0);
     }
 }
