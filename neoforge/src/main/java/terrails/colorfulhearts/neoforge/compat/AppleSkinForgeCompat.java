@@ -69,6 +69,6 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
         // I'll leave this behaviour as is at it makes the differentiation easier
         float alpha = HUDOverlayHandlerAccessor.getFlashAlpha();
 
-        drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha);
+        drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha, event.isHardcore());
     }
 }
