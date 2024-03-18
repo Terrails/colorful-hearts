@@ -18,7 +18,7 @@ public class AppleSkinCompat {
     private int lastHealth, lastModifiedHealth;
     private Heart[] hearts;
 
-    public void drawHealthOverlay(GuiGraphics guiGraphics, int x, int y, int absorbing, int health, int modifiedHealth, float alpha) {
+    public void drawHealthOverlay(GuiGraphics guiGraphics, int x, int y, int absorbing, int health, int modifiedHealth, float alpha, boolean hardcore) {
         long tickCount = this.client.gui.getGuiTicks();
         // synchronize random with vanilla
         this.random.setSeed(tickCount * 312871);
@@ -32,8 +32,6 @@ public class AppleSkinCompat {
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-        boolean hardcore = LoaderExpectPlatform.forcedHardcoreHearts() || (client.level.getLevelData().isHardcore());
 
         for (int index = 0; index < this.hearts.length; index++) {
             Heart heart = this.hearts[index];

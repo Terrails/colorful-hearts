@@ -37,7 +37,7 @@ public class AppleSkinFabCompat extends AppleSkinCompat implements AppleSkinApi 
             // I'll leave this behaviour as is at it makes the differentiation easier
             float alpha = ((HUDOverlayHandlerAccessor) HUDOverlayHandler.INSTANCE).getFlashAlpha();
 
-            drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha);
+            drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha, event.isHardcore());
             // set value back to 0
             modifiedHealth = 0;
         });
