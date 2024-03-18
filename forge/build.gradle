@@ -114,6 +114,6 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     mainFile.changelogType = "markdown"
     mainFile.addGameVersion("Client", rootProject.minecraft_version)
     mainFile.addModLoader("forge")
-    mainFile.addIncompatibility("overflowing-bars")
+    mainFile.addIncompatibility("overflowing-bars", "scaling-health")
     mainFile.withAdditionalFile(tasks.sourcesJar)
 }
