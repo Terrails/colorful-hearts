@@ -28,7 +28,7 @@ public class ColorSelectionScreen extends Screen {
 
     private boolean vanillaHeart;
     private boolean hasChanged;
-    private boolean colorsChanged;
+    private boolean colorsChanged, vanillaChanged;
 
     private ScrollableWidgetList colorSelectionList;
     private CHeartType heartType;
@@ -150,8 +150,9 @@ public class ColorSelectionScreen extends Screen {
         if (this.colorsChanged) {
             // recreates texture atlas
             this.minecraft.reloadResourcePacks();
-            // forces a heart update in renderer
-            HeartRenderer.INSTANCE.lastHealthType = null;
+            LoaderExpectPlatform.heartChangeEvent();
+        } else if (this.vanillaChanged) {
+            LoaderExpectPlatform.heartChangeEvent();
         }
     }
 
@@ -359,8 +360,9 @@ public class ColorSelectionScreen extends Screen {
         assert configColors != null && configVanilla != null;
 
         // save only valid color fields
-        if (this.hasVanillaVariant() && !this.heartType.isEffect() && this.vanillaHeart != configVanilla.get()) {
+        if (this.hasVanillaVariant() && this.vanillaHeart != configVanilla.get()) {
             configVanilla.set(this.vanillaHeart);
+            this.vanillaChanged = true;
         }
 
         List<String> previousValues = configColors.get().stream().map(String::toUpperCase).toList();

@@ -5,6 +5,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.heart.CHeartType;
+import terrails.colorfulhearts.neoforge.api.event.ForgeHeartChangeEvent;
 import terrails.colorfulhearts.neoforge.api.event.ForgeHeartRenderEvent;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
@@ -41,5 +42,9 @@ public class LoaderExpectPlatformImpl {
     ) {
         ForgeHeartRenderEvent.Post event = new ForgeHeartRenderEvent.Post(guiGraphics, x, y, blinking, hardcore, healthType, absorbingType);
         NeoForge.EVENT_BUS.post(event);
+    }
+
+    public static void heartChangeEvent() {
+        NeoForge.EVENT_BUS.post(new ForgeHeartChangeEvent());
     }
 }

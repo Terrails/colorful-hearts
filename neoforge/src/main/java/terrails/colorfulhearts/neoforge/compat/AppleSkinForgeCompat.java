@@ -11,6 +11,7 @@ import squeek.appleskin.api.food.FoodValues;
 import squeek.appleskin.client.HUDOverlayHandler;
 import squeek.appleskin.helpers.FoodHelper;
 import terrails.colorfulhearts.compat.AppleSkinCompat;
+import terrails.colorfulhearts.neoforge.api.event.ForgeHeartChangeEvent;
 import terrails.colorfulhearts.neoforge.api.event.ForgeHeartRenderEvent;
 import terrails.colorfulhearts.neoforge.mixin.compat.appleskin.HUDOverlayHandlerAccessor;
 
@@ -19,6 +20,7 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
     public AppleSkinForgeCompat() {
         NeoForge.EVENT_BUS.addListener(this::onDefaultRender);
         NeoForge.EVENT_BUS.addListener(this::onPostRender);
+        NeoForge.EVENT_BUS.addListener(this::heartChanged);
     }
 
     /**
@@ -70,5 +72,9 @@ public class AppleSkinForgeCompat extends AppleSkinCompat {
         float alpha = HUDOverlayHandlerAccessor.getFlashAlpha();
 
         drawHealthOverlay(event.getGuiGraphics(), event.getX(), event.getY(), absorbing, health, modifiedHealth, alpha, event.isHardcore());
+    }
+
+    private void heartChanged(ForgeHeartChangeEvent event) {
+        this.lastHealth = 0;
     }
 }

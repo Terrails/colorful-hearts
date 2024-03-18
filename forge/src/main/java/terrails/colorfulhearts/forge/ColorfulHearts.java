@@ -12,6 +12,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.config.screen.ConfigurationScreen;
+import terrails.colorfulhearts.forge.api.event.ForgeHeartChangeEvent;
+import terrails.colorfulhearts.render.HeartRenderer;
+import terrails.colorfulhearts.render.TabHeartRenderer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -43,10 +46,17 @@ public class ColorfulHearts {
         bus.addListener(this::setup);
 
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, RenderEventHandler.INSTANCE::renderHearts);
+        MinecraftForge.EVENT_BUS.addListener(this::heartChanged);
     }
 
     private void setup(final FMLClientSetupEvent event) {
         this.setupCompat();
+    }
+
+    private void heartChanged(ForgeHeartChangeEvent event) {
+        // force an update to heart colors when config GUI is updated
+        HeartRenderer.INSTANCE.lastHealthType = null;
+        TabHeartRenderer.INSTANCE.lastHealth = 0;
     }
 
     private void setupCompat() {

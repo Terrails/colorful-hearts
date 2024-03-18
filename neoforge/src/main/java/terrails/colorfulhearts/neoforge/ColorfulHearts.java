@@ -12,6 +12,9 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.config.screen.ConfigurationScreen;
+import terrails.colorfulhearts.neoforge.api.event.ForgeHeartChangeEvent;
+import terrails.colorfulhearts.render.HeartRenderer;
+import terrails.colorfulhearts.render.TabHeartRenderer;
 import terrails.colorfulhearts.render.atlas.sources.ColoredHearts;
 
 import java.lang.reflect.InvocationTargetException;
@@ -44,6 +47,7 @@ public class ColorfulHearts {
         bus.addListener(this::registerSprites);
 
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, RenderEventHandler.INSTANCE::renderHearts);
+        NeoForge.EVENT_BUS.addListener(this::heartChanged);
     }
 
     private void setup(final FMLClientSetupEvent event) {
@@ -52,6 +56,12 @@ public class ColorfulHearts {
 
     private void registerSprites(final RegisterSpriteSourceTypesEvent event) {
         event.register(CColorfulHearts.SPRITE_NAME, ColoredHearts.CODEC);
+    }
+
+    private void heartChanged(ForgeHeartChangeEvent event) {
+        // force an update to heart colors when config GUI is updated
+        HeartRenderer.INSTANCE.lastHealthType = null;
+        TabHeartRenderer.INSTANCE.lastHealth = 0;
     }
 
     private void setupCompat() {
