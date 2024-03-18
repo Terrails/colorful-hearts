@@ -93,7 +93,7 @@ modrinth {
     versionNumber = "${project.version}"
     versionName = "[Forge] ${rootProject.minecraft_version}-v${project.version}"
     uploadFile = remapJar
-    gameVersions = [rootProject.minecraft_version, "1.20.2"]
+    gameVersions = [rootProject.minecraft_version]
     loaders = ["forge"]
     dependencies {
         incompatible.project "overflowing-bars"
@@ -112,7 +112,7 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     mainFile.releaseType = "release"
     mainFile.changelog = fetchChangelog()
     mainFile.changelogType = "markdown"
-    mainFile.addGameVersion("Client", rootProject.minecraft_version, "1.20.2")
+    mainFile.addGameVersion("Client", rootProject.minecraft_version)
     mainFile.addModLoader("forge")
     mainFile.addIncompatibility("overflowing-bars")
     mainFile.withAdditionalFile(tasks.sourcesJar)
