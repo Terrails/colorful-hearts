@@ -74,7 +74,12 @@ public class ColoredHearts implements SpriteSource {
     }
 
     private void processColors(ResourceManager resMgr, Output out, Supplier<List<Integer>> colors, String prefix) {
-        Map<Integer, IntUnaryOperator> map = colors.get().stream().map(rgb -> Map.entry(rgb, ImageUtils.getColorOverlayOperator(rgb))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Map<Integer, IntUnaryOperator> map = colors.get().stream().map(rgb -> Map.entry(rgb, ImageUtils.getColorOverlayOperator(rgb))).collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                // Keep the existing value if duplicate keys are found
+                (oldValue, newValue) -> oldValue)
+        );
 
         this.processType(resMgr, out, map, prefix, false, false, false);
         this.processType(resMgr, out, map, prefix, false, true, false);

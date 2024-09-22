@@ -1,4 +1,4 @@
-# Colorful Stats
+# Colorful Hearts
 A client side mod that replaces vanilla multiple heart rows with a single row using colored hearts.
 
 CurseForge: https://www.curseforge.com/minecraft/mc-mods/colorful-hearts  
