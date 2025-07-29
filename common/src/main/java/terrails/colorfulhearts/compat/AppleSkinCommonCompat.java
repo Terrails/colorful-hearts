@@ -25,7 +25,7 @@ public abstract class AppleSkinCommonCompat {
         // synchronize random with vanilla
         this.random.setSeed(tickCount * 312871);
 
-        if (this.lastHealth != health || this.lastModifiedHealth != modifiedHealth) {
+        if (this.hearts == null || this.lastHealth != health || this.lastModifiedHealth != modifiedHealth) {
             this.hearts = calculateHearts(health, modifiedHealth);
             this.lastHealth = health;
             this.lastModifiedHealth = modifiedHealth;
