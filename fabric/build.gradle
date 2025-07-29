@@ -115,18 +115,19 @@ modrinth {
     dependencies {
         required.project "fabric-api"
     }
-    changelog = fetchChangelog()
+    changelog = rootProject.file("CHANGELOG.md").text
     additionalFiles = [tasks.sourcesJar.getArchiveFile().get()]
 }
 
-tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
     disableVersionDetection()
 
     def mainFile = upload(rootProject.curseforge_id, tasks.remapJar.getArchiveFile().get())
     mainFile.displayName = "[Fabric] ${rootProject.minecraft_version}-v${project.version}"
     mainFile.releaseType = "release"
-    mainFile.changelog = fetchChangelog()
+    mainFile.changelog = rootProject.file("CHANGELOG.md").text
     mainFile.changelogType = "markdown"
     mainFile.addGameVersion("Client", "1.21", rootProject.minecraft_version)
     mainFile.addRequirement("fabric-api")

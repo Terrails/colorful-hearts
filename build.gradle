@@ -71,35 +71,6 @@ configure(subprojects.findAll { !it.path.startsWith(":api") }) {
             }
         }
     }
-
-    tasks.register('printChangelog') {
-        doLast {
-            println(fetchChangelog())
-        }
-    }
-
-    // From https://github.com/architectury/architectury-api/blob/7f76087ffb453a7b1c65ce53a8e0ed05745575aa/build.gradle#L93
-    ext.fetchChangelog = {
-        def branch = "git rev-parse --abbrev-ref HEAD".execute().in.text.trim()
-        if (branch.isBlank() || branch == "HEAD") {
-            throw new GradleException("Branch name could not be fetched.")
-        }
-
-        def repoUrl = "https://github.com/terrails/colorful-hearts"
-        def changes = new StringBuilder("Latest changes ([See all](${repoUrl}/commits/${branch}))\n---")
-        def log = "git log --max-count=30 --no-merges --pretty=format:\"* %s ([%h](${repoUrl}/commit/%H))\"".execute()
-        log.in.eachLine { line ->
-            if (!line.startsWithIgnoreCase("* bump")) { // version change commits should be ignored
-                changes << "\n${line}"
-            }
-        }
-
-        if (log.waitFor() == 0) {
-            return changes.toString()
-        } else {
-            throw new GradleException("Received an error while executing git log.")
-        }
-    }
 }
 
 // all non-common subprojects
