@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow'
+    id 'com.gradleup.shadow'
 }
 
 architectury {
@@ -57,11 +57,5 @@ sourcesJar {
         def sourcesTask = project(":api:common").sourcesJar
         dependsOn sourcesTask
         from sourcesTask.archiveFile.map { zipTree(it) }
-    }
-}
-
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
     }
 }
