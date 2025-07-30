@@ -1,5 +1,6 @@
 package terrails.colorfulhearts.fabric.mixin;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
@@ -18,8 +19,6 @@ import terrails.colorfulhearts.render.HeartRenderer;
 public abstract class GuiMixin {
 
     @Shadow protected abstract Player getCameraPlayer();
-
-    @Shadow private int displayHealth;
 
     /**
      * Disables the default heart renderer by setting for-loop index to -1 resulting in it never executing
@@ -41,9 +40,10 @@ public abstract class GuiMixin {
      */
     @ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 6)
     private int colorfulhearts_renderPlayerHealth(int defaultValue) {
+        Minecraft minecraft = Minecraft.getInstance();
         int absorption = Mth.ceil(this.getCameraPlayer().getAbsorptionAmount());
         int health = Mth.ceil(this.getCameraPlayer().getHealth());
-        int maxHealth = Mth.ceil(Math.max((float) this.getCameraPlayer().getAttributeValue(Attributes.MAX_HEALTH), Math.max(this.displayHealth, health)));
+        int maxHealth = Mth.ceil(Math.max((float) this.getCameraPlayer().getAttributeValue(Attributes.MAX_HEALTH), Math.max(minecraft.gui.displayHealth, health)));
         // handle half heart requiring absorption to move one row up
         if (maxHealth == 19) maxHealth = 20;
 
