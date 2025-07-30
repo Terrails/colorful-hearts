@@ -42,6 +42,10 @@ repositories {
         name = "TerraformersMC Maven"
         url = "https://maven.terraformersmc.com/"
     }
+    maven {
+        name = "Jitpack"
+        url 'https://jitpack.io/'
+    }
 }
 
 dependencies {
@@ -65,9 +69,6 @@ dependencies {
     modImplementation("maven.modrinth:appleskin:${appleskin_version}-fabric")
     modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${clothconfig_version}")
 
-    modRuntimeOnly("maven.modrinth:forge-config-api-port:${fabric_forgeconfigapiport_version}-fabric")
-    modImplementation("maven.modrinth:overflowing-bars:${fabric_overflowingbars_version}-fabric")
-    modImplementation("maven.modrinth:puzzles-lib:${fabric_puzzleslib_version}-fabric")
     modRuntimeOnly("maven.modrinth:forge-config-api-port:${forgeconfig_version}-fabric")
     modImplementation("maven.modrinth:overflowing-bars:${overflowingbars_version}-fabric")
     modImplementation("maven.modrinth:puzzles-lib:${puzzleslib_version}-fabric")
