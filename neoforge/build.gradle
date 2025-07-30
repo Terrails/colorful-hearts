@@ -56,7 +56,11 @@ dependencies {
     modImplementation("maven.modrinth:farmers-delight:${neoforge_farmersdelight_version}-neoforge")
     modRuntimeOnly("maven.modrinth:the-undergarden:${neoforge_undergarden_version}-neoforge")
     modRuntimeOnly("maven.modrinth:raised:${neoforge_raised_version}-neoforge")
-    modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${rootProject.neoforge_clothconfig_version}")
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${neoforge_clothconfig_version}")
+
+    modRuntimeOnly("maven.modrinth:forge-config-api-port:${neoforge_forgeconfigapiport_version}-neoforge")
+    modImplementation("maven.modrinth:overflowing-bars:${neoforge_overflowingbars_version}-neoforge")
+    modImplementation("maven.modrinth:puzzles-lib:${neoforge_puzzleslib_version}-neoforge")
 }
 
 processResources {
