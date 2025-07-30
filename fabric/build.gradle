@@ -73,6 +73,8 @@ dependencies {
     modImplementation("maven.modrinth:overflowing-bars:${overflowingbars_version}-fabric")
     modImplementation("maven.modrinth:puzzles-lib:${puzzleslib_version}-fabric")
 
+    modImplementation("maven.modrinth:farmers-delight-refabricated:${farmersdelight_version}-fabric")
+    modRuntimeOnly("com.github.Chocohead:Fabric-ASM:${fabricasm_version}")
 }
 
 processResources {

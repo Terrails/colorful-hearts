@@ -6,7 +6,8 @@
   "plugin": "terrails.colorfulhearts.fabric.FabMixinPlugin",
   "client": [
     "GuiMixin",
-    "compat.appleskin.HUDOverlayHandlerAccessor"
+    "compat.appleskin.HUDOverlayHandlerAccessor",
+    "compat.farmersdelight.HUDOverlaysMixin"
   ],
   "injectors": {
     "defaultRequire": 1
