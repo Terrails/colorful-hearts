@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
+    neoForge "net.neoforged:neoforge:${neoforge_version}"
 
     common(project(path: ':api:common', configuration: 'namedElements')) { transitive false }
     common(project(path: ':api:neoforge', configuration: 'namedElements')) { transitive false }
@@ -51,16 +51,16 @@ dependencies {
     shadowBundle(project(path: ':api:neoforge', configuration: 'default')) { transitive false }
     shadowBundle(project(path: ':common', configuration: 'transformProductionNeoForge')) { transitive false }
 
-    // Optional Dependencies
-    modImplementation("maven.modrinth:appleskin:${neoforge_appleskin_version}-neoforge")
-    modImplementation("maven.modrinth:farmers-delight:${neoforge_farmersdelight_version}-neoforge")
-    modRuntimeOnly("maven.modrinth:the-undergarden:${neoforge_undergarden_version}-neoforge")
-    modRuntimeOnly("maven.modrinth:raised:${neoforge_raised_version}-neoforge")
-    modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${neoforge_clothconfig_version}")
+    modImplementation("maven.modrinth:farmers-delight:${farmersdelight_version}-neoforge")
+    modRuntimeOnly("maven.modrinth:the-undergarden:${undergarden_version}-neoforge")
+    modRuntimeOnly("maven.modrinth:raised:${raised_version}-neoforge")
 
-    modRuntimeOnly("maven.modrinth:forge-config-api-port:${neoforge_forgeconfigapiport_version}-neoforge")
-    modImplementation("maven.modrinth:overflowing-bars:${neoforge_overflowingbars_version}-neoforge")
-    modImplementation("maven.modrinth:puzzles-lib:${neoforge_puzzleslib_version}-neoforge")
+    modImplementation("maven.modrinth:appleskin:${appleskin_version}-neoforge")
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${clothconfig_version}")
+
+    modRuntimeOnly("maven.modrinth:forge-config-api-port:${forgeconfig_version}-neoforge")
+    modImplementation("maven.modrinth:overflowing-bars:${overflowingbars_version}-neoforge")
+    modImplementation("maven.modrinth:puzzles-lib:${puzzleslib_version}-neoforge")
 }
 
 processResources {

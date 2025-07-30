@@ -46,8 +46,8 @@ repositories {
 
 dependencies {
     // Fabric
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
     common(project(path: ':api:common', configuration: 'namedElements')) { transitive false }
     common(project(path: ':api:fabric', configuration: 'namedElements')) { transitive false }
@@ -56,19 +56,22 @@ dependencies {
     shadowBundle(project(path: ':api:fabric', configuration: 'default')) { transitive false }
     shadowBundle(project(path: ':common', configuration: 'transformProductionFabric')) { transitive false }
 
-    // Night Config
     api(include("com.electronwill.night-config:core:${nightconfig_version}"))
     api(include("com.electronwill.night-config:toml:${nightconfig_version}"))
 
-    // Optional Dependencies
-    modImplementation("maven.modrinth:modmenu:${fabric_modmenu_version}-fabric")
-    modImplementation("maven.modrinth:appleskin:${fabric_appleskin_version}-fabric")
-    modRuntimeOnly("maven.modrinth:raised:${fabric_raised_version}-fabric")
-    modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${fabric_clothconfig_version}")
+    modImplementation("maven.modrinth:modmenu:${modmenu_version}-fabric")
+    modRuntimeOnly("maven.modrinth:raised:${raised_version}-fabric")
+
+    modImplementation("maven.modrinth:appleskin:${appleskin_version}-fabric")
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${clothconfig_version}")
 
     modRuntimeOnly("maven.modrinth:forge-config-api-port:${fabric_forgeconfigapiport_version}-fabric")
     modImplementation("maven.modrinth:overflowing-bars:${fabric_overflowingbars_version}-fabric")
     modImplementation("maven.modrinth:puzzles-lib:${fabric_puzzleslib_version}-fabric")
+    modRuntimeOnly("maven.modrinth:forge-config-api-port:${forgeconfig_version}-fabric")
+    modImplementation("maven.modrinth:overflowing-bars:${overflowingbars_version}-fabric")
+    modImplementation("maven.modrinth:puzzles-lib:${puzzleslib_version}-fabric")
+
 }
 
 processResources {
