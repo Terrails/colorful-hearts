@@ -36,13 +36,13 @@ repositories {
 dependencies {
     neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
 
-    common(project(path: ':api:common', configuration: 'namedElements')) { transitive false }
+    common(project(path: ':api:common')) { transitive false }
     shadowBundle(project(path: ':api:common', configuration: 'transformProductionNeoForge')) { transitive false }
 }
 
-remapJar {
-    input.set shadowJar.archiveFile
-}
+//remapJar {
+//    input.set shadowJar.archiveFile
+//}
 
 shadowJar {
     exclude "architectury.common.accesswidener"

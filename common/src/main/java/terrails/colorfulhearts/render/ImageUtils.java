@@ -1,7 +1,7 @@
 package terrails.colorfulhearts.render;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 
 import java.util.function.IntUnaryOperator;
@@ -19,27 +19,27 @@ public class ImageUtils {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                int pixelBase = base.isOutsideBounds(x, y) ? 0 : base.getPixelRGBA(x, y);
-                int pixelBlend = blend.isOutsideBounds(x, y) ? 0 : blend.getPixelRGBA(x, y);
+                int pixelBase = base.isOutsideBounds(x, y) ? 0 : base.getPixel(x, y);
+                int pixelBlend = blend.isOutsideBounds(x, y) ? 0 : blend.getPixel(x, y);
 
-                int alphaBackground = FastColor.ABGR32.alpha(pixelBase);
+                int alphaBackground = ARGB.alpha(pixelBase);
                 // no point in blending if source alpha is 0
                 if (alphaBackground == 0) {
-                    base.setPixelRGBA(x, y, pixelBlend);
+                    base.setPixel(x, y, pixelBlend);
                     continue;
                 }
-                int blueBackground = FastColor.ABGR32.blue(pixelBase);
-                int greenBackground = FastColor.ABGR32.green(pixelBase);
-                int redBackground = FastColor.ABGR32.red(pixelBase);
+                int blueBackground = ARGB.blue(pixelBase);
+                int greenBackground = ARGB.green(pixelBase);
+                int redBackground = ARGB.red(pixelBase);
 
-                int alphaForeground = FastColor.ABGR32.alpha(pixelBlend);
+                int alphaForeground = ARGB.alpha(pixelBlend);
                 // skip over pixel if nothing is going to be drawn over
                 if (alphaForeground == 0) {
                     continue;
                 }
-                int blueForeground = FastColor.ABGR32.blue(pixelBlend);
-                int greenForeground = FastColor.ABGR32.green(pixelBlend);
-                int redForeground = FastColor.ABGR32.red(pixelBlend);
+                int blueForeground = ARGB.blue(pixelBlend);
+                int greenForeground = ARGB.green(pixelBlend);
+                int redForeground = ARGB.red(pixelBlend);
 
                 int alphaInvert = 255 - alphaForeground;
 
@@ -49,8 +49,8 @@ public class ImageUtils {
                 int green = Mth.clamp((greenForeground * alphaForeground + greenBackground * alphaInvert) / 255, 0, 255);
                 int red = Mth.clamp((redForeground * alphaForeground + redBackground * alphaInvert) / 255, 0, 255);
 
-                int color = FastColor.ABGR32.color(alpha, blue, green, red);
-                base.setPixelRGBA(x, y, color);
+                int color = ARGB.color(alpha, blue, green, red);
+                base.setPixel(x, y, color);
             }
         }
     }
@@ -66,27 +66,27 @@ public class ImageUtils {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                int pixelBase = base.isOutsideBounds(x, y) ? 0 : base.getPixelRGBA(x, y);
-                int pixelBlend = blend.isOutsideBounds(x, y) ? 0 : blend.getPixelRGBA(x, y);
+                int pixelBase = base.isOutsideBounds(x, y) ? 0 : base.getPixel(x, y);
+                int pixelBlend = blend.isOutsideBounds(x, y) ? 0 : blend.getPixel(x, y);
 
-                int alphaBase = FastColor.ABGR32.alpha(pixelBase);
+                int alphaBase = ARGB.alpha(pixelBase);
                 if (alphaBase == 0) {
-                    base.setPixelRGBA(x, y, pixelBlend);
+                    base.setPixel(x, y, pixelBlend);
                     continue;
                 }
 
-                int alphaBlend = FastColor.ABGR32.alpha(pixelBlend);
+                int alphaBlend = ARGB.alpha(pixelBlend);
                 if (alphaBlend == 0) {
                     continue;
                 }
 
-                int blueBase = FastColor.ABGR32.blue(pixelBase);
-                int greenBase = FastColor.ABGR32.green(pixelBase);
-                int redBase = FastColor.ABGR32.red(pixelBase);
+                int blueBase = ARGB.blue(pixelBase);
+                int greenBase = ARGB.green(pixelBase);
+                int redBase = ARGB.red(pixelBase);
 
-                int blueBlend = FastColor.ABGR32.blue(pixelBlend);
-                int greenBlend = FastColor.ABGR32.green(pixelBlend);
-                int redBlend = FastColor.ABGR32.red(pixelBlend);
+                int blueBlend = ARGB.blue(pixelBlend);
+                int greenBlend = ARGB.green(pixelBlend);
+                int redBlend = ARGB.red(pixelBlend);
 
                 // take the max of two alpha
                 final int alpha = Math.max(alphaBase, alphaBlend);
@@ -94,8 +94,8 @@ public class ImageUtils {
                 final int green = greenBase * greenBlend / 255;
                 final int red = redBase * redBlend / 255;
 
-                int color = FastColor.ABGR32.color(alpha, blue, green, red);
-                base.setPixelRGBA(x, y, color);
+                int color = ARGB.color(alpha, blue, green, red);
+                base.setPixel(x, y, color);
             }
         }
     }
@@ -111,27 +111,27 @@ public class ImageUtils {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                int pixelBase = base.isOutsideBounds(x, y) ? 0 : base.getPixelRGBA(x, y);
-                int pixelBlend = blend.isOutsideBounds(x, y) ? 0 : blend.getPixelRGBA(x, y);
+                int pixelBase = base.isOutsideBounds(x, y) ? 0 : base.getPixel(x, y);
+                int pixelBlend = blend.isOutsideBounds(x, y) ? 0 : blend.getPixel(x, y);
 
-                int alphaBase = FastColor.ABGR32.alpha(pixelBase);
+                int alphaBase = ARGB.alpha(pixelBase);
                 if (alphaBase == 0) {
-                    base.setPixelRGBA(x, y, pixelBlend);
+                    base.setPixel(x, y, pixelBlend);
                     continue;
                 }
 
-                int alphaBlend = FastColor.ABGR32.alpha(pixelBlend);
+                int alphaBlend = ARGB.alpha(pixelBlend);
                 if (alphaBlend == 0) {
                     continue;
                 }
 
-                int blueBase = FastColor.ABGR32.blue(pixelBase);
-                int greenBase = FastColor.ABGR32.green(pixelBase);
-                int redBase = FastColor.ABGR32.red(pixelBase);
+                int blueBase = ARGB.blue(pixelBase);
+                int greenBase = ARGB.green(pixelBase);
+                int redBase = ARGB.red(pixelBase);
 
-                int blueBlend = FastColor.ABGR32.blue(pixelBlend);
-                int greenBlend = FastColor.ABGR32.green(pixelBlend);
-                int redBlend = FastColor.ABGR32.red(pixelBlend);
+                int blueBlend = ARGB.blue(pixelBlend);
+                int greenBlend = ARGB.green(pixelBlend);
+                int redBlend = ARGB.red(pixelBlend);
 
                 // take the max of two alpha
                 int alpha = Math.max(alphaBase, alphaBlend);
@@ -139,8 +139,8 @@ public class ImageUtils {
                 int green = Mth.clamp(255 - (255 - greenBase) * (255 - greenBlend) / 255, 0, 255);
                 int red = Mth.clamp(255 - (255 - redBase) * (255 - redBlend) / 255, 0, 255);
 
-                int color = FastColor.ABGR32.color(alpha, blue, green, red);
-                base.setPixelRGBA(x, y, color);
+                int color = ARGB.color(alpha, blue, green, red);
+                base.setPixel(x, y, color);
             }
         }
     }
@@ -160,27 +160,27 @@ public class ImageUtils {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                int pixelBase = base.isOutsideBounds(x, y) ? 0 : base.getPixelRGBA(x, y);
-                int pixelBlend = blend.isOutsideBounds(x, y) ? 0 : blend.getPixelRGBA(x, y);
+                int pixelBase = base.isOutsideBounds(x, y) ? 0 : base.getPixel(x, y);
+                int pixelBlend = blend.isOutsideBounds(x, y) ? 0 : blend.getPixel(x, y);
 
-                int alphaBase = FastColor.ABGR32.alpha(pixelBase);
+                int alphaBase = ARGB.alpha(pixelBase);
                 if (alphaBase == 0) {
-                    base.setPixelRGBA(x, y, pixelBlend);
+                    base.setPixel(x, y, pixelBlend);
                     continue;
                 }
 
-                int alphaBlend = FastColor.ABGR32.alpha(pixelBlend);
+                int alphaBlend = ARGB.alpha(pixelBlend);
                 if (alphaBlend == 0) {
                     continue;
                 }
 
-                int blueBase = FastColor.ABGR32.blue(pixelBase);
-                int greenBase = FastColor.ABGR32.green(pixelBase);
-                int redBase = FastColor.ABGR32.red(pixelBase);
+                int blueBase = ARGB.blue(pixelBase);
+                int greenBase = ARGB.green(pixelBase);
+                int redBase = ARGB.red(pixelBase);
 
-                int blueBlend = FastColor.ABGR32.blue(pixelBlend);
-                int greenBlend = FastColor.ABGR32.green(pixelBlend);
-                int redBlend = FastColor.ABGR32.red(pixelBlend);
+                int blueBlend = ARGB.blue(pixelBlend);
+                int greenBlend = ARGB.green(pixelBlend);
+                int redBlend = ARGB.red(pixelBlend);
 
                 // take the max of two alpha
                 final int alpha = Math.max(alphaBase, alphaBlend);
@@ -204,25 +204,25 @@ public class ImageUtils {
                     red = Mth.clamp(255 - (2 * (alphaBlend - redBase) * (alphaBase - redBlend) / 255), 0, 255);
                 }
 
-                int color = FastColor.ABGR32.color(alpha, blue, green, red);
-                base.setPixelRGBA(x, y, color);
+                int color = ARGB.color(alpha, blue, green, red);
+                base.setPixel(x, y, color);
             }
         }
     }
 
     /**
      * Returns a unary operator to color all given ABGR pixels with the given ARGB color using overlay blend mode.
-     * Designed for {@link NativeImage#applyToAllPixels(IntUnaryOperator)} and {@link NativeImage#mappedCopy(IntUnaryOperator)}
+     * Designed for {@link NativeImage#mappedCopy(IntUnaryOperator)}
      */
     public static IntUnaryOperator getColorOverlayOperator(int redColor, int greenColor, int blueColor) {
         return (pixel) -> {
-            int alphaBase = FastColor.ABGR32.alpha(pixel);
+            int alphaBase = ARGB.alpha(pixel);
             // no need to do any extra processing as nothing is going to be colored
             if (alphaBase == 0) return pixel;
 
-            int blueBase = FastColor.ABGR32.blue(pixel);
-            int greenBase = FastColor.ABGR32.green(pixel);
-            int redBase = FastColor.ABGR32.red(pixel);
+            int blueBase = ARGB.blue(pixel);
+            int greenBase = ARGB.green(pixel);
+            int redBase = ARGB.red(pixel);
 
             final int blue, green, red;
 
@@ -244,7 +244,7 @@ public class ImageUtils {
                 red = 255 - (2 * (255 - redBase) * (alphaBase - redColor) / 255);
             }
 
-            return FastColor.ABGR32.color(alphaBase, blue, green, red);
+            return ARGB.color(alphaBase, blue, green, red);
         };
     }
 

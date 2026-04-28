@@ -44,23 +44,23 @@ repositories {
 dependencies {
     neoForge "net.neoforged:neoforge:${neoforge_version}"
 
-    common(project(path: ':api:common', configuration: 'namedElements')) { transitive false }
-    common(project(path: ':api:neoforge', configuration: 'namedElements')) { transitive false }
-    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+    common(project(':api:common')) { transitive false }
+    common(project(':api:neoforge')) { transitive false }
+    common(project(':common')) { transitive false }
     shadowBundle(project(path: ':api:common', configuration: 'transformProductionNeoForge')) { transitive false }
     shadowBundle(project(path: ':api:neoforge', configuration: 'default')) { transitive false }
     shadowBundle(project(path: ':common', configuration: 'transformProductionNeoForge')) { transitive false }
 
-    modImplementation("maven.modrinth:farmers-delight:${farmersdelight_version}-neoforge")
-    modRuntimeOnly("maven.modrinth:the-undergarden:${undergarden_version}-neoforge")
-    modRuntimeOnly("maven.modrinth:raised:${raised_version}-neoforge")
-
-    modImplementation("maven.modrinth:appleskin:${appleskin_version}-neoforge")
-    modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${clothconfig_version}")
-
-    modRuntimeOnly("maven.modrinth:forge-config-api-port:${forgeconfig_version}-neoforge")
-    modImplementation("maven.modrinth:overflowing-bars:${overflowingbars_version}-neoforge")
-    modImplementation("maven.modrinth:puzzles-lib:${puzzleslib_version}-neoforge")
+//    implementation("maven.modrinth:farmers-delight:${farmersdelight_version}-neoforge")
+//    runtimeOnly("maven.modrinth:the-undergarden:${undergarden_version}-neoforge")
+//    runtimeOnly("maven.modrinth:raised:${raised_version}-neoforge")
+//
+//    implementation("maven.modrinth:appleskin:${appleskin_version}-neoforge")
+//    runtimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${clothconfig_version}")
+//
+//    runtimeOnly("maven.modrinth:forge-config-api-port:${forgeconfig_version}-neoforge")
+//    implementation("maven.modrinth:overflowing-bars:${overflowingbars_version}-neoforge")
+//    implementation("maven.modrinth:puzzles-lib:${puzzleslib_version}-neoforge")
 }
 
 processResources {
@@ -71,10 +71,10 @@ processResources {
     }
 }
 
-remapJar {
-    input.set shadowJar.archiveFile
-    atAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
-}
+//remapJar {
+//    input.set shadowJar.archiveFile
+//    atAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
+//}
 
 shadowJar {
     exclude "architectury.common.accesswidener"
@@ -105,7 +105,7 @@ modrinth {
     projectId = "${rootProject.modrinth_id}"
     versionNumber = "${project.version}"
     versionName = "[NeoForge] ${rootProject.minecraft_version}-v${project.version}"
-    uploadFile = tasks.remapJar.getArchiveFile().get()
+    uploadFile = tasks.shadowJar.getArchiveFile().get()
     gameVersions = ["1.21", rootProject.minecraft_version]
     loaders = ["neoforge"]
     changelog = rootProject.file("CHANGELOG.md").text

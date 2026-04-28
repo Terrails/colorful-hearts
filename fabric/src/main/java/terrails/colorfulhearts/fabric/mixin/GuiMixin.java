@@ -2,7 +2,7 @@ package terrails.colorfulhearts.fabric.mixin;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -24,9 +24,9 @@ public abstract class GuiMixin {
      * Disables the default heart renderer by setting for-loop index to -1 resulting in it never executing
      * Also injects own heart render
      */
-    @ModifyVariable(method = "renderHearts", at = @At("STORE"), ordinal = 10)
+    @ModifyVariable(method = "extractHearts", at = @At("STORE"), name = "containerIndex")
     private int colorfulhearts_renderHearts(
-            int defaultIndexVal, GuiGraphics guiGraphics, Player player,
+            int defaultIndexVal, GuiGraphicsExtractor guiGraphics, Player player,
             int x, int y, int height, int regenIndex, float maxHealth,
             int currentHealth, int displayHealth, int absorptionAmount, boolean blinking
     ) {
@@ -38,7 +38,7 @@ public abstract class GuiMixin {
      * Modifies the heart bar rows to 1 or 2, depending on if absorption is in the same row
      * Required for armor bar to render at correct height when there are multiple heart rows
      */
-    @ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 6)
+    @ModifyVariable(method = "extractPlayerHealth", at = @At("STORE"), name = "numHealthRows")
     private int colorfulhearts_renderPlayerHealth(int defaultValue) {
         Minecraft minecraft = Minecraft.getInstance();
         int absorption = Mth.ceil(this.getCameraPlayer().getAbsorptionAmount());

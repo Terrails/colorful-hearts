@@ -2,10 +2,9 @@ package terrails.colorfulhearts.compat;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import org.lwjgl.opengl.GL11;
 import terrails.colorfulhearts.api.heart.Hearts;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
 import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
@@ -20,7 +19,7 @@ public abstract class AppleSkinCommonCompat {
     protected int lastHealth, lastModifiedHealth;
     private Heart[] hearts;
 
-    public void drawHealthOverlay(GuiGraphics guiGraphics, int x, int y, int absorbing, int health, int modifiedHealth, float alpha, boolean hardcore) {
+    public void drawHealthOverlay(GuiGraphicsExtractor guiGraphics, int x, int y, int absorbing, int health, int modifiedHealth, float alpha, boolean hardcore) {
         long tickCount = this.client.gui.getGuiTicks();
         // synchronize random with vanilla
         this.random.setSeed(tickCount * 312871);
@@ -30,10 +29,10 @@ public abstract class AppleSkinCommonCompat {
             this.lastHealth = health;
             this.lastModifiedHealth = modifiedHealth;
         }
-
-        RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
-        RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        //TODO
+//        RenderSystem.enableBlend();
+//        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
+//        RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         for (int index = 0; index < this.hearts.length; index++) {
             Heart heart = this.hearts[index];
@@ -49,8 +48,9 @@ public abstract class AppleSkinCommonCompat {
 
             heart.draw(guiGraphics, xPos, yPos, hardcore, false, false);
         }
-        RenderSystem.disableBlend();
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        //TODO
+//        RenderSystem.disableBlend();
+//        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     private Heart[] calculateHearts(int health, int modifiedHealth) {

@@ -62,7 +62,7 @@ public class ColorSelectionScreen extends Screen {
         int marginY = 32;
 
         // get previous scroll amount or none if screen was just created
-        double prevScrollAmount = this.colorSelectionList == null ? 0 : this.colorSelectionList.getScrollAmount();
+        double prevScrollAmount = this.colorSelectionList == null ? 0 : this.colorSelectionList.scrollAmount();
 
         // create scrollable list widget and add it to this screen's children
         this.colorSelectionList = this.addRenderableWidget(new ScrollableWidgetList(Minecraft.getInstance(), width, height - marginY * 2, marginY, Button.DEFAULT_HEIGHT + 6));
@@ -142,7 +142,6 @@ public class ColorSelectionScreen extends Screen {
 
     @Override
     public void onClose() {
-        assert this.minecraft != null;
         this.minecraft.setScreen(this.lastScreen);
         if (this.colorsChanged) {
             // recreates texture atlas

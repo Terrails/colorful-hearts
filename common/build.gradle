@@ -5,7 +5,7 @@ architectury {
 loom.mixin.useLegacyMixinAp = false
 
 dependencies {
-    modCompileOnly "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    compileOnly "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
-    compileOnly(project(path: ':api:common', configuration: 'namedElements')) { transitive false }
+    compileOnly(project(':api:common')) { transitive false }
 }

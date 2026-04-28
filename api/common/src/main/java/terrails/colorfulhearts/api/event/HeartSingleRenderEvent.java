@@ -1,6 +1,6 @@
 package terrails.colorfulhearts.api.event;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
 
 /**
@@ -9,11 +9,11 @@ import terrails.colorfulhearts.api.heart.drawing.Heart;
 public class HeartSingleRenderEvent {
 
     protected Heart heart;
-    protected GuiGraphics guiGraphics;
+    protected GuiGraphicsExtractor guiGraphics;
     protected int index, x, y;
     protected boolean hardcore, blinking, blinkingHeart;
 
-    public HeartSingleRenderEvent(Heart heart, GuiGraphics guiGraphics, int index, int x, int y, boolean hardcore, boolean blinking, boolean blinkingHeart) {
+    public HeartSingleRenderEvent(Heart heart, GuiGraphicsExtractor guiGraphics, int index, int x, int y, boolean hardcore, boolean blinking, boolean blinkingHeart) {
         this.heart = heart;
         this.guiGraphics = guiGraphics;
         this.index = index;
@@ -28,7 +28,7 @@ public class HeartSingleRenderEvent {
         return heart;
     }
 
-    public GuiGraphics getGuiGraphics() {
+    public GuiGraphicsExtractor getGuiGraphics() {
         return guiGraphics;
     }
 

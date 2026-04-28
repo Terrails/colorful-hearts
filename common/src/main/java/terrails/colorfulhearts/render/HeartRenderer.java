@@ -1,7 +1,7 @@
 package terrails.colorfulhearts.render;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
@@ -24,7 +24,7 @@ public class HeartRenderer {
     private OverlayHeart lastOverlayType;
     private Heart[] hearts;
 
-    public void renderPlayerHearts(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking) {
+    public void renderPlayerHearts(GuiGraphicsExtractor guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking) {
         long tickCount = this.client.gui.getGuiTicks();
         // synchronize random with vanilla
         this.random.setSeed(tickCount * 312871);

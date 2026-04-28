@@ -1,6 +1,6 @@
 package terrails.colorfulhearts.api.heart.drawing;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.jetbrains.annotations.NotNull;
 import terrails.colorfulhearts.api.heart.Hearts;
 
@@ -87,7 +87,7 @@ public class Heart {
         return this == CONTAINER_NONE;
     }
 
-    public void draw(GuiGraphics guiGraphics, int x, int y, boolean hardcore, boolean highlightContainer, boolean highlightHeart) {
+    public void draw(GuiGraphicsExtractor guiGraphics, int x, int y, boolean hardcore, boolean highlightContainer, boolean highlightHeart) {
         if (this.isEmpty()) return;
         boolean hasBackground = this.backgroundHeart != null;
         if (hasBackground) {

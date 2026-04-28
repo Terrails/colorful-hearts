@@ -6,6 +6,6 @@ allprojects {
 subprojects {
     base {
         // colorfulhearts-loader-version
-        archivesBaseName = "colorfulhearts-${project.name}-api"
+        archivesName = "colorfulhearts-${project.name}-api"
     }
 }

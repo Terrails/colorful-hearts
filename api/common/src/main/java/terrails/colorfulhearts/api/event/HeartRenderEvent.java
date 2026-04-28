@@ -1,6 +1,6 @@
 package terrails.colorfulhearts.api.event;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Player;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
@@ -19,7 +19,7 @@ public class HeartRenderEvent {
 
         private boolean cancelled = false;
 
-        public Pre(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        public Pre(GuiGraphicsExtractor guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
             super(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
         }
 
@@ -54,19 +54,19 @@ public class HeartRenderEvent {
      */
     public static class Post extends HeartRenderEvent {
 
-        public Post(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        public Post(GuiGraphicsExtractor guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
             super(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
         }
     }
 
-    protected final GuiGraphics guiGraphics;
+    protected final GuiGraphicsExtractor guiGraphics;
     protected final Player player;
     protected int x, y;
     protected int maxHealth, health, displayHealth, absorption;
     protected boolean blinking, hardcore;
     protected OverlayHeart overlayHeart;
 
-    public HeartRenderEvent(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+    public HeartRenderEvent(GuiGraphicsExtractor guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
         this.guiGraphics = guiGraphics;
         this.player = player;
         this.x = x;
@@ -80,7 +80,7 @@ public class HeartRenderEvent {
         this.overlayHeart = overlayHeart;
     }
 
-    public GuiGraphics getGuiGraphics() {
+    public GuiGraphicsExtractor getGuiGraphics() {
         return guiGraphics;
     }
 

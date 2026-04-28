@@ -9,6 +9,6 @@ pluginManagement {
 
 include("api:common", "common")
 include("api:fabric", "fabric")
-include("api:neoforge", "neoforge")
+//include("api:neoforge", "neoforge")
 
 rootProject.name = "colorful-hearts"

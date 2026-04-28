@@ -1,15 +1,13 @@
 package terrails.colorfulhearts.config.screen.base;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,24 +22,18 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
         this.clearEntries();
     }
 
-    @Nullable
-    @Override
-    public Entry remove(int index) {
-        return super.remove(index);
-    }
-
     @Override
     public int addEntry(@NotNull Entry entry) {
         return super.addEntry(entry);
     }
 
     @Override
-    protected int getRowTop(int index) {
+    public int getRowTop(int index) {
         return super.getRowTop(index);
     }
 
     @Override
-    protected int getScrollbarPosition() {
+    protected int scrollBarX() {
         return this.width - 7;
     }
 
@@ -50,7 +42,6 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
         return this.width - 14;
     }
 
-    @MethodsReturnNonnullByDefault
     public static class Entry extends ContainerObjectSelectionList.Entry<Entry> {
 
         final List<AbstractWidget> children;
@@ -64,10 +55,10 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
         }
 
         @Override
-        public void render(@NotNull GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
+        public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
             this.children.forEach(widget -> {
-                widget.setY(top);
-                widget.render(guiGraphics, mouseX, mouseY, partialTick);
+                widget.setY(this.getContentY());
+                widget.extractRenderState(graphics, mouseX, mouseY, a);
             });
         }
 

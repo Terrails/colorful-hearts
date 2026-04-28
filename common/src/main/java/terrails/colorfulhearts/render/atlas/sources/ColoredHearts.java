@@ -9,20 +9,22 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
-import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.client.renderer.texture.atlas.sources.LazyLoadedImage;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.ResourceMetadata;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.render.ImageUtils;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
@@ -30,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class ColoredHearts implements SpriteSource {
 
-    public static SpriteSourceType TYPE;
+    public static MapCodec<SpriteSource> TYPE;
 
     private static final Codec<Boolean> IS_HEALTH = Codec.STRING.comapFlatMap(
             s -> {
@@ -93,11 +95,11 @@ public class ColoredHearts implements SpriteSource {
 
     private void processType(ResourceManager resMgr, Output out, Map<Integer, IntUnaryOperator> hexARGBs, String prefix, boolean hardcore, boolean highlight, boolean half) {
         String suffix = (hardcore ? "hardcore_" : "") + (half ? "half" : "full") + (highlight ? "_blinking" : "");
-        ResourceLocation baseLocation = CColorfulHearts.location("heart/" + prefix + "/" + suffix);
+        Identifier baseLocation = CColorfulHearts.location("heart/" + prefix + "/" + suffix);
 
         Supplier<Consumer<NativeImage>> blendApplier = Suppliers.memoize(() -> this.getBlendApplier(resMgr, baseLocation, hexARGBs.size()));
 
-        ResourceLocation textureLocation = TEXTURE_ID_CONVERTER.idToFile(baseLocation);
+        Identifier textureLocation = TEXTURE_ID_CONVERTER.idToFile(baseLocation);
         Optional<Resource> optional = resMgr.getResource(textureLocation);
         if (optional.isEmpty()) {
             CColorfulHearts.LOGGER.warn("Missing texture: {}", textureLocation);
@@ -106,7 +108,7 @@ public class ColoredHearts implements SpriteSource {
 
         LazyLoadedImage lazyImage = new LazyLoadedImage(textureLocation, optional.get(), hexARGBs.size());
         for (Map.Entry<Integer, IntUnaryOperator> entry : hexARGBs.entrySet()) {
-            ResourceLocation spriteLocation = baseLocation.withSuffix("_" + entry.getKey());
+            Identifier spriteLocation = baseLocation.withSuffix("_" + entry.getKey());
             out.add(spriteLocation, new ColoredHeartsSupplier(lazyImage, entry.getValue(), blendApplier, spriteLocation));
         }
     }
@@ -119,11 +121,11 @@ public class ColoredHearts implements SpriteSource {
      * From what I know the best way to override the default screen blend files is to just make them empty/fully transparent files in the resource pack
      * All files must have their blend name appended to the usual name for the given base heart icon, so overlay for full.png would be full_overlay.png
      */
-    private Consumer<NativeImage> getBlendApplier(ResourceManager resourceManager, ResourceLocation spriteLocation, int loadCount) {
-        final ResourceLocation normalLocation = TEXTURE_ID_CONVERTER.idToFile(spriteLocation.withSuffix("_normal"));
-        final ResourceLocation multiplyLocation = TEXTURE_ID_CONVERTER.idToFile(spriteLocation.withSuffix("_multiply"));
-        final ResourceLocation screenLocation = TEXTURE_ID_CONVERTER.idToFile(spriteLocation.withSuffix("_screen"));
-        final ResourceLocation overlayLocation = TEXTURE_ID_CONVERTER.idToFile(spriteLocation.withSuffix("_overlay"));
+    private Consumer<NativeImage> getBlendApplier(ResourceManager resourceManager, Identifier spriteLocation, int loadCount) {
+        final Identifier normalLocation = TEXTURE_ID_CONVERTER.idToFile(spriteLocation.withSuffix("_normal"));
+        final Identifier multiplyLocation = TEXTURE_ID_CONVERTER.idToFile(spriteLocation.withSuffix("_multiply"));
+        final Identifier screenLocation = TEXTURE_ID_CONVERTER.idToFile(spriteLocation.withSuffix("_screen"));
+        final Identifier overlayLocation = TEXTURE_ID_CONVERTER.idToFile(spriteLocation.withSuffix("_overlay"));
 
         final Optional<LazyLoadedImage> normalOptional = resourceManager.getResource(normalLocation).map(r -> new LazyLoadedImage(normalLocation, r, loadCount));
         final Optional<LazyLoadedImage> multiplyOptional = resourceManager.getResource(multiplyLocation).map(r -> new LazyLoadedImage(multiplyLocation, r, loadCount));
@@ -176,20 +178,20 @@ public class ColoredHearts implements SpriteSource {
     }
 
     @Override
-    public @NotNull SpriteSourceType type() {
+    public @NotNull MapCodec<SpriteSource> codec() {
         return ColoredHearts.TYPE;
     }
 
     private record ColoredHeartsSupplier(
-            LazyLoadedImage image, IntUnaryOperator colorOperator, Supplier<Consumer<NativeImage>> blend, ResourceLocation spriteLocation
-    ) implements SpriteSupplier {
+            LazyLoadedImage image, IntUnaryOperator colorOperator, Supplier<Consumer<NativeImage>> blend, Identifier spriteLocation
+    ) implements DiscardableLoader {
 
         @Override
-        public SpriteContents apply(SpriteResourceLoader spriteResourceLoader) {
+        public SpriteContents get(@NonNull SpriteResourceLoader spriteResourceLoader) {
             try {
                 NativeImage image = this.image.get().mappedCopy(this.colorOperator);
                 this.blend.get().accept(image);
-                return new SpriteContents(this.spriteLocation, new FrameSize(image.getWidth(), image.getHeight()), image, ResourceMetadata.EMPTY);
+                return new SpriteContents(this.spriteLocation, new FrameSize(image.getWidth(), image.getHeight()), image);
             } catch (IllegalArgumentException | IOException e) {
                 CColorfulHearts.LOGGER.error("Unable to apply color to {}", this.spriteLocation, e);
             } finally {
