@@ -38,13 +38,16 @@ configurations {
 }
 
 repositories {
-    maven {
-        name = "TerraformersMC Maven"
-        url = "https://maven.terraformersmc.com/"
-    }
-    maven {
-        name = "Jitpack"
-        url 'https://jitpack.io/'
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
     }
 }
 
@@ -64,17 +67,6 @@ dependencies {
     api(include("com.electronwill.night-config:toml:${nightconfig_version}"))
 
     modImplementation("maven.modrinth:modmenu:${modmenu_version}-fabric")
-    modRuntimeOnly("maven.modrinth:raised:${raised_version}-fabric")
-
-    modImplementation("maven.modrinth:appleskin:${appleskin_version}-fabric")
-    modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${clothconfig_version}")
-
-    modRuntimeOnly("maven.modrinth:forge-config-api-port:${forgeconfig_version}-fabric")
-    modImplementation("maven.modrinth:overflowing-bars:${overflowingbars_version}-fabric")
-    modImplementation("maven.modrinth:puzzles-lib:${puzzleslib_version}-fabric")
-
-    modImplementation("maven.modrinth:farmers-delight-refabricated:${farmersdelight_version}-fabric")
-    modRuntimeOnly("com.github.Chocohead:Fabric-ASM:${fabricasm_version}")
 }
 
 processResources {

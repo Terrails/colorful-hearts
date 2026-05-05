@@ -1,16 +1,18 @@
 package terrails.colorfulhearts.config.screen.widgets;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import terrails.colorfulhearts.config.screen.HeartType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import terrails.colorfulhearts.config.screen.HeartType;
 
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -80,7 +82,7 @@ public class HeartColorEditBox extends EditBox {
                 // draw over the border in red if the text is invalid
                 int borderColor = this.isFocused() ? 0xFFD6231A : 0xFF590707;
                 guiGraphics.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + 1, borderColor);
-                guiGraphics.fill(this.getX(), this.getY() + this.height - 1, this.getX() + this.width,  this.getY() + this.height, borderColor);
+                guiGraphics.fill(this.getX(), this.getY() + this.height - 1, this.getX() + this.width, this.getY() + this.height, borderColor);
                 guiGraphics.fill(this.getX(), this.getY() + 1, this.getX() + 1, this.getY() + this.height - 1, borderColor);
                 guiGraphics.fill(this.getX() + this.width - 1, this.getY() + 1, this.getX() + this.width, this.getY() + this.height - 1, borderColor);
             }
@@ -89,7 +91,7 @@ public class HeartColorEditBox extends EditBox {
             int x = this.getX() + this.width - 11;
             int y = this.getY() + this.height / 2 - 5;
             if (this.spriteLocation != null) {
-                guiGraphics.blitSprite(this.spriteLocation, x, y, 9, 9);
+                guiGraphics.blitSprite(RenderType::guiTextured, this.spriteLocation, x, y, 9, 9);
             } else {
                 guiGraphics.fill(x, y, x + 9, y + 9, this.getColor() | 0xFF000000);
                 guiGraphics.renderOutline(x, y, 9, 9, 0xFFDDDDDD);

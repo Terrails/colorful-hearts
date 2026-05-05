@@ -6,6 +6,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import org.jetbrains.annotations.NotNull;
+
+import terrails.colorfulhearts.CColorfulHearts;
+import terrails.colorfulhearts.config.Configuration;
+import terrails.colorfulhearts.render.ImageUtils;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
@@ -16,21 +21,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceMetadata;
-import org.jetbrains.annotations.NotNull;
-import terrails.colorfulhearts.CColorfulHearts;
-import terrails.colorfulhearts.config.Configuration;
-import terrails.colorfulhearts.render.ImageUtils;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ColoredHearts implements SpriteSource {
-
-    public static SpriteSourceType TYPE;
 
     private static final Codec<Boolean> IS_HEALTH = Codec.STRING.comapFlatMap(
             s -> {
@@ -46,11 +48,13 @@ public class ColoredHearts implements SpriteSource {
             bool -> bool ? "HEALTH" : "ABSORPTION"
     );
 
-    public static final MapCodec<ColoredHearts> CODEC = RecordCodecBuilder.mapCodec(
+    private static final MapCodec<ColoredHearts> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
                     ColoredHearts.IS_HEALTH.fieldOf("heart").forGetter(source -> source.isHealth)
             ).apply(instance, ColoredHearts::new)
     );
+
+    public static final SpriteSourceType TYPE = new SpriteSourceType(CODEC);
 
     private final boolean isHealth;
 
@@ -181,7 +185,8 @@ public class ColoredHearts implements SpriteSource {
     }
 
     private record ColoredHeartsSupplier(
-            LazyLoadedImage image, IntUnaryOperator colorOperator, Supplier<Consumer<NativeImage>> blend, ResourceLocation spriteLocation
+            LazyLoadedImage image, IntUnaryOperator colorOperator, Supplier<Consumer<NativeImage>> blend,
+            ResourceLocation spriteLocation
     ) implements SpriteSupplier {
 
         @Override

@@ -1,16 +1,17 @@
 package terrails.colorfulhearts.fabric.mixin;
 
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+
+import terrails.colorfulhearts.render.HeartRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import terrails.colorfulhearts.render.HeartRenderer;
 
 /**
  * Mixin for injecting custom heart renderer for Fabric and Quilt mod-loaders
@@ -18,7 +19,8 @@ import terrails.colorfulhearts.render.HeartRenderer;
 @Mixin(Gui.class)
 public abstract class GuiMixin {
 
-    @Shadow protected abstract Player getCameraPlayer();
+    @Shadow
+    protected abstract Player getCameraPlayer();
 
     /**
      * Disables the default heart renderer by setting for-loop index to -1 resulting in it never executing

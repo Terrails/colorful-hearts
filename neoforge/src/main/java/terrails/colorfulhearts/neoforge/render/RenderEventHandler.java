@@ -1,14 +1,16 @@
 package terrails.colorfulhearts.neoforge.render;
 
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+
+import terrails.colorfulhearts.render.HeartRenderer;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
+import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
-import terrails.colorfulhearts.render.HeartRenderer;
 
 import java.util.Objects;
 
@@ -25,7 +27,7 @@ public class RenderEventHandler {
             return;
         }
 
-        client.getProfiler().push("health");
+        Profiler.get().push("health");
 
         int absorption = Mth.ceil(player.getAbsorptionAmount());
         int health = Mth.ceil(player.getHealth());
@@ -62,7 +64,7 @@ public class RenderEventHandler {
 
         HeartRenderer.INSTANCE.renderPlayerHearts(guiGraphics, player, left, top, maxHealth, health, this.displayHealth, absorption, highlight);
 
-        client.getProfiler().pop();
+        Profiler.get().pop();
 
         event.setCanceled(true);
     }

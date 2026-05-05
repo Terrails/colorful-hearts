@@ -3,11 +3,8 @@
   "package": "terrails.colorfulhearts.fabric.mixin",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
-  "plugin": "terrails.colorfulhearts.fabric.FabMixinPlugin",
   "client": [
-    "GuiMixin",
-    "compat.appleskin.HUDOverlayHandlerAccessor",
-    "compat.farmersdelight.HUDOverlaysMixin"
+    "GuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1

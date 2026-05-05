@@ -15,8 +15,6 @@ logoFile = "icon.png"
 displayTest = "IGNORE_ALL_VERSION" # ignore everything since it's a client only mod
 
 [[mixins]]
-config = "colorfulhearts.mixins.json"
-[[mixins]]
 config = "colorfulhearts-common.mixins.json"
 
 [[dependencies.colorfulhearts]]

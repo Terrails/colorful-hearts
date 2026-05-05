@@ -50,17 +50,6 @@ dependencies {
     shadowBundle(project(path: ':api:common', configuration: 'transformProductionNeoForge')) { transitive false }
     shadowBundle(project(path: ':api:neoforge', configuration: 'default')) { transitive false }
     shadowBundle(project(path: ':common', configuration: 'transformProductionNeoForge')) { transitive false }
-
-    modImplementation("maven.modrinth:farmers-delight:${farmersdelight_version}-neoforge")
-    modRuntimeOnly("maven.modrinth:the-undergarden:${undergarden_version}-neoforge")
-    modRuntimeOnly("maven.modrinth:raised:${raised_version}-neoforge")
-
-    modImplementation("maven.modrinth:appleskin:${appleskin_version}-neoforge")
-    modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${clothconfig_version}")
-
-    modRuntimeOnly("maven.modrinth:forge-config-api-port:${forgeconfig_version}-neoforge")
-    modImplementation("maven.modrinth:overflowing-bars:${overflowingbars_version}-neoforge")
-    modImplementation("maven.modrinth:puzzles-lib:${puzzleslib_version}-neoforge")
 }
 
 processResources {

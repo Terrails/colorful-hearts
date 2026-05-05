@@ -1,22 +1,25 @@
 package terrails.colorfulhearts.config.screen;
 
+import terrails.colorfulhearts.CColorfulHearts;
+import terrails.colorfulhearts.config.ConfigOption;
+import terrails.colorfulhearts.config.ConfigUtils;
+import terrails.colorfulhearts.config.Configuration;
+import terrails.colorfulhearts.config.SimpleConfigOption;
+import terrails.colorfulhearts.config.screen.base.ScrollableWidgetList;
+import terrails.colorfulhearts.config.screen.widgets.HeartColorEditBox;
+import terrails.colorfulhearts.render.HeartRenderer;
+import terrails.colorfulhearts.render.TabHeartRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import terrails.colorfulhearts.CColorfulHearts;
-import terrails.colorfulhearts.config.ConfigOption;
-import terrails.colorfulhearts.config.ConfigUtils;
-import terrails.colorfulhearts.config.SimpleConfigOption;
-import terrails.colorfulhearts.config.Configuration;
-import terrails.colorfulhearts.config.screen.base.ScrollableWidgetList;
-import terrails.colorfulhearts.config.screen.widgets.HeartColorEditBox;
-import terrails.colorfulhearts.render.HeartRenderer;
-import terrails.colorfulhearts.render.TabHeartRenderer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ColorSelectionScreen extends Screen {
@@ -62,7 +65,7 @@ public class ColorSelectionScreen extends Screen {
         int marginY = 32;
 
         // get previous scroll amount or none if screen was just created
-        double prevScrollAmount = this.colorSelectionList == null ? 0 : this.colorSelectionList.getScrollAmount();
+        double prevScrollAmount = this.colorSelectionList == null ? 0 : this.colorSelectionList.scrollAmount();
 
         // create scrollable list widget and add it to this screen's children
         this.colorSelectionList = this.addRenderableWidget(new ScrollableWidgetList(Minecraft.getInstance(), width, height - marginY * 2, marginY, Button.DEFAULT_HEIGHT + 6));

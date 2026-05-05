@@ -1,6 +1,9 @@
 package terrails.colorfulhearts.config.screen.base;
 
 import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -8,8 +11,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,13 +37,14 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
     }
 
     @Override
-    protected int getRowTop(int index) {
+    public int getRowTop(int index) {
         return super.getRowTop(index);
     }
 
     @Override
-    protected int getScrollbarPosition() {
-        return this.width - 7;
+    protected int scrollBarX() {
+        // TODO: fix this
+        return super.scrollBarX(); //this.width - 7;
     }
 
     @Override

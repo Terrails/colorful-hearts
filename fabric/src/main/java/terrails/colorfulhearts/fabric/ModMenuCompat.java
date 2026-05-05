@@ -1,7 +1,8 @@
-package terrails.colorfulhearts.fabric.compat;
+package terrails.colorfulhearts.fabric;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+
 import terrails.colorfulhearts.config.screen.ConfigurationScreen;
 
 public class ModMenuCompat implements ModMenuApi {

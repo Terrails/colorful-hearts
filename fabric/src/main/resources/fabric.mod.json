@@ -5,8 +5,9 @@
 
   "name": "Colorful Hearts",
   "description": "A client side mod that replaces multiple vanilla heart rows with a single row using colored hearts",
-  "authors": [ "Terrails" ],
-
+  "authors": [
+    "Terrails"
+  ],
   "license": "MIT",
   "contact": {
     "sources": "https://github.com/Terrails/colorful-hearts",
@@ -19,10 +20,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [ "terrails.colorfulhearts.fabric.ColorfulHearts" ],
-    "modmenu": [ "terrails.colorfulhearts.fabric.compat.ModMenuCompat" ],
-    "appleskin": [
-      "terrails.colorfulhearts.fabric.compat.AppleSkinCompat"
-    ]
+    "modmenu": [ "terrails.colorfulhearts.fabric.ModMenuCompat" ]
   },
 
   "mixins": [

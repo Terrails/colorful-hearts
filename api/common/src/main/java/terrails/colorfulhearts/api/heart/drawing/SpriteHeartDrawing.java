@@ -1,6 +1,7 @@
 package terrails.colorfulhearts.api.heart.drawing;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 public class SpriteHeartDrawing extends HeartDrawing {
@@ -43,7 +44,7 @@ public class SpriteHeartDrawing extends HeartDrawing {
                 spriteLocation = half ? this.half : this.full;
             }
         }
-        guiGraphics.blitSprite(spriteLocation, x, y, 9, 9);
+        guiGraphics.blitSprite(RenderType::guiTextured, spriteLocation, x, y, 9, 9);
     }
 
     public static SpriteHeartBuilder build(ResourceLocation id) {
