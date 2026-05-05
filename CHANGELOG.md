@@ -1,3 +1,6 @@
+## [21.4.0] - 2026-05-05
+- Updated to Minecraft 1.21.4 and removed all mod compats to allow for faster mod updates. All compats will be located in a separate mod. ([030a9bb](https://github.com/Terrails/colorful-hearts/commit/030a9bb68ea3bac3dfff0d7d912493562b11f91b))
+
 ## [10.5.9] - 2025-07-31
 - Fixed a possible crash when hearts would possibly not be calculated in the AppleSkin compat.
 ([b727508](https://github.com/Terrails/colorful-hearts/commit/b72750862e4778170e808dd15b9dde22e7a2e0e4))
