@@ -1,19 +1,23 @@
 package terrails.colorfulhearts.neoforge;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
+
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.PlatformProxy;
-import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.event.HeartRegistry;
+import terrails.colorfulhearts.api.event.HeartRenderEvent;
+import terrails.colorfulhearts.api.heart.Hearts;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
-import terrails.colorfulhearts.api.neoforge.event.NeoHeartSingleRenderEvent;
-import terrails.colorfulhearts.api.neoforge.event.NeoHeartUpdateEvent;
 import terrails.colorfulhearts.api.neoforge.event.NeoHeartRegistryEvent;
 import terrails.colorfulhearts.api.neoforge.event.NeoHeartRenderEvent;
+import terrails.colorfulhearts.api.neoforge.event.NeoHeartSingleRenderEvent;
+import terrails.colorfulhearts.api.neoforge.event.NeoHeartUpdateEvent;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.entity.player.Player;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
 
@@ -40,6 +44,12 @@ public class PlatformProxyImpl implements PlatformProxy {
         NeoHeartRenderEvent.Pre event = new NeoHeartRenderEvent.Pre(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
         NeoForge.EVENT_BUS.post(event);
         return event.getEvent();
+    }
+
+    @Override
+    public OverlayHeart playerHeartTypeEvent(Player player, OverlayHeart overlayHeart) {
+        Gui.HeartType heartType = Hearts.getHeartTypeFromOverlayHeart(overlayHeart);
+        return Hearts.getOverlayHeartFromHeartType(NeoForge.EVENT_BUS.post(new PlayerHeartTypeEvent(player, heartType)).getType()).orElse(overlayHeart);
     }
 
     @Override

@@ -4,6 +4,10 @@ allprojects {
 }
 
 subprojects {
+    loom {
+        accessWidenerPath = project(":common").file("src/main/resources/colorfulhearts.accesswidener")
+    }
+
     base {
         // colorfulhearts-loader-version
         archivesBaseName = "colorfulhearts-${project.name}-api"

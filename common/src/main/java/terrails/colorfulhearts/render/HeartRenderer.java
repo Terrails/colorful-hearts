@@ -1,16 +1,16 @@
 package terrails.colorfulhearts.render;
 
+import terrails.colorfulhearts.CColorfulHearts;
+import terrails.colorfulhearts.api.event.HeartRenderEvent;
+import terrails.colorfulhearts.api.heart.Hearts;
+import terrails.colorfulhearts.api.heart.drawing.Heart;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import terrails.colorfulhearts.CColorfulHearts;
-import terrails.colorfulhearts.api.event.HeartRenderEvent;
-import terrails.colorfulhearts.api.heart.Hearts;
-import terrails.colorfulhearts.api.heart.drawing.Heart;
-import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 public class HeartRenderer {
 
@@ -50,7 +50,7 @@ public class HeartRenderer {
         y = event.getY();
         blinking = event.isBlinking();
         hardcore = event.isHardcore();
-        heartType = event.getOverlayHeart().orElse(null);
+        heartType = CColorfulHearts.PROXY.playerHeartTypeEvent(player, event.getOverlayHeart().orElse(null));
 
         if (this.lastHardcore != hardcore || this.lastHealth != currentHealth || this.lastMaxHealth != maxHealth || this.lastAbsorption != absorption
                 || this.lastOverlayType != heartType || this.hearts == null) {

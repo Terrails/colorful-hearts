@@ -1,16 +1,16 @@
 package terrails.colorfulhearts.config;
 
+import terrails.colorfulhearts.CColorfulHearts;
+import terrails.colorfulhearts.api.event.HeartRegistry;
+import terrails.colorfulhearts.api.heart.Hearts;
+import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
+import terrails.colorfulhearts.api.heart.drawing.SpriteHeartDrawing;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import terrails.colorfulhearts.CColorfulHearts;
-import terrails.colorfulhearts.api.event.HeartRegistry;
-import terrails.colorfulhearts.api.heart.Hearts;
-import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
-import terrails.colorfulhearts.api.heart.drawing.SpriteHeartDrawing;
-import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,9 +65,9 @@ public class ConfigUtils {
 
     public static void loadStatusEffectHearts() {
         HeartRegistry registry = new HeartRegistry();
-        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.poisonedColors.get(), Configuration.ABSORPTION.poisonedColors.get(), "poisoned", MobEffects.POISON, ResourceLocation.withDefaultNamespace("poison")));
-        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.witheredColors.get(), Configuration.ABSORPTION.witheredColors.get(), "withered", MobEffects.WITHER, ResourceLocation.withDefaultNamespace("wither")));
-        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.frozenColors.get(), Configuration.ABSORPTION.frozenColors.get(), "frozen", Player::isFullyFrozen, ResourceLocation.withDefaultNamespace("frozen")));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.poisonedColors.get(), Configuration.ABSORPTION.poisonedColors.get(), "poisoned", MobEffects.POISON, Hearts.POISON_OVERLAY_HEART_ID));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.witheredColors.get(), Configuration.ABSORPTION.witheredColors.get(), "withered", MobEffects.WITHER, Hearts.WITHER_OVERLAY_HEART_ID));
+        registry.registerOverlayHeart(buildEffectHearts(Configuration.HEALTH.frozenColors.get(), Configuration.ABSORPTION.frozenColors.get(), "frozen", Player::isFullyFrozen, Hearts.FROZEN_OVERLAY_HEART_ID));
         CColorfulHearts.PROXY.heartRegistryEvent(registry);
     }
 

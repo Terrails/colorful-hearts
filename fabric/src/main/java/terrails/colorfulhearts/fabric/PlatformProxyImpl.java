@@ -1,17 +1,18 @@
 package terrails.colorfulhearts.fabric;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.entity.player.Player;
+
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.PlatformProxy;
 import terrails.colorfulhearts.api.event.HeartRegistry;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.event.HeartSingleRenderEvent;
-import terrails.colorfulhearts.api.heart.drawing.Heart;
-import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 import terrails.colorfulhearts.api.fabric.ColorfulHeartsApi;
 import terrails.colorfulhearts.api.fabric.event.FabHeartEvents;
+import terrails.colorfulhearts.api.heart.drawing.Heart;
+import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.entity.player.Player;
 
 public class PlatformProxyImpl implements PlatformProxy {
 
@@ -37,6 +38,11 @@ public class PlatformProxyImpl implements PlatformProxy {
         HeartRenderEvent.Pre event = new HeartRenderEvent.Pre(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
         FabHeartEvents.PRE_RENDER.invoker().accept(event);
         return event;
+    }
+
+    @Override
+    public OverlayHeart playerHeartTypeEvent(Player player, OverlayHeart overlayHeart) {
+        return overlayHeart; // do nothing as it's a NeoForge specific event
     }
 
     @Override
