@@ -31,8 +31,8 @@ configurations {
 
 dependencies {
     // Fabric
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     common(project(path: ':api:common', configuration: 'namedElements')) { transitive false }
     shadowBundle(project(path: ':api:common', configuration: 'transformProductionFabric')) { transitive false }

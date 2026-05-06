@@ -29,7 +29,7 @@ public class SpriteHeartDrawing extends HeartDrawing {
     }
 
     @Override
-    public void draw(GuiGraphics guiGraphics, int x, int y, boolean half, boolean hardcore, boolean highlight) {
+    public void draw(GuiGraphics guiGraphics, int x, int y, boolean half, boolean hardcore, boolean highlight, int argb) {
         ResourceLocation spriteLocation;
         if (hardcore) {
             if (highlight) {
@@ -44,7 +44,7 @@ public class SpriteHeartDrawing extends HeartDrawing {
                 spriteLocation = half ? this.half : this.full;
             }
         }
-        guiGraphics.blitSprite(RenderType::guiTextured, spriteLocation, x, y, 9, 9);
+        guiGraphics.blitSprite(RenderType::guiTextured, spriteLocation, x, y, 9, 9, argb);
     }
 
     public static SpriteHeartBuilder build(ResourceLocation id) {

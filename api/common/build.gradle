@@ -1,8 +1,7 @@
 architectury {
-    injectInjectables(false)
     common("fabric", "neoforge")
 }
 
 dependencies {
-    modCompileOnly "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modCompileOnly "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 }

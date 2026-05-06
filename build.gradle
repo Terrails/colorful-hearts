@@ -7,29 +7,22 @@ plugins {
 }
 
 architectury {
-    minecraft = rootProject.minecraft_version
-}
-
-allprojects {
-    group = "terrails.colorfulhearts"
-    version = rootProject.mod_version
+    minecraft = project.minecraft_version
 }
 
 // all subprojects
-configure(subprojects.findAll { it.name != "api" }) {
+configure(subprojects.findAll { it.name == "common" || it.name == "fabric" || it.name == "neoforge" }) {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
 
-    // disable ExpectPlatform since it seems to randomly not get applied when building
-    architectury.injectInjectables = false
-
-    loom {
-        accessWidenerPath = project(":common").file("src/main/resources/colorfulhearts.accesswidener")
+    architectury {
+        compileOnly()
+        injectInjectables = false
     }
 
-    base {
-        // colorfulhearts-loader-version
-        archivesBaseName = "colorfulhearts-${project.name}-${rootProject.minecraft_version}"
+    loom {
+        silentMojangMappingsLicense()
+        mixin.useLegacyMixinAp = false
     }
 
     repositories {
@@ -37,10 +30,11 @@ configure(subprojects.findAll { it.name != "api" }) {
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        minecraft "com.mojang:minecraft:${project.minecraft_version}"
         mappings loom.layered() {
+
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip" as String)
+            parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}@zip" as String)
         }
     }
 
@@ -55,8 +49,22 @@ configure(subprojects.findAll { it.name != "api" }) {
 }
 
 // all non-common subprojects
-configure(subprojects.findAll { it.name != "common" && it.name != "api" }) {
+configure(subprojects.findAll { it.name == "fabric" || it.name == "neoforge" }) {
     apply plugin: 'maven-publish'
+
+    repositories {
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = "Modrinth"
+                    url = "https://api.modrinth.com/maven"
+                }
+            }
+            filter {
+                includeGroup "maven.modrinth"
+            }
+        }
+    }
 
     tasks.withType(GenerateModuleMetadata).configureEach {
         enabled = false
@@ -65,12 +73,15 @@ configure(subprojects.findAll { it.name != "common" && it.name != "api" }) {
     publishing {
         publications {
             maven(MavenPublication) {
-                groupId = rootProject.group
-                artifactId = "colorfulhearts-${project.name}${project.path.startsWith(':api') ? "-api" : ""}"
+                var isApi = project.path.startsWith(":api")
+                var isExtensions = project.path.startsWith(":extensions")
+
+                groupId = project.group
+                artifactId = "colorfulhearts-${project.name}${isApi ? "-api" : isExtensions ? "-extensions" : ""}"
                 from components.java
                 // From https://github.com/Fuzss/modresources/blob/d40b8125cadb6ab1b56d90c03eb0c09a666d949a/gradle/v2/main.gradle#L235-L260
                 pom {
-                    name = "Colorful Hearts"
+                    name = "Colorful Hearts${isApi ? " API" : isExtensions ? " Extensions" : ""}"
                     description = "A client side mod that replaces multiple vanilla heart rows with a single row using colored hearts"
                     url = "https://github.com/Terrails/colorful-hearts"
                     scm {

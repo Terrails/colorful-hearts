@@ -1,0 +1,40 @@
+modLoader = "javafml"
+loaderVersion = "[2,)"
+issueTrackerURL = "https://github.com/Terrails/colorful-hearts"
+license = "MIT"
+
+[[mods]]
+modId = "colorfulhearts_extensions"
+version = "${version}"
+
+displayName = "Colorful Hearts Extensions"
+authors = "Terrails"
+description = ''' An extension mod for colorful-hearts adding compatibility with other mods. '''
+
+logoFile = "icon.png"
+displayTest = "IGNORE_ALL_VERSION" # ignore everything since it's a client only mod
+
+[[mixins]]
+config = "colorfulhearts_extensions.mixins.json"
+
+[[dependencies.colorfulhearts_extensions]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.0,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.colorfulhearts_extensions]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.colorfulhearts_extensions]]
+modId = "colorfulhearts"
+type = "required"
+versionRange = "[0,)"
+ordering = "NONE"
+side = "CLIENT"
+

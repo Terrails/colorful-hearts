@@ -1,0 +1,33 @@
+allprojects {
+    group = "terrails.colorfulhearts"
+    version = project.mod_version
+}
+
+subprojects {
+    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'architectury-plugin'
+
+    base {
+        archivesBaseName = "colorfulhearts-${project.name}-${project.minecraft_version}"
+    }
+
+    architectury {
+        // disable ExpectPlatform since it seems to randomly not get applied when building
+
+    }
+
+    loom {
+        accessWidenerPath = project(":base:common").file("src/main/resources/colorfulhearts.accesswidener")
+
+        if (project.path != ':base:common') {
+            mods {
+                main {
+                    sourceSet project.sourceSets.main
+                    sourceSet project(':base:common').sourceSets.main
+                    sourceSet project(":api:${project.name}").sourceSets.main
+                    sourceSet project(':api:common').sourceSets.main
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,31 @@
+allprojects {
+    group = "terrails.colorfulhearts.extensions" // required to prevent circular dependency
+    version = project.mod_version
+}
+
+subprojects {
+    apply plugin: 'dev.architectury.loom'
+
+    base {
+        archivesBaseName = "colorfulhearts-extensions-${project.name}-${project.minecraft_version}"
+    }
+
+    loom {
+        accessWidenerPath = project(":extensions:common").file("src/main/resources/colorfulhearts_extensions.accesswidener")
+
+        if (project.path != ':extensions:common') {
+            mods {
+                main {
+                    sourceSet project.sourceSets.main
+                    sourceSet project(':extensions:common').sourceSets.main
+                }
+                colorfulhearts { // required so that the resources from the base module are available during dev
+                    sourceSet project(":base:${project.name}").sourceSets.main
+                    sourceSet project(':base:common').sourceSets.main
+                    sourceSet project(":api:${project.name}").sourceSets.main
+                    sourceSet project(':api:common').sourceSets.main
+                }
+            }
+        }
+    }
+}

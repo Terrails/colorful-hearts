@@ -1,15 +1,26 @@
 allprojects {
     group = "terrails.colorfulhearts.api" // required to prevent circular dependency
-    version = project.mod_api_version
+    version = project.mod_version
 }
 
 subprojects {
-    loom {
-        accessWidenerPath = project(":common").file("src/main/resources/colorfulhearts.accesswidener")
-    }
+    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'architectury-plugin'
 
     base {
-        // colorfulhearts-loader-version
-        archivesBaseName = "colorfulhearts-${project.name}-api"
+        archivesBaseName = "colorfulhearts-api-${project.name}-${project.minecraft_version}"
+    }
+
+    loom {
+        accessWidenerPath = project(":base:common").file("src/main/resources/colorfulhearts.accesswidener")
+
+        if (project.path != ':api:common') {
+            mods {
+                main {
+                    sourceSet project.sourceSets.main
+                    sourceSet project(':api:common').sourceSets.main
+                }
+            }
+        }
     }
 }

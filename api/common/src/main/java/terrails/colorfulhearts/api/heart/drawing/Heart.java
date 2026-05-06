@@ -1,8 +1,9 @@
 package terrails.colorfulhearts.api.heart.drawing;
 
-import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
+
 import terrails.colorfulhearts.api.heart.Hearts;
+import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -88,15 +89,19 @@ public class Heart {
     }
 
     public void draw(GuiGraphics guiGraphics, int x, int y, boolean hardcore, boolean highlightContainer, boolean highlightHeart) {
+        this.draw(guiGraphics, x, y, hardcore, highlightContainer, highlightHeart, -1);
+    }
+
+    public void draw(GuiGraphics guiGraphics, int x, int y, boolean hardcore, boolean highlightContainer, boolean highlightHeart, int argb) {
         if (this.isEmpty()) return;
         boolean hasBackground = this.backgroundHeart != null;
         if (hasBackground) {
-            this.backgroundHeart.draw(guiGraphics, x, y, hardcore, highlightContainer, highlightHeart);
+            this.backgroundHeart.draw(guiGraphics, x, y, hardcore, highlightContainer, highlightHeart, argb);
             // skip rendering HALF background on top of FULL background
             // special case for when hearts are set as blank in OverlayHeart
             if (this.drawing == Hearts.CONTAINER && this.half) return;
         }
         boolean highlight = this.isContainer() ? highlightContainer : highlightHeart;
-        this.drawing.draw(guiGraphics, x, y, this.half, hardcore, highlight);
+        this.drawing.draw(guiGraphics, x, y, this.half, hardcore, highlight, argb);
     }
 }

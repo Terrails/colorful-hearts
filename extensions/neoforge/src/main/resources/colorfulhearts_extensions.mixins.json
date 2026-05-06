@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "terrails.colorfulhearts.extensions.neoforge.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "plugin": "terrails.colorfulhearts.extensions.neoforge.NeoMixinPlugin",
+  "client": [
+    "appleskin.HUDOverlayHandlerAccessor",
+    "farmersdelight.HUDOverlaysMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

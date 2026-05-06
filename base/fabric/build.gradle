@@ -1,0 +1,118 @@
+plugins {
+    id 'com.gradleup.shadow'
+    id 'com.modrinth.minotaur'
+    id 'net.darkhax.curseforgegradle'
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+loom {
+    runs {
+        server.ideConfigGenerated(false)
+        // set window size to 720p
+        client.programArgs("--width", "1280", "--height", "720")
+    }
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+
+    // Files in this configuration will be bundled into your mod using the Shadow plugin.
+    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+dependencies {
+    // Fabric
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    common(project(path: ':api:common', configuration: 'namedElements')) { transitive false }
+    common(project(path: ':api:fabric', configuration: 'namedElements')) { transitive false }
+    common(project(path: ':base:common', configuration: 'namedElements')) { transitive false }
+    shadowBundle(project(path: ':api:common', configuration: 'transformProductionFabric'))
+    shadowBundle(project(path: ':api:fabric', configuration: 'namedElements'))
+    shadowBundle(project(path: ':base:common', configuration: 'transformProductionFabric'))
+
+    api(include("com.electronwill.night-config:core:${nightconfig_version}"))
+    api(include("com.electronwill.night-config:toml:${nightconfig_version}"))
+
+    modImplementation("maven.modrinth:modmenu:${modmenu_version}-fabric")
+}
+
+processResources {
+    inputs.property 'version', project.version
+
+    filesMatching('fabric.mod.json') {
+        expand version: project.version
+    }
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    injectAccessWidener = true
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = 'dev-shadow'
+}
+
+sourcesJar {
+    afterEvaluate {
+        [":base:common", ":api:fabric"].forEach {
+            def sourcesTask = project(it).sourcesJar
+            dependsOn sourcesTask
+            from sourcesTask.archiveFile.map { zipTree(it) }
+        }
+    }
+}
+
+tasks.build.mustRunAfter(tasks.clean)
+tasks.register('publishProduction') {
+    dependsOn([tasks.clean, tasks.build])
+    finalizedBy([tasks.modrinth, tasks.publishCurseForge])
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "${project.modrinth_id}"
+    versionNumber = "${project.version}"
+    versionName = "[Fabric] ${project.minecraft_version}-v${project.version}"
+    uploadFile = tasks.remapJar.getArchiveFile().get()
+    gameVersions = ["1.21", project.minecraft_version]
+    loaders = ["fabric", "quilt"]
+    dependencies {
+        required.project "fabric-api"
+    }
+    changelog = parent.file("CHANGELOG.md").text
+    additionalFiles = [tasks.sourcesJar.getArchiveFile().get()]
+}
+
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
+    apiToken = System.getenv("CURSEFORGE_TOKEN")
+    disableVersionDetection()
+
+    def mainFile = upload(project.curseforge_id, tasks.remapJar.getArchiveFile().get())
+    mainFile.displayName = "[Fabric] ${project.minecraft_version}-v${project.version}"
+    mainFile.releaseType = "release"
+    mainFile.changelog = parent.file("CHANGELOG.md").text
+    mainFile.changelogType = "markdown"
+    mainFile.addGameVersion("Client", "1.21", project.minecraft_version)
+    mainFile.addRequirement("fabric-api")
+    mainFile.addModLoader("fabric", "quilt")
+    mainFile.withAdditionalFile(tasks.sourcesJar.getArchiveFile().get())
+}

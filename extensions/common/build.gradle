@@ -1,0 +1,20 @@
+// Copy the canonical access widener from :base:common into this module's resources
+// every Gradle configuration/refresh so it is guaranteed to be available next
+// to architectury.common.json (Architectury/Loom require the AW to be present
+// during project configuration).
+def _baseAw = project(':base:common').file('src/main/resources/colorfulhearts.accesswidener')
+def _destAw = file('src/main/resources/colorfulhearts_extensions.accesswidener')
+if (_baseAw.exists()) {
+    _destAw.parentFile.mkdirs()
+    _destAw.withOutputStream { os -> os << _baseAw.bytes }
+}
+
+architectury {
+    common("fabric", "neoforge")
+}
+
+dependencies {
+    modCompileOnly "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+
+    compileOnly(project(path: ':api:common', configuration: 'namedElements')) { transitive false }
+}

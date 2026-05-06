@@ -1,0 +1,123 @@
+plugins {
+    id 'com.gradleup.shadow'
+    id 'com.modrinth.minotaur'
+    id 'net.darkhax.curseforgegradle'
+}
+
+architectury {
+    platformSetupLoomIde()
+    neoForge()
+}
+
+loom {
+    runs {
+        server.ideConfigGenerated(false)
+        // set window size to 720p
+        client.programArgs("--width", "1280", "--height", "720")
+    }
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentNeoForge.extendsFrom common
+
+    // Files in this configuration will be bundled into your mod using the Shadow plugin.
+    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+repositories {
+    maven { url "https://maven.neoforged.net/releases/" }
+}
+
+dependencies {
+    neoForge "net.neoforged:neoforge:${neoforge_version}"
+
+    common(project(path: ':extensions:common', configuration: 'namedElements')) { transitive false }
+    shadowBundle(project(path: ':extensions:common', configuration: 'transformProductionNeoForge'))
+
+    api(project(path: ':api:common', configuration: 'namedElements')) { transitive false }
+    api(project(path: ':api:neoforge', configuration: 'namedElements')) { transitive false }
+    runtimeOnly(project(path: ':base:common', configuration: 'namedElements')) { transitive false }
+    runtimeOnly(project(path: ':base:neoforge', configuration: 'namedElements')) { transitive false }
+
+    modCompileOnly("maven.modrinth:farmers-delight:${farmersdelight_version}-neoforge")
+//    modRuntimeOnly("maven.modrinth:the-undergarden:${undergarden_version}-neoforge")
+    modRuntimeOnly("maven.modrinth:raised:${raised_version}-neoforge")
+
+    modImplementation("maven.modrinth:appleskin:${appleskin_version}-neoforge")
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${clothconfig_version}")
+
+    modRuntimeOnly("maven.modrinth:forge-config-api-port:${forgeconfig_version}-neoforge")
+    modImplementation("maven.modrinth:overflowing-bars:${overflowingbars_version}-neoforge")
+    modImplementation("maven.modrinth:puzzles-lib:${puzzleslib_version}-neoforge")
+}
+
+processResources {
+    inputs.property 'version', project.version
+
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand version: project.version
+    }
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    atAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = 'dev-shadow'
+}
+
+sourcesJar {
+    afterEvaluate {
+        [":extensions:common", ":api:neoforge"].forEach {
+            def sourcesTask = project(it).sourcesJar
+            dependsOn sourcesTask
+            from sourcesTask.archiveFile.map { zipTree(it) }
+        }
+    }
+}
+
+tasks.build.mustRunAfter(tasks.clean)
+tasks.register('publishProduction') {
+    dependsOn([tasks.clean, tasks.build])
+    finalizedBy([tasks.modrinth, tasks.publishCurseForge])
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "${project.modrinth_id}"
+    versionNumber = "${project.version}"
+    versionName = "[NeoForge] ${project.minecraft_version}-v${project.version}"
+    uploadFile = tasks.remapJar.getArchiveFile().get()
+    gameVersions = ["1.21", project.minecraft_version]
+    loaders = ["neoforge"]
+    changelog = parent.file("CHANGELOG.md").text
+    additionalFiles = [tasks.sourcesJar.getArchiveFile().get()]
+}
+
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
+    apiToken = System.getenv("CURSEFORGE_TOKEN")
+    disableVersionDetection()
+
+    def mainFile = upload(project.curseforge_id, tasks.remapJar.getArchiveFile().get())
+    mainFile.displayName = "[NeoForge] ${project.minecraft_version}-v${project.version}"
+    mainFile.releaseType = "release"
+    mainFile.changelog = parent.file("CHANGELOG.md").text
+    mainFile.changelogType = "markdown"
+    mainFile.addGameVersion("Client", "1.21", project.minecraft_version)
+    mainFile.addModLoader("neoforge")
+    mainFile.withAdditionalFile(tasks.sourcesJar.getArchiveFile().get())
+}

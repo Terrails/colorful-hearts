@@ -1,9 +1,8 @@
 package terrails.colorfulhearts.api.heart.drawing;
 
+import terrails.colorfulhearts.api.heart.Hearts;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import org.lwjgl.opengl.GL11;
-import terrails.colorfulhearts.api.heart.Hearts;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -54,7 +53,8 @@ public class OverlayHeart {
 
     /**
      * Creates an instance of {@link Builder} to create an instance of {@link OverlayHeart}
-     * @param id easily distinguishable ID useful for debugging
+     *
+     * @param id        easily distinguishable ID useful for debugging
      * @param condition for this heart type to be active
      */
     public static Builder build(ResourceLocation id, Predicate<Player> condition) {
@@ -80,15 +80,15 @@ public class OverlayHeart {
          * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgb values for the second heart color
          */
         public Builder addHealth(HeartDrawing drawing, float r, float g, float b) {
-            return this.addHealth(drawing, r, g, b, 1.0f, GL11.GL_ONE, GL11.GL_SRC_COLOR);
+            return this.addHealth(drawing, r, g, b, 1.0f);
         }
 
         /**
          * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgba values and blending modes
          */
-        public Builder addHealth(HeartDrawing drawing, float r, float g, float b, float alpha, int sourceFactor, int destinationFactor) {
+        public Builder addHealth(HeartDrawing drawing, float r, float g, float b, float alpha) {
             this.healthFirst = drawing;
-            this.healthSecond = HeartDrawing.colorBlend(drawing, drawing.getId().withSuffix("_2"), r, g, b, alpha, sourceFactor, destinationFactor);;
+            this.healthSecond = HeartDrawing.colorBlend(drawing, drawing.getId().withSuffix("_2"), r, g, b, alpha);
             return this;
         }
 
@@ -113,15 +113,15 @@ public class OverlayHeart {
          * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgb values for the second heart color
          */
         public Builder addAbsorption(HeartDrawing drawing, float r, float g, float b) {
-            return this.addAbsorption(drawing, r, g, b, 1.0f, GL11.GL_ONE, GL11.GL_SRC_COLOR);
+            return this.addAbsorption(drawing, r, g, b, 1.0f);
         }
 
         /**
          * Uses the provided {@link HeartDrawing} object for the first heart color and colors the same texture using the provided rgba values and blending modes
          */
-        public Builder addAbsorption(HeartDrawing drawing, float r, float g, float b, float alpha, int sourceFactor, int destinationFactor) {
+        public Builder addAbsorption(HeartDrawing drawing, float r, float g, float b, float alpha) {
             this.absorptionFirst = drawing;
-            this.absorptionSecond = HeartDrawing.colorBlend(drawing, drawing.getId().withSuffix("_2"), r, g, b, alpha, sourceFactor, destinationFactor);
+            this.absorptionSecond = HeartDrawing.colorBlend(drawing, drawing.getId().withSuffix("_2"), r, g, b, alpha);
             return this;
         }
 
