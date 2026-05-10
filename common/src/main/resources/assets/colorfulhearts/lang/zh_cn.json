@@ -1,0 +1,16 @@
+{
+  "colorfulhearts.screen.configuration.title": "更美观的血条",
+  "colorfulhearts.screen.configuration.colors.category": "颜色",
+  "colorfulhearts.screen.health.title": "血条颜色",
+  "colorfulhearts.screen.absorption.title": "伤害吸收颜色",
+  "colorfulhearts.options.button.health_colors": "血条",
+  "colorfulhearts.options.button.absorption_colors": "伤害吸收",
+  "colorfulhearts.options.button.hearttype.normal": "正常",
+  "colorfulhearts.options.button.hearttype.poisoned": "中毒",
+  "colorfulhearts.options.button.hearttype.withered": "凋零",
+  "colorfulhearts.options.button.hearttype.frozen": "冰冻",
+  "colorfulhearts.options.button.confirmsave": "保存并退出",
+  "colorfulhearts.options.button.cancel": "取消",
+  "colorfulhearts.options.button.vanillaheart.true": "原版血条：启用",
+  "colorfulhearts.options.button.vanillaheart.false": "原版血条：禁用"
+}
