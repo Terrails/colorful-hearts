@@ -43,7 +43,7 @@ dependencies {
     common(project(path: ':api:fabric', configuration: 'namedElements')) { transitive false }
     common(project(path: ':base:common', configuration: 'namedElements')) { transitive false }
     shadowBundle(project(path: ':api:common', configuration: 'transformProductionFabric'))
-    shadowBundle(project(path: ':api:fabric', configuration: 'namedElements'))
+    shadowBundle(project(path: ':api:fabric', configuration: 'namedElements')) { transitive false }
     shadowBundle(project(path: ':base:common', configuration: 'transformProductionFabric'))
 
     api(include("com.electronwill.night-config:core:${nightconfig_version}"))

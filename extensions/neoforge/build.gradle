@@ -81,7 +81,7 @@ shadowJar {
 
 sourcesJar {
     afterEvaluate {
-        [":extensions:common", ":api:neoforge"].forEach {
+        [":extensions:common"].forEach {
             def sourcesTask = project(it).sourcesJar
             dependsOn sourcesTask
             from sourcesTask.archiveFile.map { zipTree(it) }

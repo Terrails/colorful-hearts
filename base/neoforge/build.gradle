@@ -54,7 +54,7 @@ dependencies {
     common(project(path: ':api:neoforge', configuration: 'namedElements')) { transitive false }
     common(project(path: ':base:common', configuration: 'namedElements')) { transitive false }
     shadowBundle(project(path: ':api:common', configuration: 'transformProductionNeoForge'))
-    shadowBundle(project(path: ':api:neoforge', configuration: 'namedElements'))
+    shadowBundle(project(path: ':api:neoforge', configuration: 'namedElements')) { transitive false }
     shadowBundle(project(path: ':base:common', configuration: 'transformProductionNeoForge'))
 }
 
