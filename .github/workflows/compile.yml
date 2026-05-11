@@ -21,5 +21,64 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Detect changed modules
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            api:
+              - 'api/**'
+            base:
+              - 'base/**'
+            extensions:
+              - 'extensions/**'
+            shared:
+              - 'build.gradle'
+              - 'settings.gradle'
+              - 'gradle.properties'
+              - 'gradle/**'
+              - '.github/workflows/**'
+              - 'gradlew'
+              - 'gradlew.bat'
+
+      - name: Build affected modules
+        shell: bash
+        run: |
+          tasks=()
+
+          if [[ "${{ steps.changes.outputs.shared }}" == 'true' || "${{ steps.changes.outputs.api }}" == 'true' ]]; then
+            tasks+=(
+              ":api:common:build"
+              ":api:fabric:build"
+              ":api:neoforge:build"
+              ":base:common:build"
+              ":base:fabric:build"
+              ":base:neoforge:build"
+              ":extensions:common:build"
+              ":extensions:fabric:build"
+              ":extensions:neoforge:build"
+            )
+          else
+            if [[ "${{ steps.changes.outputs.base }}" == 'true' ]]; then
+              tasks+=(
+                ":base:common:build"
+                ":base:fabric:build"
+                ":base:neoforge:build"
+              )
+            fi
+
+            if [[ "${{ steps.changes.outputs.extensions }}" == 'true' ]]; then
+              tasks+=(
+                ":extensions:common:build"
+                ":extensions:fabric:build"
+                ":extensions:neoforge:build"
+              )
+            fi
+          fi
+
+          if [[ ${#tasks[@]} -eq 0 ]]; then
+            echo "No tracked project changes detected; skipping Gradle build."
+            exit 0
+          fi
+
+          ./gradlew "${tasks[@]}"
