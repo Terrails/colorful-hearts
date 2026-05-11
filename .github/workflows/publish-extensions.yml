@@ -1,4 +1,4 @@
-name: Publish
+name: Publish Extensions
 
 on:
   workflow_dispatch:
@@ -27,4 +27,4 @@ jobs:
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-        run: ./gradlew :base:fabric:publishProduction :base:neoforge:publishProduction
+        run: ./gradlew :extensions:fabric:publishProduction :extensions:neoforge:publishProduction
