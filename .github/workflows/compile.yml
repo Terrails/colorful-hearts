@@ -89,8 +89,8 @@ jobs:
         with:
           name: api-artifacts
           path: |
-            api/fabric/build/libs/*.jar
-            api/neoforge/build/libs/*.jar
+            api/*/build/libs/*[0-9].jar
+            api/*/build/libs/*[0-9]-sources.jar
 
       - name: Upload Base artifacts
         if: success() && (steps.changes.outputs.shared == 'true' || steps.changes.outputs.base == 'true')
@@ -98,8 +98,8 @@ jobs:
         with:
           name: base-artifacts
           path: |
-            base/fabric/build/libs/*.jar
-            base/neoforge/build/libs/*.jar
+            base/*/build/libs/*[0-9].jar
+            base/*/build/libs/*[0-9]-sources.jar
 
       - name: Upload Extensions artifacts
         if: success() && (steps.changes.outputs.shared == 'true' || steps.changes.outputs.extensions == 'true')
@@ -107,5 +107,5 @@ jobs:
         with:
           name: extensions-artifacts
           path: |
-            extensions/fabric/build/libs/*.jar
-            extensions/neoforge/build/libs/*.jar
+            extensions/*/build/libs/*[0-9].jar
+            extensions/*/build/libs/*[0-9]-sources.jar
