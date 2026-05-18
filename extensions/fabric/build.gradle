@@ -58,9 +58,6 @@ dependencies {
     runtimeOnly(project(path: ':base:common', configuration: 'namedElements')) { transitive false }
     runtimeOnly(project(path: ':base:fabric', configuration: 'namedElements')) { transitive false }
 
-    api(include("com.electronwill.night-config:core:${nightconfig_version}"))
-    api(include("com.electronwill.night-config:toml:${nightconfig_version}"))
-
     modRuntimeOnly("maven.modrinth:modmenu:${modmenu_version}-fabric")
     modRuntimeOnly("maven.modrinth:raised:${raised_version}-fabric")
 
@@ -126,6 +123,7 @@ modrinth {
 }
 
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 tasks.register('publishCurseForge', TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
     disableVersionDetection()
