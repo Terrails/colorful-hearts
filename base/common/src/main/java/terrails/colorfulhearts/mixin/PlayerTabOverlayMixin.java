@@ -21,7 +21,7 @@ public class PlayerTabOverlayMixin {
     )
     private void colorfulhearts_renderTablistHearts(
             int y, int x, int offset, UUID playerUuid, GuiGraphics guiGraphics, int scoreValue,
-            CallbackInfo ci, @Local(name = "healthState") PlayerTabOverlay.HealthState healthState
+            CallbackInfo ci, @Local(ordinal = 0) PlayerTabOverlay.HealthState healthState
     ) {
         // this handles just 2 rows and then uses vanilla NNhp format (default behaviour)
         TabHeartRenderer.INSTANCE.renderPlayerListHud(y, x, offset, guiGraphics, scoreValue, healthState);
