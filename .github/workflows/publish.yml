@@ -39,11 +39,11 @@ jobs:
             exit 1
           fi
 
-      - name: Run publishProduction
-        env:
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-        run: ./gradlew :base:fabric:publishProduction :base:neoforge:publishProduction
+      #      - name: Run publishProduction
+      #        env:
+      #          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      #          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+      #        run: ./gradlew :base:fabric:publishProduction :base:neoforge:publishProduction
 
       - name: Create GitHub release
         env:
@@ -52,5 +52,7 @@ jobs:
         run: |
           gh release create "$RELEASE_NAME" \
             --title "Colorful Hearts $RELEASE_NAME" \
-            base/*/build/libs/*[0-9].jar \
-            api/*/build/libs/*[0-9].jar
+            base/fabric/build/libs/*[0-9].jar \
+            base/neoforge/build/libs/*[0-9].jar \
+            api/fabric/build/libs/*[0-9].jar \
+            api/neoforge/build/libs/*[0-9].jar
