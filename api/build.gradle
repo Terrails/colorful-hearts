@@ -11,6 +11,10 @@ subprojects {
         archivesBaseName = "colorfulhearts-api-${project.name}-${project.minecraft_version}"
     }
 
+    java {
+        withSourcesJar()
+    }
+
     loom {
         accessWidenerPath = project(":base:common").file("src/main/resources/colorfulhearts.accesswidener")
 

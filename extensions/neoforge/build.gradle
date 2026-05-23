@@ -1,7 +1,5 @@
 plugins {
     id 'com.gradleup.shadow'
-    id 'com.modrinth.minotaur'
-    id 'net.darkhax.curseforgegradle'
 }
 
 architectury {
@@ -31,6 +29,11 @@ configurations {
     shadowBundle {
         canBeResolved = true
         canBeConsumed = false
+    }
+
+    shadowArtifact {
+        canBeConsumed = true
+        canBeResolved = false
     }
 }
 
@@ -79,49 +82,12 @@ shadowJar {
     archiveClassifier = 'dev-shadow'
 }
 
-sourcesJar {
-    afterEvaluate {
-        [":extensions:common"].forEach {
-            def sourcesTask = project(it).sourcesJar
-            dependsOn sourcesTask
-            from sourcesTask.archiveFile.map { zipTree(it) }
-        }
-    }
+artifacts {
+    shadowArtifact(shadowJar)
 }
 
 tasks.build.mustRunAfter(tasks.clean)
 tasks.register('publishProduction') {
     dependsOn([tasks.clean, tasks.build])
     finalizedBy([tasks.modrinth, tasks.publishCurseForge])
-}
-
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
-    projectId = "${project.modrinth_id}"
-    versionNumber = "${project.version}"
-    versionName = "[NeoForge] ${project.minecraft_version}-v${project.version}"
-    uploadFile = tasks.remapJar.getArchiveFile().get()
-    gameVersions = [project.minecraft_version]
-    loaders = ["neoforge"]
-    dependencies {
-        required.project "colorful-hearts"
-    }
-    changelog = parent.file("CHANGELOG.md").text
-    additionalFiles = [tasks.sourcesJar.getArchiveFile().get()]
-}
-
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
-tasks.register('publishCurseForge', TaskPublishCurseForge) {
-    apiToken = System.getenv("CURSEFORGE_TOKEN")
-    disableVersionDetection()
-
-    def mainFile = upload(project.curseforge_id, tasks.remapJar.getArchiveFile().get())
-    mainFile.displayName = "[NeoForge] ${project.minecraft_version}-v${project.version}"
-    mainFile.releaseType = "release"
-    mainFile.changelog = parent.file("CHANGELOG.md").text
-    mainFile.changelogType = "markdown"
-    mainFile.addGameVersion("Client", project.minecraft_version)
-    mainFile.addRequirement("colorful-hearts")
-    mainFile.addModLoader("neoforge")
-    mainFile.withAdditionalFile(tasks.sourcesJar.getArchiveFile().get())
 }

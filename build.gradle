@@ -38,10 +38,6 @@ configure(subprojects.findAll { it.name == "common" || it.name == "fabric" || it
         }
     }
 
-    java {
-        withSourcesJar()
-    }
-
     tasks.withType(JavaCompile).configureEach {
         it.options.encoding = "UTF-8"
         it.options.release = 21

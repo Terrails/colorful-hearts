@@ -45,6 +45,7 @@ dependencies {
     shadowBundle(project(path: ':api:common', configuration: 'transformProductionFabric'))
     shadowBundle(project(path: ':api:fabric', configuration: 'namedElements')) { transitive false }
     shadowBundle(project(path: ':base:common', configuration: 'transformProductionFabric'))
+    include(project(path: ':extensions:fabric', configuration: 'shadowArtifact')) { transitive false }
 
     api(include("com.electronwill.night-config:core:${nightconfig_version}"))
     api(include("com.electronwill.night-config:toml:${nightconfig_version}"))
@@ -70,16 +71,6 @@ shadowJar {
     archiveClassifier = 'dev-shadow'
 }
 
-sourcesJar {
-    afterEvaluate {
-        [":base:common", ":api:fabric"].forEach {
-            def sourcesTask = project(it).sourcesJar
-            dependsOn sourcesTask
-            from sourcesTask.archiveFile.map { zipTree(it) }
-        }
-    }
-}
-
 tasks.build.mustRunAfter(tasks.clean)
 tasks.register('publishProduction') {
     dependsOn([tasks.clean, tasks.build])
@@ -98,10 +89,10 @@ modrinth {
         required.project "fabric-api"
     }
     changelog = parent.file("CHANGELOG.md").text
-    additionalFiles = [tasks.sourcesJar.getArchiveFile().get()]
 }
 
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 tasks.register('publishCurseForge', TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
     disableVersionDetection()
@@ -114,5 +105,4 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     mainFile.addGameVersion("Client", project.minecraft_version)
     mainFile.addRequirement("fabric-api")
     mainFile.addModLoader("fabric")
-    mainFile.withAdditionalFile(tasks.sourcesJar.getArchiveFile().get())
 }

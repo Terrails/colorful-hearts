@@ -56,6 +56,7 @@ dependencies {
     shadowBundle(project(path: ':api:common', configuration: 'transformProductionNeoForge'))
     shadowBundle(project(path: ':api:neoforge', configuration: 'namedElements')) { transitive false }
     shadowBundle(project(path: ':base:common', configuration: 'transformProductionNeoForge'))
+    include(project(path: ':extensions:neoforge', configuration: 'shadowArtifact')) { transitive false }
 }
 
 processResources {
@@ -76,16 +77,6 @@ shadowJar {
     archiveClassifier = 'dev-shadow'
 }
 
-sourcesJar {
-    afterEvaluate {
-        [":base:common", ":api:neoforge"].forEach {
-            def sourcesTask = project(it).sourcesJar
-            dependsOn sourcesTask
-            from sourcesTask.archiveFile.map { zipTree(it) }
-        }
-    }
-}
-
 tasks.build.mustRunAfter(tasks.clean)
 tasks.register('publishProduction') {
     dependsOn([tasks.clean, tasks.build])
@@ -101,10 +92,10 @@ modrinth {
     gameVersions = [project.minecraft_version]
     loaders = ["neoforge"]
     changelog = parent.file("CHANGELOG.md").text
-    additionalFiles = [tasks.sourcesJar.getArchiveFile().get()]
 }
 
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 tasks.register('publishCurseForge', TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
     disableVersionDetection()
@@ -116,5 +107,4 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     mainFile.changelogType = "markdown"
     mainFile.addGameVersion("Client", project.minecraft_version)
     mainFile.addModLoader("neoforge")
-    mainFile.withAdditionalFile(tasks.sourcesJar.getArchiveFile().get())
 }

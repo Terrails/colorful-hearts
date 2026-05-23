@@ -1,6 +1,6 @@
 name: Compile
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   build:
@@ -19,93 +19,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@v4
 
-      - name: Detect changed modules
-        id: changes
-        uses: dorny/paths-filter@v4
-        with:
-          filters: |
-            api:
-              - 'api/**'
-            base:
-              - 'base/**'
-            extensions:
-              - 'extensions/**'
-            shared:
-              - 'build.gradle'
-              - 'settings.gradle'
-              - 'gradle.properties'
-              - 'gradle/**'
-              - '.github/workflows/**'
-              - 'gradlew'
-              - 'gradlew.bat'
-
-      - name: Build affected modules
-        shell: bash
-        run: |
-          tasks=()
-
-          if [[ "${{ steps.changes.outputs.shared }}" == 'true' || "${{ steps.changes.outputs.api }}" == 'true' ]]; then
-            tasks+=(
-              ":api:common:build"
-              ":api:fabric:build"
-              ":api:neoforge:build"
-              ":base:common:build"
-              ":base:fabric:build"
-              ":base:neoforge:build"
-              ":extensions:common:build"
-              ":extensions:fabric:build"
-              ":extensions:neoforge:build"
-            )
-          else
-            if [[ "${{ steps.changes.outputs.base }}" == 'true' ]]; then
-              tasks+=(
-                ":base:common:build"
-                ":base:fabric:build"
-                ":base:neoforge:build"
-              )
-            fi
-
-            if [[ "${{ steps.changes.outputs.extensions }}" == 'true' ]]; then
-              tasks+=(
-                ":extensions:common:build"
-                ":extensions:fabric:build"
-                ":extensions:neoforge:build"
-              )
-            fi
-          fi
-
-          if [[ ${#tasks[@]} -eq 0 ]]; then
-            echo "No tracked project changes detected; skipping Gradle build."
-            exit 0
-          fi
-
-          ./gradlew "${tasks[@]}"
-
-      - name: Upload API artifacts
-        if: success() && (steps.changes.outputs.shared == 'true' || steps.changes.outputs.api == 'true')
-        uses: actions/upload-artifact@v7
-        with:
-          name: api-artifacts
-          path: |
-            api/*/build/libs/*[0-9].jar
-            api/*/build/libs/*[0-9]-sources.jar
-
-      - name: Upload Base artifacts
-        if: success() && (steps.changes.outputs.shared == 'true' || steps.changes.outputs.base == 'true')
-        uses: actions/upload-artifact@v7
-        with:
-          name: base-artifacts
-          path: |
-            base/*/build/libs/*[0-9].jar
-            base/*/build/libs/*[0-9]-sources.jar
-
-      - name: Upload Extensions artifacts
-        if: success() && (steps.changes.outputs.shared == 'true' || steps.changes.outputs.extensions == 'true')
-        uses: actions/upload-artifact@v7
-        with:
-          name: extensions-artifacts
-          path: |
-            extensions/*/build/libs/*[0-9].jar
-            extensions/*/build/libs/*[0-9]-sources.jar
+      - name: Build with Gradle
+        run: ./gradlew build
