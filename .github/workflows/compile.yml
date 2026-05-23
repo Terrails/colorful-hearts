@@ -23,3 +23,25 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Upload API artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: api-artifacts
+          path: |
+            api/*/build/libs/*[0-9].jar
+            api/*/build/libs/*[0-9]-sources.jar
+
+      - name: Upload Base artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: artifacts
+          path: |
+            base/*/build/libs/*[0-9].jar
+
+      - name: Upload Extensions artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: extensions-artifacts
+          path: |
+            extensions/*/build/libs/*[0-9].jar
