@@ -1,6 +1,6 @@
 {
-  "pack": {
-    "description": "colorfulhearts_extensions",
-    "pack_format": 18
-  }
+	"pack": {
+		"description": "colorfulhearts-extensions",
+		"pack_format": 18
+	}
 }

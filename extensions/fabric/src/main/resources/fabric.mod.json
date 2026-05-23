@@ -1,37 +1,47 @@
 {
-  "schemaVersion": 1,
-  "id": "colorfulhearts_extensions",
-  "version": "${version}",
+	"schemaVersion": 1,
+	"id": "colorfulhearts-extensions",
+	"version": "${version}",
 
-  "name": "Colorful Hearts Extensions",
-  "description": "An extension mod for colorful-hearts adding compatibility with other mods.",
-  "authors": [
-    "Terrails"
-  ],
-  "license": "MIT",
-  "contact": {
-    "sources": "https://github.com/Terrails/colorful-hearts",
-    "issues": "https://github.com/Terrails/colorful-hearts/issues",
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/colorful-hearts"
-  },
+	"name": "Colorful Hearts Extensions",
+	"description": "A builtin module for Colorful Hearts adding compatibility with other mods.",
+	"authors": [
+		"Terrails"
+	],
+	"license": "MIT",
+	"contact": {
+		"sources": "https://github.com/Terrails/colorful-hearts",
+		"issues": "https://github.com/Terrails/colorful-hearts/issues",
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/colorful-hearts"
+	},
 
-  "icon": "icon.png",
+	"icon": "icon.png",
 
-  "environment": "client",
-  "entrypoints": {
-    "client": [ "terrails.colorfulhearts.extensions.fabric.ColorfulHeartsExtensions" ],
-    "appleskin": [ "terrails.colorfulhearts.extensions.fabric.compat.AppleSkinCompat" ]
-  },
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"terrails.colorfulhearts.extensions.fabric.ColorfulHeartsExtensions"
+		],
+		"appleskin": [
+			"terrails.colorfulhearts.extensions.fabric.compat.AppleSkinCompat"
+		]
+	},
 
-  "mixins": [
-    "colorfulhearts_extensions.mixins.json"
-  ],
+	"mixins": [
+		"colorfulhearts-extensions.mixins.json"
+	],
 
-  "depends": {
-    "fabricloader": ">=0.14.19",
-    "fabric-api": "*",
-    "colorfulhearts": "*",
-    "minecraft": ">=1.21",
-    "java": ">=17"
-  }
+	"depends": {
+		"fabricloader": ">=0.14.19",
+		"fabric-api": "*",
+		"colorfulhearts": "*",
+		"minecraft": ">=1.21",
+		"java": ">=17"
+	},
+
+	"custom": {
+		"modmenu": {
+			"parent": "colorfulhearts"
+		}
+	}
 }

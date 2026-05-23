@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class CColorfulHeartsExtensions {
 
-    public static final String MOD_ID = "colorfulhearts_extensions";
+    public static final String MOD_ID = "colorfulhearts-extensions";
     public static final String MOD_NAME = "Colorful Hearts Extensions";
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 

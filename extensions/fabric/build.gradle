@@ -60,6 +60,8 @@ dependencies {
     api(project(path: ':api:fabric', configuration: 'namedElements')) { transitive false }
     runtimeOnly(project(path: ':base:common', configuration: 'namedElements')) { transitive false }
     runtimeOnly(project(path: ':base:fabric', configuration: 'namedElements')) { transitive false }
+    runtimeOnly("com.electronwill.night-config:core:${nightconfig_version}")
+    runtimeOnly("com.electronwill.night-config:toml:${nightconfig_version}")
 
     modRuntimeOnly("maven.modrinth:modmenu:${modmenu_version}-fabric")
     modRuntimeOnly("maven.modrinth:raised:${raised_version}-fabric")
