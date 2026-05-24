@@ -32,15 +32,6 @@ configurations {
         canBeResolved = true
         canBeConsumed = false
     }
-//
-//    devRuntimeElements {
-//        canBeResolved = false
-//        canBeConsumed = true
-//        outgoing.artifact(project(':api:common').sourceSets.main.output)
-//        outgoing.artifact(project(':api:neoforge').sourceSets.main.output)
-//        outgoing.artifact(project(':base:common').sourceSets.main.output)
-//        outgoing.artifact(sourceSets.main.output)
-//    }
 }
 
 repositories {

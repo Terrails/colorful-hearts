@@ -11,11 +11,6 @@ subprojects {
         archivesBaseName = "colorfulhearts-${project.name}-${project.minecraft_version}"
     }
 
-    architectury {
-        // disable ExpectPlatform since it seems to randomly not get applied when building
-
-    }
-
     loom {
         accessWidenerPath = project(":base:common").file("src/main/resources/colorfulhearts.accesswidener")
 
