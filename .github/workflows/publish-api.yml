@@ -1,36 +1,21 @@
-name: Publish API
+name: Publish API to Github Packages
 
 on:
   workflow_dispatch:
 
 jobs:
-  publish-production-api:
+  publish-api:
     runs-on: ubuntu-latest
     environment: deploy
     permissions:
-      contents: write
+      contents: read
+      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
-
-      - name: Read mod version
-        id: version
-        run: |
-          VERSION=$(grep '^mod_version=' api/gradle.properties | cut -d'=' -f2)
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Check whether release already exists
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_NAME: ${{ steps.version.outputs.version }}
-        run: |
-          if gh release view "api-$RELEASE_NAME" >/dev/null 2>&1; then
-            echo "Release api-$RELEASE_NAME already exists."
-            exit 1
-          fi
 
       - name: Setup JDK 21
         uses: actions/setup-java@v5
@@ -42,16 +27,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
 
       - name: Build with Gradle
-        run: ./gradlew build :api:fabric:build :api:neoforge:build
+        run: ./gradlew :api:common:build :api:fabric:build :api:neoforge:build
 
-      - name: Create GitHub release
+      - name: Publish to Maven
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_NAME: ${{ steps.version.outputs.version }}
-        run: |
-          gh release create "api-$RELEASE_NAME" \
-            --title "Colorful Hearts API $RELEASE_NAME" \
-            api/fabric/build/libs/*[0-9].jar \
-            api/fabric/build/libs/*[0-9]-sources.jar \
-            api/neoforge/build/libs/*[0-9].jar \
-            api/neoforge/build/libs/*[0-9]-sources.jar
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew :api:common:publish :api:fabric:publish :api:neoforge:publish

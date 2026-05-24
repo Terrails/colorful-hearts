@@ -70,18 +70,18 @@ subprojects {
             }
         }
 
-        if (System.getenv("MODMAVEN_PATH")) {
-            def mavenPath = System.getenv("MODMAVEN_PATH")
-            if (file(mavenPath).exists()) {
-                repositories {
+        repositories {
+            if (System.getenv("MODMAVEN_PATH")) {
+                def mavenPath = System.getenv("MODMAVEN_PATH")
+                if (file(mavenPath).exists()) {
                     maven {
                         name = "ModMaven"
                         url "file://" + System.getenv("MODMAVEN_PATH")
                     }
                 }
             }
-        } else if (System.getenv("GITHUB_TOKEN") && System.getenv("GITHUB_ACTOR")) {
-            repositories {
+
+            if (System.getenv("GITHUB_TOKEN") && System.getenv("GITHUB_ACTOR")) {
                 maven {
                     name = "GithubPackages"
                     url = "https://maven.pkg.github.com/Terrails/colorful-hearts"

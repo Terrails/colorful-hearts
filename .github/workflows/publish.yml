@@ -12,9 +12,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          fetch-tags: true
 
       - name: Read mod version
         id: version
@@ -31,6 +28,27 @@ jobs:
             echo "Release $RELEASE_NAME already exists."
             exit 1
           fi
+          echo "Release $RELEASE_NAME does not exist."
+
+      - name: Check whether changelog entry exists
+        env:
+          RELEASE_NAME: ${{ steps.version.outputs.version }}
+        run: |
+          NOTES=$(awk "/^## \[$RELEASE_NAME\]/,/^## / {print}" ./CHANGELOG.md | sed '$d')
+
+          if [ -z "$NOTES" ]; then
+            echo "No changelog entry found for version $RELEASE_NAME in CHANGELOG.md"
+            exit 1
+          fi
+
+          # Store multiline output safely
+          {
+            echo "notes<<EOF"
+            echo "$NOTES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          
+          echo "Changelog entry for $RELEASE_NAME found."
 
       - name: Setup JDK 21
         uses: actions/setup-java@v5
@@ -54,8 +72,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_NAME: ${{ steps.version.outputs.version }}
+          CHANGELOG_NOTES: ${{ steps.changelog.outputs.notes }}
         run: |
           gh release create "$RELEASE_NAME" \
-            --title "Colorful Hearts $RELEASE_NAME" \
+            --title "Colorful Hearts v$RELEASE_NAME" \
+            --notes "$CHANGELOG_NOTES" \
             base/fabric/build/libs/*[0-9].jar \
             base/neoforge/build/libs/*[0-9].jar
