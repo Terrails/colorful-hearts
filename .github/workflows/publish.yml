@@ -34,7 +34,7 @@ jobs:
         env:
           RELEASE_NAME: ${{ steps.version.outputs.version }}
         run: |
-          NOTES=$(awk "/^## \[$RELEASE_NAME\]/,/^## / {print}" ./CHANGELOG.md | sed '$d')
+          NOTES=$(sed -n "/^## \[$RELEASE_NAME\]/,/^## /p" ./CHANGELOG.md | sed "\$d")
 
           if [ -z "$NOTES" ]; then
             echo "No changelog entry found for version $RELEASE_NAME in CHANGELOG.md"
