@@ -32,7 +32,6 @@ configure(subprojects.findAll { it.name == "common" || it.name == "fabric" || it
     dependencies {
         minecraft "com.mojang:minecraft:${project.minecraft_version}"
         mappings loom.layered() {
-
             officialMojangMappings()
             parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}@zip" as String)
         }
@@ -46,8 +45,6 @@ configure(subprojects.findAll { it.name == "common" || it.name == "fabric" || it
 
 // all non-common subprojects
 configure(subprojects.findAll { it.name == "fabric" || it.name == "neoforge" }) {
-    apply plugin: 'maven-publish'
-
     repositories {
         exclusiveContent {
             forRepository {
@@ -58,62 +55,6 @@ configure(subprojects.findAll { it.name == "fabric" || it.name == "neoforge" }) 
             }
             filter {
                 includeGroup "maven.modrinth"
-            }
-        }
-    }
-
-    tasks.withType(GenerateModuleMetadata).configureEach {
-        enabled = false
-    }
-
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                var isApi = project.path.startsWith(":api")
-                var isExtensions = project.path.startsWith(":extensions")
-
-                groupId = project.group
-                artifactId = "colorfulhearts-${project.name}${isApi ? "-api" : isExtensions ? "-extensions" : ""}"
-                from components.java
-                // From https://github.com/Fuzss/modresources/blob/d40b8125cadb6ab1b56d90c03eb0c09a666d949a/gradle/v2/main.gradle#L235-L260
-                pom {
-                    name = "Colorful Hearts${isApi ? " API" : isExtensions ? " Extensions" : ""}"
-                    description = "A client side mod that replaces multiple vanilla heart rows with a single row using colored hearts"
-                    url = "https://github.com/Terrails/colorful-hearts"
-                    scm {
-                        url = "https://github.com/Terrails/colorful-hearts"
-                        connection = "scm:git:git://github.com/Terrails/colorful-hearts.git"
-                        developerConnection = "scm:git:git@github.com:Terrails/colorful-hearts.git"
-                    }
-                    issueManagement {
-                        system = "github"
-                        url = "https://github.com/Terrails/colorful-hearts/issues"
-                    }
-                    licenses {
-                        license {
-                            name = "MIT"
-                            url = "https://spdx.org/licenses/MIT.html"
-                        }
-                    }
-                    developers {
-                        developer {
-                            id = "terrails"
-                            name = "Terrails"
-                        }
-                    }
-                }
-            }
-        }
-
-        if (System.getenv("MODMAVEN_PATH")) {
-            def mavenPath = System.getenv("MODMAVEN_PATH")
-            if (file(mavenPath).exists()) {
-                repositories {
-                    maven {
-                        name = "ModMaven"
-                        url "file://" + System.getenv("MODMAVEN_PATH")
-                    }
-                }
             }
         }
     }

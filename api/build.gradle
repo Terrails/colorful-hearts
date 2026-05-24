@@ -6,6 +6,7 @@ allprojects {
 subprojects {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
+    apply plugin: 'maven-publish'
 
     base {
         archivesBaseName = "colorfulhearts-api-${project.name}-${project.minecraft_version}"
@@ -23,6 +24,71 @@ subprojects {
                 main {
                     sourceSet project.sourceSets.main
                     sourceSet project(':api:common').sourceSets.main
+                }
+            }
+        }
+    }
+
+    tasks.withType(GenerateModuleMetadata).configureEach {
+        enabled = false
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+
+                groupId = project.group
+                artifactId = "colorfulhearts-${project.name}-api"
+                from components.java
+                // From https://github.com/Fuzss/modresources/blob/d40b8125cadb6ab1b56d90c03eb0c09a666d949a/gradle/v2/main.gradle#L235-L260
+                pom {
+                    name = "Colorful Hearts API"
+                    description = "The API for Colorful Hearts"
+                    url = "https://github.com/Terrails/colorful-hearts"
+                    scm {
+                        url = "https://github.com/Terrails/colorful-hearts"
+                        connection = "scm:git:git://github.com/Terrails/colorful-hearts.git"
+                        developerConnection = "scm:git:git@github.com:Terrails/colorful-hearts.git"
+                    }
+                    issueManagement {
+                        system = "github"
+                        url = "https://github.com/Terrails/colorful-hearts/issues"
+                    }
+                    licenses {
+                        license {
+                            name = "MIT"
+                            url = "https://spdx.org/licenses/MIT.html"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "terrails"
+                            name = "Terrails"
+                        }
+                    }
+                }
+            }
+        }
+
+        if (System.getenv("MODMAVEN_PATH")) {
+            def mavenPath = System.getenv("MODMAVEN_PATH")
+            if (file(mavenPath).exists()) {
+                repositories {
+                    maven {
+                        name = "ModMaven"
+                        url "file://" + System.getenv("MODMAVEN_PATH")
+                    }
+                }
+            }
+        } else if (System.getenv("GITHUB_TOKEN") && System.getenv("GITHUB_ACTOR")) {
+            repositories {
+                maven {
+                    name = "GithubPackages"
+                    url = "https://maven.pkg.github.com/Terrails/colorful-hearts"
+                    credentials {
+                        username = System.getenv("GITHUB_ACTOR")
+                        password = System.getenv("GITHUB_TOKEN")
+                    }
                 }
             }
         }
