@@ -91,7 +91,7 @@ modrinth {
     uploadFile = tasks.remapJar.getArchiveFile().get()
     gameVersions = [project.minecraft_version]
     loaders = ["neoforge"]
-    changelog = parent.file("CHANGELOG.md").text
+    changelog = rootProject.file("CHANGELOG.md").text
 }
 
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
@@ -103,7 +103,7 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
     def mainFile = upload(project.curseforge_id, tasks.remapJar.getArchiveFile().get())
     mainFile.displayName = "[NeoForge] ${project.minecraft_version}-v${project.version}"
     mainFile.releaseType = "release"
-    mainFile.changelog = parent.file("CHANGELOG.md").text
+    mainFile.changelog = rootProject.file("CHANGELOG.md").text
     mainFile.changelogType = "markdown"
     mainFile.addGameVersion("Client", project.minecraft_version)
     mainFile.addModLoader("neoforge")
