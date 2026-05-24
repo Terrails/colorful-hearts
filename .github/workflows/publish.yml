@@ -31,6 +31,7 @@ jobs:
           echo "Release $RELEASE_NAME does not exist."
 
       - name: Check whether changelog entry exists
+        id: changelog
         env:
           RELEASE_NAME: ${{ steps.version.outputs.version }}
         run: |
