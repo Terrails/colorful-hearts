@@ -14,15 +14,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Setup JDK 21
-        uses: actions/setup-java@v5
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
-
       - name: Read mod version
         id: version
         run: |
@@ -38,6 +29,15 @@ jobs:
             echo "Release $RELEASE_NAME already exists."
             exit 1
           fi
+         
+      - name: Setup JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Build with Gradle
         run: ./gradlew build
