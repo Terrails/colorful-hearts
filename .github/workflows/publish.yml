@@ -39,6 +39,9 @@ jobs:
             exit 1
           fi
 
+      - name: Build with Gradle
+        run: ./gradlew build
+
       #      - name: Run publishProduction
       #        env:
       #          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
