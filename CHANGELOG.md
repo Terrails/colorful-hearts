@@ -1,4 +1,4 @@
-## [21.4.1] - 2026-05-05
+## [21.4.0] - 2026-05-05
 
 - Updated to Minecraft
   1.21.4 ([030a9bb](https://github.com/Terrails/colorful-hearts/commit/030a9bb68ea3bac3dfff0d7d912493562b11f91b))
