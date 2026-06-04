@@ -63,11 +63,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      #      - name: Run publishProduction
-      #        env:
-      #          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      #          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-      #        run: ./gradlew :base:fabric:publishProduction :base:neoforge:publishProduction
+      - name: Run publishProduction
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        run: ./gradlew :base:fabric:publishProduction :base:neoforge:publishProduction
 
       - name: Create GitHub release
         env:
