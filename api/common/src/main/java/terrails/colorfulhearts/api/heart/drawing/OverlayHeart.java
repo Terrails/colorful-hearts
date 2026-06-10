@@ -1,7 +1,7 @@
 package terrails.colorfulhearts.api.heart.drawing;
 
 import terrails.colorfulhearts.api.heart.Hearts;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
@@ -9,12 +9,12 @@ import java.util.function.Predicate;
 
 public class OverlayHeart {
 
-    private final ResourceLocation id;
+    private final Identifier id;
     private final Predicate<Player> condition;
     private final List<HeartDrawing> healthDrawings, absorptionDrawings;
     private final boolean opaque;
 
-    OverlayHeart(ResourceLocation id, Predicate<Player> condition, HeartDrawing h1, HeartDrawing h2, HeartDrawing a1, HeartDrawing a2, boolean opaque) {
+    OverlayHeart(Identifier id, Predicate<Player> condition, HeartDrawing h1, HeartDrawing h2, HeartDrawing a1, HeartDrawing a2, boolean opaque) {
         this.id = id;
         this.condition = condition;
         this.healthDrawings = h1 == null || h2 == null ? List.of() : List.of(h1, h2);
@@ -34,7 +34,7 @@ public class OverlayHeart {
         return this.absorptionDrawings;
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return this.id;
     }
 
@@ -57,20 +57,20 @@ public class OverlayHeart {
      * @param id        easily distinguishable ID useful for debugging
      * @param condition for this heart type to be active
      */
-    public static Builder build(ResourceLocation id, Predicate<Player> condition) {
+    public static Builder build(Identifier id, Predicate<Player> condition) {
         return new Builder(id, condition);
     }
 
     public static class Builder {
 
-        final ResourceLocation id;
+        final Identifier id;
         final Predicate<Player> condition;
 
         HeartDrawing healthFirst, healthSecond;
         HeartDrawing absorptionFirst, absorptionSecond;
         boolean opaque;
 
-        Builder(ResourceLocation id, Predicate<Player> condition) {
+        Builder(Identifier id, Predicate<Player> condition) {
             this.id = id;
             this.condition = condition;
             this.opaque = true;

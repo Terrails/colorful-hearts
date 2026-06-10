@@ -1,9 +1,9 @@
 package terrails.colorfulhearts.config.screen;
 
-import net.minecraft.resources.ResourceLocation;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.config.ConfigOption;
 import terrails.colorfulhearts.config.Configuration;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -65,11 +65,11 @@ public enum HeartType {
         return this.configColors.get();
     }
 
-    public ResourceLocation getBaseSprite(boolean hardcore, boolean highlight, boolean half) {
+    public Identifier getBaseSprite(boolean hardcore, boolean highlight, boolean half) {
         return CColorfulHearts.location("heart/" + (this.isHealthType() ? "health" : "absorbing") + this.getEffectName() + "/" + (hardcore ? "hardcore_" : "") + (half ? "half" : "full") + (highlight ? "_blinking" : ""));
     }
 
-    public ResourceLocation getSprite(boolean hardcore, boolean highlight, boolean half, int color) {
+    public Identifier getSprite(boolean hardcore, boolean highlight, boolean half, int color) {
         return this.getBaseSprite(hardcore, highlight, half).withSuffix("_" + color);
     }
 }

@@ -4,10 +4,10 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'dev.architectury.loom-no-remap'
 
     base {
-        archivesBaseName = "colorfulhearts-extensions-${project.name}-${project.minecraft_version}"
+        archivesName = "colorfulhearts-extensions-${project.name}-${project.minecraft_version}"
     }
 
     loom {

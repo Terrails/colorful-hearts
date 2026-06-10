@@ -1,10 +1,11 @@
 package terrails.colorfulhearts.api.neoforge.event;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
+
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Optional;
 
@@ -12,13 +13,14 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
     public static class Pre extends NeoHeartRenderEvent<HeartRenderEvent.Pre> {
 
-        public Pre(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        public Pre(GuiGraphicsExtractor guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
             super(new HeartRenderEvent.Pre(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart));
         }
 
         public void setCancelled(boolean cancel) {
             event.setCancelled(cancel);
         }
+
         public boolean isCancelled() {
             return event.isCancelled();
         }
@@ -26,6 +28,7 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
         public void setX(int x) {
             event.setX(x);
         }
+
         public void setY(int y) {
             event.setY(y);
         }
@@ -33,9 +36,11 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
         public void setBlinking(boolean blinking) {
             event.setBlinking(blinking);
         }
+
         public void setHardcore(boolean hardcore) {
             event.setHardcore(hardcore);
         }
+
         public void setOverlayHeart(OverlayHeart heart) {
             event.setOverlayHeart(heart);
         }
@@ -43,7 +48,7 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
 
     public static class Post extends NeoHeartRenderEvent<HeartRenderEvent.Post> {
 
-        public Post(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        public Post(GuiGraphicsExtractor guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
             super(new HeartRenderEvent.Post(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart));
         }
     }
@@ -58,7 +63,7 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
         return this.event;
     }
 
-    public GuiGraphics getGuiGraphics() {
+    public GuiGraphicsExtractor getGuiGraphics() {
         return event.getGuiGraphics();
     }
 
@@ -69,6 +74,7 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
     public int getX() {
         return event.getX();
     }
+
     public int getY() {
         return event.getY();
     }
@@ -76,12 +82,15 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
     public int getMaxHealth() {
         return event.getMaxHealth();
     }
+
     public int getHealth() {
         return event.getHealth();
     }
+
     public int getDisplayHealth() {
         return event.getDisplayHealth();
     }
+
     public int getAbsorption() {
         return event.getAbsorption();
     }
@@ -89,6 +98,7 @@ public class NeoHeartRenderEvent<E extends HeartRenderEvent> extends Event {
     public boolean isBlinking() {
         return event.isBlinking();
     }
+
     public boolean isHardcore() {
         return event.isHardcore();
     }

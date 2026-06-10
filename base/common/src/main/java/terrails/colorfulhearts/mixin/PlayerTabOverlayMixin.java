@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import terrails.colorfulhearts.render.TabHeartRenderer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 
 import java.util.UUID;
@@ -15,12 +15,12 @@ import java.util.UUID;
 @Mixin(PlayerTabOverlay.class)
 public class PlayerTabOverlayMixin {
 
-    @Inject(method = "renderTablistHearts", cancellable = true,
+    @Inject(method = "extractTablistHearts", cancellable = true,
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Ljava/util/function/Function;Lnet/minecraft/resources/ResourceLocation;IIII)V")
+                    target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V")
     )
     private void colorfulhearts_renderTablistHearts(
-            int y, int x, int offset, UUID playerUuid, GuiGraphics guiGraphics, int scoreValue,
+            int y, int x, int offset, UUID playerUuid, GuiGraphicsExtractor guiGraphics, int scoreValue,
             CallbackInfo ci, @Local(ordinal = 0) PlayerTabOverlay.HealthState healthState
     ) {
         // this handles just 2 rows and then uses vanilla NNhp format (default behaviour)

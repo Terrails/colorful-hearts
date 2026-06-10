@@ -1,12 +1,12 @@
 package terrails.colorfulhearts.config.screen;
 
+import terrails.colorfulhearts.config.screen.widgets.LabelLine;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import terrails.colorfulhearts.config.screen.widgets.LabelLine;
 
 public class ConfigurationScreen extends Screen {
 
@@ -19,7 +19,6 @@ public class ConfigurationScreen extends Screen {
 
     @Override
     protected void init() {
-        assert this.minecraft != null;
         final Font font = this.minecraft.font;
 
         final int marginY = 32;
@@ -60,14 +59,14 @@ public class ConfigurationScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 16777215);
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        guiGraphics.centeredText(this.font, this.title, this.width / 2, 20, 16777215);
+
     }
 
     @Override
     public void onClose() {
-        assert this.minecraft != null;
         this.minecraft.setScreen(this.lastScreen);
     }
 }

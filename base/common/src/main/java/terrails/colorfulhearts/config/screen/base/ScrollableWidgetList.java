@@ -1,12 +1,10 @@
 package terrails.colorfulhearts.config.screen.base;
 
 import com.google.common.collect.ImmutableList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -21,35 +19,19 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
         super(minecraft, width, height, y, entryHeight);
     }
 
-    public void removeEntries() {
-        this.clearEntries();
-    }
-
-    @Nullable
     @Override
-    public Entry remove(int index) {
-        return super.remove(index);
-    }
-
-    @Override
-    public int addEntry(@NotNull Entry entry) {
+    public int addEntry(Entry entry) {
         return super.addEntry(entry);
     }
 
     @Override
-    public int getRowTop(int index) {
-        return super.getRowTop(index);
-    }
-
-    @Override
     protected int scrollBarX() {
-        // TODO: fix this
-        return super.scrollBarX(); //this.width - 7;
+        return this.width - scrollbarWidth();
     }
 
     @Override
     public int getRowWidth() {
-        return this.width - 14;
+        return this.width - scrollbarWidth();
     }
 
     @MethodsReturnNonnullByDefault
@@ -66,12 +48,20 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
         }
 
         @Override
-        public void render(@NotNull GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
+        public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
             this.children.forEach(widget -> {
-                widget.setY(top);
-                widget.render(guiGraphics, mouseX, mouseY, partialTick);
+                widget.setY(getContentY());
+                widget.extractRenderState(graphics, mouseX, mouseY, a);
             });
         }
+
+        //        @Override
+        //        public void render(@NotNull GuiGraphicsExtractor guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
+        //            this.children.forEach(widget -> {
+        //                widget.setY(top);
+        //                widget.render(guiGraphics, mouseX, mouseY, partialTick);
+        //            });
+        //        }
 
         @Override
         public List<? extends GuiEventListener> children() {

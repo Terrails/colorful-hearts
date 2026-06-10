@@ -46,8 +46,8 @@ public class ColorSelectionScreen extends Screen {
 
     @Override
     public void tick() {
+        this.heartTypeButtons.forEach(btn -> btn.active = !this.hasChanged);
         if (this.hasChanged) {
-            this.heartTypeButtons.forEach(btn -> btn.active = false);
             this.saveButton.active = this.canApplyChanges();
         } else if (this.saveButton.active) {
             this.rebuildWidgets();

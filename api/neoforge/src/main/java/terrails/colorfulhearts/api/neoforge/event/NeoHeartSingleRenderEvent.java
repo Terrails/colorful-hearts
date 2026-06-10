@@ -1,15 +1,16 @@
 package terrails.colorfulhearts.api.neoforge.event;
 
-import net.minecraft.client.gui.GuiGraphics;
 import net.neoforged.bus.api.Event;
+
 import terrails.colorfulhearts.api.event.HeartSingleRenderEvent;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class NeoHeartSingleRenderEvent extends Event {
 
     final HeartSingleRenderEvent event;
 
-    public NeoHeartSingleRenderEvent(Heart heart, GuiGraphics guiGraphics, int index, int x, int y, boolean hardcore, boolean blinking, boolean blinkingHeart) {
+    public NeoHeartSingleRenderEvent(Heart heart, GuiGraphicsExtractor guiGraphics, int index, int x, int y, boolean hardcore, boolean blinking, boolean blinkingHeart) {
         this.event = new HeartSingleRenderEvent(heart, guiGraphics, index, x, y, hardcore, blinking, blinkingHeart);
     }
 
@@ -21,7 +22,7 @@ public class NeoHeartSingleRenderEvent extends Event {
         return event.getHeart();
     }
 
-    public GuiGraphics getGuiGraphics() {
+    public GuiGraphicsExtractor getGuiGraphics() {
         return event.getGuiGraphics();
     }
 
@@ -32,6 +33,7 @@ public class NeoHeartSingleRenderEvent extends Event {
     public int getX() {
         return event.getX();
     }
+
     public int getY() {
         return event.getY();
     }
@@ -39,9 +41,11 @@ public class NeoHeartSingleRenderEvent extends Event {
     public boolean isHardcoreEnabled() {
         return event.isHardcoreEnabled();
     }
+
     public boolean isBlinking() {
         return event.isBlinking();
     }
+
     public boolean isBlinkingHeart() {
         return event.isBlinkingHeart();
     }

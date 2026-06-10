@@ -4,7 +4,7 @@ import terrails.colorfulhearts.api.heart.Hearts;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
 import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -19,7 +19,7 @@ public class AppleSkinCommonCompat {
     protected int lastHealth, lastModifiedHealth;
     private Heart[] hearts;
 
-    public void drawHealthOverlay(GuiGraphics guiGraphics, int x, int y, int absorbing, int health, int modifiedHealth, float alpha, boolean hardcore) {
+    public void drawHealthOverlay(GuiGraphicsExtractor guiGraphics, int x, int y, int absorbing, int health, int modifiedHealth, float alpha, boolean hardcore) {
         long tickCount = this.client.gui.getGuiTicks();
         // synchronize random with vanilla
         this.random.setSeed(tickCount * 312871);

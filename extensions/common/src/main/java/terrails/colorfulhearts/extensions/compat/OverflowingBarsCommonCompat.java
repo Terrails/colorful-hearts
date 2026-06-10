@@ -2,7 +2,7 @@ package terrails.colorfulhearts.extensions.compat;
 
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
@@ -19,7 +19,7 @@ public abstract class OverflowingBarsCommonCompat {
         }
     }
 
-    protected abstract void drawBarRowCount(GuiGraphics guiGraphics, int posX, int posY, int barValue, int maxRowCount);
+    protected abstract void drawBarRowCount(GuiGraphicsExtractor guiGraphics, int posX, int posY, int barValue, int maxRowCount);
 
     protected abstract boolean allowCount();
 }

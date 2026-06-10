@@ -1,6 +1,6 @@
 package terrails.colorfulhearts.extensions.neoforge;
 
-import net.neoforged.fml.loading.LoadingModList;
+import net.neoforged.fml.loading.FMLLoader;
 import org.apache.logging.log4j.LogManager;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -21,7 +21,7 @@ public class NeoMixinPlugin implements IMixinConfigPlugin {
         if (matcher.matches()) {
             String modid = matcher.group(1);
             String className = matcher.group(2);
-            if (LoadingModList.get().getModFileById(modid) != null) {
+            if (FMLLoader.getCurrent().getLoadingModList().getModFileById(modid) != null) {
                 LogManager.getLogger("Colorful Hearts Extensions").info("Applying mixin {} as mod {} is present.", className, modid);
                 return true;
             } else {

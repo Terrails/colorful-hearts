@@ -3,7 +3,7 @@ package terrails.colorfulhearts.api.heart.drawing;
 import org.jetbrains.annotations.NotNull;
 
 import terrails.colorfulhearts.api.heart.Hearts;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -88,11 +88,11 @@ public class Heart {
         return this == CONTAINER_NONE;
     }
 
-    public void draw(GuiGraphics guiGraphics, int x, int y, boolean hardcore, boolean highlightContainer, boolean highlightHeart) {
+    public void draw(GuiGraphicsExtractor guiGraphics, int x, int y, boolean hardcore, boolean highlightContainer, boolean highlightHeart) {
         this.draw(guiGraphics, x, y, hardcore, highlightContainer, highlightHeart, -1);
     }
 
-    public void draw(GuiGraphics guiGraphics, int x, int y, boolean hardcore, boolean highlightContainer, boolean highlightHeart, int argb) {
+    public void draw(GuiGraphicsExtractor guiGraphics, int x, int y, boolean hardcore, boolean highlightContainer, boolean highlightHeart, int argb) {
         if (this.isEmpty()) return;
         boolean hasBackground = this.backgroundHeart != null;
         if (hasBackground) {

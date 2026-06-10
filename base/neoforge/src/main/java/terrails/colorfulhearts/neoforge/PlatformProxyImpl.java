@@ -1,8 +1,8 @@
 package terrails.colorfulhearts.neoforge;
 
 import net.neoforged.fml.ModLoader;
+import net.neoforged.neoforge.client.event.PlayerHeartTypeEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
 
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.PlatformProxy;
@@ -16,7 +16,7 @@ import terrails.colorfulhearts.api.neoforge.event.NeoHeartRenderEvent;
 import terrails.colorfulhearts.api.neoforge.event.NeoHeartSingleRenderEvent;
 import terrails.colorfulhearts.api.neoforge.event.NeoHeartUpdateEvent;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Player;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
@@ -40,8 +40,8 @@ public class PlatformProxyImpl implements PlatformProxy {
     }
 
     @Override
-    public HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
-        NeoHeartRenderEvent.Pre event = new NeoHeartRenderEvent.Pre(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
+    public HeartRenderEvent.Pre preRenderEvent(GuiGraphicsExtractor GuiGraphicsExtractor, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        NeoHeartRenderEvent.Pre event = new NeoHeartRenderEvent.Pre(GuiGraphicsExtractor, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
         NeoForge.EVENT_BUS.post(event);
         return event.getEvent();
     }
@@ -53,8 +53,8 @@ public class PlatformProxyImpl implements PlatformProxy {
     }
 
     @Override
-    public void postRenderEvent(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
-        NeoForge.EVENT_BUS.post(new NeoHeartRenderEvent.Post(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart));
+    public void postRenderEvent(GuiGraphicsExtractor GuiGraphicsExtractor, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        NeoForge.EVENT_BUS.post(new NeoHeartRenderEvent.Post(GuiGraphicsExtractor, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart));
     }
 
     @Override
@@ -63,8 +63,8 @@ public class PlatformProxyImpl implements PlatformProxy {
     }
 
     @Override
-    public void singleRenderEvent(Heart heart, GuiGraphics guiGraphics, int index, int x, int y, boolean hardcore, boolean blinking, boolean blinkingHeart) {
-        NeoForge.EVENT_BUS.post(new NeoHeartSingleRenderEvent(heart, guiGraphics, index, x, y, hardcore, blinking, blinkingHeart));
+    public void singleRenderEvent(Heart heart, GuiGraphicsExtractor GuiGraphicsExtractor, int index, int x, int y, boolean hardcore, boolean blinking, boolean blinkingHeart) {
+        NeoForge.EVENT_BUS.post(new NeoHeartSingleRenderEvent(heart, GuiGraphicsExtractor, index, x, y, hardcore, blinking, blinkingHeart));
     }
 
     @Override

@@ -1,11 +1,11 @@
 package terrails.colorfulhearts.render;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.PlayerTabOverlay;
-import net.minecraft.util.Mth;
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.PlayerTabOverlay;
+import net.minecraft.util.Mth;
 
 import java.util.Arrays;
 
@@ -20,7 +20,7 @@ public class TabHeartRenderer {
     private Heart[] hearts;
     public int lastHealth, lastDisplayHealth;
 
-    public void renderPlayerListHud(int y, int x, int offset, GuiGraphics guiGraphics, int health, PlayerTabOverlay.HealthState healthState) {
+    public void renderPlayerListHud(int y, int x, int offset, GuiGraphicsExtractor guiGraphics, int health, PlayerTabOverlay.HealthState healthState) {
         if (health != this.lastHealth || healthState.displayedValue() != this.lastDisplayHealth || this.hearts == null) {
             // Use higher value to calculate hearts
             int value = Math.max(health, healthState.displayedValue());

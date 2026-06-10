@@ -1,8 +1,8 @@
 package terrails.colorfulhearts.api.event;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.entity.player.Player;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Optional;
 
@@ -19,13 +19,14 @@ public class HeartRenderEvent {
 
         private boolean cancelled = false;
 
-        public Pre(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        public Pre(GuiGraphicsExtractor guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
             super(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
         }
 
         public void setCancelled(boolean cancel) {
             this.cancelled = cancel;
         }
+
         public boolean isCancelled() {
             return this.cancelled;
         }
@@ -33,6 +34,7 @@ public class HeartRenderEvent {
         public void setX(int x) {
             this.x = x;
         }
+
         public void setY(int y) {
             this.y = y;
         }
@@ -40,9 +42,11 @@ public class HeartRenderEvent {
         public void setBlinking(boolean blinking) {
             this.blinking = blinking;
         }
+
         public void setHardcore(boolean hardcore) {
             this.hardcore = hardcore;
         }
+
         public void setOverlayHeart(OverlayHeart heart) {
             this.overlayHeart = heart;
         }
@@ -54,19 +58,19 @@ public class HeartRenderEvent {
      */
     public static class Post extends HeartRenderEvent {
 
-        public Post(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        public Post(GuiGraphicsExtractor guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
             super(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
         }
     }
 
-    protected final GuiGraphics guiGraphics;
+    protected final GuiGraphicsExtractor guiGraphics;
     protected final Player player;
     protected int x, y;
     protected int maxHealth, health, displayHealth, absorption;
     protected boolean blinking, hardcore;
     protected OverlayHeart overlayHeart;
 
-    public HeartRenderEvent(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+    public HeartRenderEvent(GuiGraphicsExtractor guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
         this.guiGraphics = guiGraphics;
         this.player = player;
         this.x = x;
@@ -80,7 +84,7 @@ public class HeartRenderEvent {
         this.overlayHeart = overlayHeart;
     }
 
-    public GuiGraphics getGuiGraphics() {
+    public GuiGraphicsExtractor getGuiGraphics() {
         return guiGraphics;
     }
 
@@ -91,6 +95,7 @@ public class HeartRenderEvent {
     public int getX() {
         return x;
     }
+
     public int getY() {
         return y;
     }
@@ -98,12 +103,15 @@ public class HeartRenderEvent {
     public int getMaxHealth() {
         return maxHealth;
     }
+
     public int getHealth() {
         return health;
     }
+
     public int getDisplayHealth() {
         return displayHealth;
     }
+
     public int getAbsorption() {
         return absorption;
     }
@@ -111,6 +119,7 @@ public class HeartRenderEvent {
     public boolean isBlinking() {
         return blinking;
     }
+
     public boolean isHardcore() {
         return hardcore;
     }

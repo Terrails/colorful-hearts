@@ -1,29 +1,29 @@
 package terrails.colorfulhearts.config.screen.widgets;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import terrails.colorfulhearts.config.screen.HeartType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 public class HeartColorEditBox extends EditBox {
 
-    private static final Pattern HEX_FORMAT = Pattern.compile("^#[0-9a-fA-F]{0,6}$"), HEX_MATCH = Pattern.compile("^#[0-9a-fA-F]{6}$");
+    private static final Pattern HEX_MATCH = Pattern.compile("^#[0-9a-fA-F]{6}$");
 
     private boolean invalidRGBHex;
 
-    private ResourceLocation spriteLocation;
+    private Identifier spriteLocation;
     private Integer color;
 
     private final Consumer<String> defaultResponder;
@@ -34,15 +34,14 @@ public class HeartColorEditBox extends EditBox {
 
     public HeartColorEditBox(Font font, int x, int y, int width, int height, @Nullable EditBox editBox, HeartType heartType) {
         super(font, x, y, width, height, editBox, Component.empty());
-        this.setResponder((str) -> {});
-        this.setFilter((str) -> HEX_FORMAT.matcher(str).matches());
-        this.setMaxLength(7);
         this.defaultResponder = (str) -> {
             this.invalidRGBHex = !HEX_MATCH.matcher(str).matches();
             if (!this.isInvalid()) {
                 this.color = Integer.decode(this.getValue());
-                ResourceLocation spriteLocation = heartType.getSprite(false, false, false, this.color);
-                TextureAtlasSprite sprite = Minecraft.getInstance().getGuiSprites().getSprite(spriteLocation);
+                Identifier spriteLocation = heartType.getSprite(false, false, false, this.color);
+                TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager()
+                        .getAtlasOrThrow(AtlasIds.GUI)
+                        .getSprite(spriteLocation);
                 if (!sprite.contents().name().equals(MissingTextureAtlasSprite.getLocation())) {
                     this.spriteLocation = spriteLocation;
                 } else {
@@ -50,7 +49,9 @@ public class HeartColorEditBox extends EditBox {
                 }
             }
         };
-        this.defaultResponder.accept(this.getValue());
+        defaultResponder.accept(this.getValue());
+        this.setResponder((str) -> {});
+        this.setMaxLength(7);
     }
 
     @Override
@@ -70,8 +71,8 @@ public class HeartColorEditBox extends EditBox {
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         if (!this.isVisible()) {
             return;
@@ -91,10 +92,10 @@ public class HeartColorEditBox extends EditBox {
             int x = this.getX() + this.width - 11;
             int y = this.getY() + this.height / 2 - 5;
             if (this.spriteLocation != null) {
-                guiGraphics.blitSprite(RenderType::guiTextured, this.spriteLocation, x, y, 9, 9);
+                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.spriteLocation, x, y, 9, 9);
             } else {
                 guiGraphics.fill(x, y, x + 9, y + 9, this.getColor() | 0xFF000000);
-                guiGraphics.renderOutline(x, y, 9, 9, 0xFFDDDDDD);
+                guiGraphics.outline(x, y, 9, 9, 0xFFDDDDDD);
             }
         }
     }

@@ -11,7 +11,7 @@ import terrails.colorfulhearts.api.fabric.ColorfulHeartsApi;
 import terrails.colorfulhearts.api.fabric.event.FabHeartEvents;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Player;
 
 public class PlatformProxyImpl implements PlatformProxy {
@@ -34,8 +34,8 @@ public class PlatformProxyImpl implements PlatformProxy {
     }
 
     @Override
-    public HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
-        HeartRenderEvent.Pre event = new HeartRenderEvent.Pre(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
+    public HeartRenderEvent.Pre preRenderEvent(GuiGraphicsExtractor GuiGraphicsExtractor, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        HeartRenderEvent.Pre event = new HeartRenderEvent.Pre(GuiGraphicsExtractor, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
         FabHeartEvents.PRE_RENDER.invoker().accept(event);
         return event;
     }
@@ -46,14 +46,14 @@ public class PlatformProxyImpl implements PlatformProxy {
     }
 
     @Override
-    public void postRenderEvent(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
-        HeartRenderEvent.Post event = new HeartRenderEvent.Post(guiGraphics, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
+    public void postRenderEvent(GuiGraphicsExtractor GuiGraphicsExtractor, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart) {
+        HeartRenderEvent.Post event = new HeartRenderEvent.Post(GuiGraphicsExtractor, player, x, y, maxHealth, currentHealth, displayHealth, absorption, blinking, hardcore, overlayHeart);
         FabHeartEvents.POST_RENDER.invoker().accept(event);
     }
 
     @Override
-    public void singleRenderEvent(Heart heart, GuiGraphics guiGraphics, int index, int x, int y, boolean hardcore, boolean blinking, boolean blinkingHeart) {
-        HeartSingleRenderEvent event = new HeartSingleRenderEvent(heart, guiGraphics, index, x, y, hardcore, blinking, blinkingHeart);
+    public void singleRenderEvent(Heart heart, GuiGraphicsExtractor GuiGraphicsExtractor, int index, int x, int y, boolean hardcore, boolean blinking, boolean blinkingHeart) {
+        HeartSingleRenderEvent event = new HeartSingleRenderEvent(heart, GuiGraphicsExtractor, index, x, y, hardcore, blinking, blinkingHeart);
         FabHeartEvents.SINGLE_RENDER.invoker().accept(event);
     }
 

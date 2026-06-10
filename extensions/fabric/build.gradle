@@ -9,9 +9,9 @@ architectury {
 
 loom {
     runs {
-        server.ideConfigGenerated(false)
+        server.setGenerateRunConfig(false)
         // set window size to 720p
-        client.programArgs("--width", "1280", "--height", "720")
+        client.setProgramArguments(["--width", "1280", "--height", "720"])
     }
 }
 
@@ -26,14 +26,19 @@ configurations {
 
     // Files in this configuration will be bundled into your mod using the Shadow plugin.
     // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
-    shadowBundle {
+    shadowCommon {
         canBeResolved = true
         canBeConsumed = false
     }
 
-    shadowArtifact {
-        canBeConsumed = true
-        canBeResolved = false
+    apiElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
+
+    runtimeElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
     }
 }
 
@@ -46,35 +51,40 @@ repositories {
         name = "Jitpack"
         url 'https://jitpack.io/'
     }
+    maven {
+        name = "Greenhouse Maven"
+        url = 'https://maven.greenhouse.lgbt/releases/'
+    }
 }
 
 dependencies {
     // Fabric
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    api "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
-    common(project(path: ':extensions:common', configuration: 'namedElements')) { transitive false }
-    shadowBundle(project(path: ':extensions:common', configuration: 'transformProductionFabric'))
+    common(project(path: ':extensions:common')) { transitive false }
+    shadowCommon(project(path: ':extensions:common', configuration: 'transformProductionFabric'))
 
-    api(project(path: ':api:common', configuration: 'namedElements')) { transitive false }
-    api(project(path: ':api:fabric', configuration: 'namedElements')) { transitive false }
-    runtimeOnly(project(path: ':base:common', configuration: 'namedElements')) { transitive false }
-    runtimeOnly(project(path: ':base:fabric', configuration: 'namedElements')) { transitive false }
+    api(project(path: ':api:common')) { transitive false }
+    api(project(path: ':api:fabric')) { transitive false }
+    runtimeOnly(project(path: ':base:common')) { transitive false }
+    runtimeOnly(project(path: ':base:fabric')) { transitive false }
     runtimeOnly("com.electronwill.night-config:core:${nightconfig_version}")
     runtimeOnly("com.electronwill.night-config:toml:${nightconfig_version}")
 
-    modRuntimeOnly("maven.modrinth:modmenu:${modmenu_version}-fabric")
-    modRuntimeOnly("maven.modrinth:raised:${raised_version}-fabric")
+    runtimeOnly("maven.modrinth:modmenu:${modmenu_version}-fabric")
+    runtimeOnly("maven.modrinth:raised:${raised_version}-fabric")
 
-    modImplementation("maven.modrinth:appleskin:${appleskin_version}-fabric")
-    modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${clothconfig_version}")
+    implementation("maven.modrinth:appleskin:${appleskin_version}-fabric")
+//    runtimeOnly("me.shedaniel.cloth:cloth-config-fabric:${clothconfig_version}")
 
-    modRuntimeOnly("maven.modrinth:forge-config-api-port:${forgeconfig_version}-fabric")
-    modImplementation("maven.modrinth:overflowing-bars:${overflowingbars_version}-fabric")
-    modImplementation("maven.modrinth:puzzles-lib:${puzzleslib_version}-fabric")
+    runtimeOnly("maven.modrinth:forge-config-api-port:${forgeconfig_version}-fabric")
+    implementation("maven.modrinth:overflowing-bars:${overflowingbars_version}-fabric")
+    implementation("maven.modrinth:puzzles-lib:${puzzleslib_version}-fabric")
 
-    modCompileOnly("maven.modrinth:farmers-delight-refabricated:${farmersdelight_version}-fabric")
-    modCompileOnly("com.github.Chocohead:Fabric-ASM:${fabricasm_version}")
+    implementation("vectorwing:FarmersDelight:${farmersdelight_version}+refabricated") {
+        exclude(group: "net.fabricmc")
+    }
 }
 
 processResources {
@@ -85,16 +95,11 @@ processResources {
     }
 }
 
-remapJar {
-    input.set shadowJar.archiveFile
-    injectAccessWidener = true
-}
-
 shadowJar {
-    configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
-}
-
-artifacts {
-    shadowArtifact(shadowJar)
+    dependsOn(jar)
+    mainSpec.sourcePaths.clear()
+    from(zipTree(jar.archiveFile))
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = null
+    from rootProject.file("LICENSE")
 }

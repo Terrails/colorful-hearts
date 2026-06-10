@@ -4,7 +4,7 @@ import terrails.colorfulhearts.api.event.HeartRegistry;
 import terrails.colorfulhearts.api.event.HeartRenderEvent;
 import terrails.colorfulhearts.api.heart.drawing.Heart;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Player;
 
 public interface PlatformProxy {
@@ -53,7 +53,7 @@ public interface PlatformProxy {
      * @param overlayHeart  type of overlay heart, null otherwise
      * @return the event with modified values
      */
-    HeartRenderEvent.Pre preRenderEvent(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart);
+    HeartRenderEvent.Pre preRenderEvent(GuiGraphicsExtractor guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart);
 
     /**
      * A way to call the PlayerHeartTypeEvent from NeoForge to be able to change the heart type to a different effect.
@@ -79,7 +79,7 @@ public interface PlatformProxy {
      * @param hardcore      hearts are of hardcore type
      * @param overlayHeart  type of overlay heart, null otherwise
      */
-    void postRenderEvent(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart);
+    void postRenderEvent(GuiGraphicsExtractor guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking, boolean hardcore, OverlayHeart overlayHeart);
 
     /**
      * Called after a single heart icon finishes drawing
@@ -93,7 +93,7 @@ public interface PlatformProxy {
      * @param blinking      blinking flag, usually means that the heart background is blinking/white
      * @param blinkingHeart heart blinking flag, usually means that the heart itself is blinking by being drawn as a lighter color
      */
-    void singleRenderEvent(Heart heart, GuiGraphics guiGraphics, int index, int x, int y, boolean hardcore, boolean blinking, boolean blinkingHeart);
+    void singleRenderEvent(Heart heart, GuiGraphicsExtractor guiGraphics, int index, int x, int y, boolean hardcore, boolean blinking, boolean blinkingHeart);
 
     /**
      * Just an empty event used to notify about in-game changes from the Config Screen
