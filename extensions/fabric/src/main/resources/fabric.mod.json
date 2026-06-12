@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"id": "colorfulhearts-extensions",
-	"version": "${version}",
+	"id": "colorfulhearts_extensions",
+	"version": "${mod_version}",
 
 	"name": "Colorful Hearts Extensions",
 	"description": "A builtin module for Colorful Hearts adding compatibility with other mods.",
@@ -10,9 +10,8 @@
 	],
 	"license": "MIT",
 	"contact": {
-		"sources": "https://github.com/Terrails/colorful-hearts",
-		"issues": "https://github.com/Terrails/colorful-hearts/issues",
-		"homepage": "https://www.curseforge.com/minecraft/mc-mods/colorful-hearts"
+		"homepage": "https://github.com/Terrails/colorful-hearts",
+		"issues": "https://github.com/Terrails/colorful-hearts/issues"
 	},
 
 	"icon": "icon.png",
@@ -28,15 +27,16 @@
 	},
 
 	"mixins": [
-		"colorfulhearts-extensions.mixins.json"
+		"colorfulhearts_extensions.mixins.json"
 	],
 
+	"accessWidener": "colorfulhearts_extensions.accesswidener",
+
 	"depends": {
-		"fabricloader": ">=0.14.19",
-		"fabric-api": "*",
-		"colorfulhearts": "*",
-		"minecraft": ">=1.21",
-		"java": ">=17"
+		"minecraft": ">=${min_minecraft_version}",
+		"fabricloader": ">=${min_fabric_loader_version}",
+		"fabric-api": ">=${min_fabric_api_version}",
+		"colorfulhearts": ">=${min_colorfulhearts_version}"
 	},
 
 	"custom": {

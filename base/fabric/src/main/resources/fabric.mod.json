@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "colorfulhearts",
-	"version": "${version}",
+	"version": "${mod_version}",
 
 	"name": "Colorful Hearts",
 	"description": "A client side mod that replaces multiple vanilla heart rows with a single row using colored hearts",
@@ -10,9 +10,8 @@
 	],
 	"license": "MIT",
 	"contact": {
-		"sources": "https://github.com/Terrails/colorful-hearts",
-		"issues": "https://github.com/Terrails/colorful-hearts/issues",
-		"homepage": "https://www.curseforge.com/minecraft/mc-mods/colorful-hearts"
+		"homepage": "https://github.com/Terrails/colorful-hearts",
+		"issues": "https://github.com/Terrails/colorful-hearts/issues"
 	},
 
 	"icon": "icon.png",
@@ -31,10 +30,11 @@
 		"colorfulhearts-common.mixins.json"
 	],
 
+	"accessWidener": "colorfulhearts.accesswidener",
+
 	"depends": {
-		"fabricloader": ">=0.19.3",
-		"fabric-api": "*",
-		"minecraft": ">=26.1.2",
-		"java": ">=25"
+		"minecraft": ">=${min_minecraft_version}",
+		"fabricloader": ">=${min_fabric_loader_version}",
+		"fabric-api": ">=${min_fabric_api_version}"
 	}
 }

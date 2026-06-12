@@ -9,12 +9,21 @@ architectury {
     neoForge()
 }
 
-configurations {
-    includeJars { // Temporary workaround as `include` is broken in shadowJar as of loom 1.17
-        canBeResolved = true
-        canBeConsumed = false
+loom {
+    runs {
+        server.setGenerateRunConfig(false)
+        // set window size to 720p
+        client.setProgramArguments(["--width", "1280", "--height", "720"])
     }
 
+    neoForge {
+        convertAccessWideners(tasks.named('shadowJar', Jar.class), 'colorfulhearts.accesswidener')
+    }
+
+    loom.nestJars(tasks.named("shadowJar", Jar.class), configurations.named("include"))
+}
+
+configurations {
     common {
         canBeResolved = true
         canBeConsumed = false
@@ -41,20 +50,6 @@ configurations {
     }
 }
 
-loom {
-    runs {
-        server.setGenerateRunConfig(false)
-        // set window size to 720p
-        client.setProgramArguments(["--width", "1280", "--height", "720"])
-    }
-
-    neoForge {
-        convertAccessWideners(tasks.named('shadowJar'), 'colorfulhearts.accesswidener')
-    }
-
-    nestJars(tasks.named("shadowJar"), configurations.named("includeJars"))
-}
-
 repositories {
     maven { url "https://maven.neoforged.net/releases/" }
 }
@@ -68,23 +63,26 @@ dependencies {
     shadowCommon(project(path: ':base:common', configuration: 'transformProductionNeoForge'))
     shadowCommon(project(path: ':api:common', configuration: 'transformProductionNeoForge'))
     shadowCommon(project(path: ':api:neoforge')) { transitive false }
-//    includeJars(project(path: ':extensions:neoforge')) { transitive false }
+    include(project(path: ':extensions:neoforge')) { transitive false }
 }
 
 processResources {
-    inputs.property 'version', project.version
+    var expandProps = [
+            mod_version          : project.version,
+            min_minecraft_version: rootProject.min_minecraft_version,
+            min_neoforge_version : rootProject.neoforge_version
+    ]
 
+    inputs.properties expandProps
     filesMatching('META-INF/neoforge.mods.toml') {
-        expand version: project.version
+        expand expandProps
     }
 }
 
 shadowJar {
-    dependsOn(jar)
-    mainSpec.sourcePaths.clear()
-    from(zipTree(jar.archiveFile))
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = null
+    exclude "architectury.common.json"
     from rootProject.file("LICENSE")
 }
 

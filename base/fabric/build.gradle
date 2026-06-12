@@ -9,12 +9,17 @@ architectury {
     fabric()
 }
 
-configurations {
-    includeJars { // Temporary workaround as `include` is broken in shadowJar as of loom 1.17
-        canBeResolved = true
-        canBeConsumed = false
+loom {
+    runs {
+        server.setGenerateRunConfig(false)
+        // set window size to 720p
+        client.setProgramArguments(["--width", "1280", "--height", "720"])
     }
 
+    loom.nestJars(tasks.named("shadowJar", Jar.class), configurations.named("include"))
+}
+
+configurations {
     common {
         canBeResolved = true
         canBeConsumed = false
@@ -41,16 +46,6 @@ configurations {
     }
 }
 
-loom {
-    runs {
-        server.setGenerateRunConfig(false)
-        // set window size to 720p
-        client.setProgramArguments(["--width", "1280", "--height", "720"])
-    }
-
-    nestJars(tasks.named("shadowJar"), configurations.named("includeJars"))
-}
-
 dependencies {
     // Fabric
     implementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
@@ -62,28 +57,32 @@ dependencies {
     shadowCommon(project(path: ':base:common', configuration: 'transformProductionFabric'))
     shadowCommon(project(path: ':api:common', configuration: 'transformProductionFabric'))
     shadowCommon(project(path: ':api:fabric')) { transitive false }
-    includeJars(project(path: ':extensions:fabric')) { transitive false }
+    include(project(path: ':extensions:fabric')) { transitive false }
 
-    api(includeJars("com.electronwill.night-config:core:${nightconfig_version}"))
-    api(includeJars("com.electronwill.night-config:toml:${nightconfig_version}"))
+    api(include("com.electronwill.night-config:core:${nightconfig_version}"))
+    api(include("com.electronwill.night-config:toml:${nightconfig_version}"))
 
     implementation("maven.modrinth:modmenu:${modmenu_version}-fabric")
 }
 
 processResources {
-    inputs.property 'version', project.version
+    var expandProps = [
+            mod_version              : project.version,
+            min_minecraft_version    : rootProject.min_minecraft_version,
+            min_fabric_loader_version: rootProject.fabric_loader_version,
+            min_fabric_api_version   : rootProject.fabric_api_version
+    ]
 
+    inputs.properties expandProps
     filesMatching('fabric.mod.json') {
-        expand version: project.version
+        expand expandProps
     }
 }
 
 shadowJar {
-    dependsOn(jar)
-    mainSpec.sourcePaths.clear()
-    from(zipTree(jar.archiveFile))
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = null
+    exclude "architectury.common.json"
     from rootProject.file("LICENSE")
 }
 

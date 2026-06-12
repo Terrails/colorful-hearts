@@ -15,8 +15,10 @@ loom {
     }
 
     neoForge {
-        convertAccessWideners(tasks.named('shadowJar'), 'colorfulhearts-extensions.accesswidener')
+        convertAccessWideners(tasks.named('shadowJar', Jar.class), 'colorfulhearts_extensions.accesswidener')
     }
+
+    loom.nestJars(tasks.named("shadowJar", Jar.class), configurations.named("include"))
 }
 
 configurations {
@@ -74,19 +76,24 @@ dependencies {
 }
 
 processResources {
-    inputs.property 'version', project.version
+    var expandProps = [
+            mod_version               : project.version,
+            min_minecraft_version     : rootProject.min_minecraft_version,
+            min_neoforge_version      : rootProject.neoforge_version,
+            min_colorfulhearts_version: project(":base").version
+    ]
 
+    inputs.properties expandProps
     filesMatching('META-INF/neoforge.mods.toml') {
-        expand version: project.version
+        expand expandProps
     }
 }
 
 shadowJar {
-    dependsOn(jar)
-    mainSpec.sourcePaths.clear()    // Remove default source set inclusion
-    from(zipTree(jar.archiveFile))  // Unpack jar output (preserves Loom modifications)
-
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = null
     from rootProject.file("LICENSE")
+    from(project(":base:neoforge").loom.accessWidenerPath) {
+        rename { "colorfulhearts_extensions.accesswidener" }
+    }
 }

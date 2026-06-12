@@ -13,6 +13,8 @@ loom {
         // set window size to 720p
         client.setProgramArguments(["--width", "1280", "--height", "720"])
     }
+
+    loom.nestJars(tasks.named("shadowJar", Jar.class), configurations.named("include"))
 }
 
 configurations {
@@ -88,18 +90,25 @@ dependencies {
 }
 
 processResources {
-    inputs.property 'version', project.version
+    var expandProps = [
+            mod_version               : project.version,
+            min_minecraft_version     : rootProject.min_minecraft_version,
+            min_fabric_loader_version : rootProject.fabric_loader_version,
+            min_fabric_api_version    : rootProject.fabric_api_version,
+            min_colorfulhearts_version: project(":base").version
+    ]
 
+    inputs.properties expandProps
     filesMatching('fabric.mod.json') {
-        expand version: project.version
+        expand expandProps
     }
 }
 
 shadowJar {
-    dependsOn(jar)
-    mainSpec.sourcePaths.clear()
-    from(zipTree(jar.archiveFile))
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = null
     from rootProject.file("LICENSE")
+    from(project(":base:fabric").loom.accessWidenerPath) {
+        rename { "colorfulhearts_extensions.accesswidener" }
+    }
 }

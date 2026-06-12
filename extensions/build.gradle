@@ -11,7 +11,7 @@ subprojects {
     }
 
     loom {
-        accessWidenerPath = project(":extensions:common").file("src/main/resources/colorfulhearts-extensions.accesswidener")
+        accessWidenerPath = project(":base:common").file("src/main/resources/colorfulhearts.accesswidener")
 
         if (project.path != ':extensions:common') {
             mods {

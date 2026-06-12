@@ -1,11 +1,11 @@
 modLoader = "javafml"
 loaderVersion = "[2,)"
-issueTrackerURL = "https://github.com/Terrails/colorful-hearts"
+issueTrackerURL = "https://github.com/Terrails/colorful-hearts/issues"
 license = "MIT"
 
 [[mods]]
 modId = "colorfulhearts"
-version = "${version}"
+version = "${mod_version}"
 
 displayName = "Colorful Hearts"
 authors = "Terrails"
@@ -18,15 +18,15 @@ displayTest = "IGNORE_ALL_VERSION" # ignore everything since it's a client only 
 config = "colorfulhearts-common.mixins.json"
 
 [[dependencies.colorfulhearts]]
-modId = "neoforge"
+modId = "minecraft"
 type = "required"
-versionRange = "[26.1.2,)"
+versionRange = "[${min_minecraft_version},)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.colorfulhearts]]
-modId = "minecraft"
+modId = "neoforge"
 type = "required"
-versionRange = "[26.1.2,)"
+versionRange = "[${min_neoforge_version},)"
 ordering = "NONE"
 side = "CLIENT"
