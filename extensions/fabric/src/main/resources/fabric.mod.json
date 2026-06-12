@@ -30,8 +30,6 @@
 		"colorfulhearts_extensions.mixins.json"
 	],
 
-	"accessWidener": "colorfulhearts_extensions.accesswidener",
-
 	"depends": {
 		"minecraft": ">=${min_minecraft_version}",
 		"fabricloader": ">=${min_fabric_loader_version}",
