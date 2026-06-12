@@ -12,6 +12,7 @@ import terrails.colorfulhearts.api.neoforge.event.NeoHeartRenderEvent;
 import terrails.colorfulhearts.api.neoforge.event.NeoHeartUpdateEvent;
 import terrails.colorfulhearts.extensions.compat.AppleSkinCommonCompat;
 import terrails.colorfulhearts.extensions.neoforge.mixin.appleskin.HUDOverlayHandlerAccessor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffects;
@@ -39,8 +40,8 @@ public class AppleSkinCompat extends AppleSkinCommonCompat {
     }
 
     private void onPostRender(NeoHeartRenderEvent.Post event) {
-        Player player = client.player;
-        assert player != null;
+        Minecraft client = Minecraft.getInstance();
+        Player player = event.getPlayer();
 
         if (!shouldDrawOverlay(event.getOverlayHeart().orElse(null), player)) {
             return;

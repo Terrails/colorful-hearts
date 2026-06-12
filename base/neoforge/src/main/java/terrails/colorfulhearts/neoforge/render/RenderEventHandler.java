@@ -16,10 +16,9 @@ import java.util.Objects;
 public class RenderEventHandler {
 
     public static final RenderEventHandler INSTANCE = new RenderEventHandler();
-
-    private final Minecraft client = Minecraft.getInstance();
-
+    
     public void renderHearts(RenderGuiLayerEvent.Pre event) {
+        Minecraft client = Minecraft.getInstance();
         if (event.isCanceled()
                 || client.options.hideGui
                 || !event.getName().equals(VanillaGuiLayers.PLAYER_HEALTH)

@@ -15,8 +15,6 @@ public class TabHeartRenderer {
 
     public static final TabHeartRenderer INSTANCE = new TabHeartRenderer();
 
-    private final Minecraft client = Minecraft.getInstance();
-
     private Heart[] hearts;
     public int lastHealth, lastDisplayHealth;
 
@@ -31,17 +29,19 @@ public class TabHeartRenderer {
             LOGGER.debug("Successfully updated tab hearts.\n{}", Arrays.toString(this.hearts));
         }
 
+        Minecraft client = Minecraft.getInstance();
+
         health = Math.min(health, 20);
         int displayHealth = Math.min(healthState.displayedValue(), 20);
         int displayHealthHearts = Mth.ceil(displayHealth / 2.0);
 
-        boolean blinking = healthState.isBlinking(this.client.gui.getGuiTicks());
+        boolean blinking = healthState.isBlinking(client.gui.getGuiTicks());
 
         int spacingDivisor = Math.max(health, displayHealth) / 2;
         // Adds space between hearts when there are less than 10
         int spacingMultiplier = Mth.floor(Math.min((float) (offset - x - 4) / (float) spacingDivisor, 9.0F));
 
-        boolean hardcore = CColorfulHearts.PROXY.forcedHardcoreHearts() || (this.client.level != null && this.client.level.getLevelData().isHardcore());
+        boolean hardcore = CColorfulHearts.PROXY.forcedHardcoreHearts() || (client.level != null && client.level.getLevelData().isHardcore());
 
         for (int i = 0; i < this.hearts.length; i++) {
             Heart heart = this.hearts[i];

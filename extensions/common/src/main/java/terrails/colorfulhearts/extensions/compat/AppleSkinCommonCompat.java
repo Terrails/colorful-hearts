@@ -13,14 +13,13 @@ import java.util.List;
 
 public class AppleSkinCommonCompat {
 
-    public final Minecraft client = Minecraft.getInstance();
     private final RandomSource random = RandomSource.create();
 
     protected int lastHealth, lastModifiedHealth;
     private Heart[] hearts;
 
     public void drawHealthOverlay(GuiGraphicsExtractor guiGraphics, int x, int y, int absorbing, int health, int modifiedHealth, float alpha, boolean hardcore) {
-        long tickCount = this.client.gui.getGuiTicks();
+        long tickCount = Minecraft.getInstance().gui.getGuiTicks();
         // synchronize random with vanilla
         this.random.setSeed(tickCount * 312871);
 

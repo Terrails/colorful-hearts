@@ -18,7 +18,6 @@ public class HeartRenderer {
 
     public static final HeartRenderer INSTANCE = new HeartRenderer();
 
-    private final Minecraft client = Minecraft.getInstance();
     private final RandomSource random = RandomSource.create();
 
     public int displayHealth, lastHealth, lastMaxHealth, lastAbsorption;
@@ -29,7 +28,7 @@ public class HeartRenderer {
 
     public void renderPlayerHearts(GuiGraphicsExtractor guiGraphics, Player player, int x, int y) {
         int currentHealth = Mth.ceil(player.getHealth());
-        long tickCount = client.gui.getGuiTicks();
+        long tickCount = Minecraft.getInstance().gui.getGuiTicks();
         boolean blinking = this.healthBlinkTime > tickCount && (this.healthBlinkTime - tickCount) / 3L % 2L == 1L;
         long timeMillis = Util.getMillis();
 
