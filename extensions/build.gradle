@@ -1,3 +1,5 @@
+import net.fabricmc.loom.api.LoomGradleExtensionAPI
+
 allprojects {
     group = "terrails.colorfulhearts.extensions" // required to prevent circular dependency
     version = project.mod_version
@@ -11,7 +13,7 @@ subprojects {
     }
 
     loom {
-        accessWidenerPath = project(":base:common").file("src/main/resources/colorfulhearts.accesswidener")
+        accessWidenerPath = project(":base:common").getExtensions().getByType(LoomGradleExtensionAPI.class).accessWidenerPath
 
         if (project.path != ':extensions:common') {
             mods {
@@ -19,7 +21,8 @@ subprojects {
                     sourceSet project.sourceSets.main
                     sourceSet project(':extensions:common').sourceSets.main
                 }
-                colorfulhearts { // required so that the resources from the base module are available during dev
+                colorfulhearts {
+                    // required so that the resources from the base module are available during dev
                     sourceSet project(":base:${project.name}").sourceSets.main
                     sourceSet project(':base:common').sourceSets.main
                     sourceSet project(":api:${project.name}").sourceSets.main
