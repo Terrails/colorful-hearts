@@ -5,7 +5,8 @@
 	"minVersion": "0.8",
 	"plugin": "terrails.colorfulhearts.extensions.fabric.FabMixinPlugin",
 	"client": [
-		"appleskin.HUDOverlayHandlerAccessor"
+		"appleskin.HUDOverlayHandlerAccessor",
+		"farmersdelight.HUDOverlaysMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
