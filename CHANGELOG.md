@@ -1,3 +1,7 @@
+## [26.1.2.0] - 2026-06-13
+
+- Updated to Minecraft 26.1.2
+
 ## [21.4.0] - 2026-05-05
 
 - Updated to Minecraft
