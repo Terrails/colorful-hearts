@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "colorfulhearts-extensions",
+	"id": "colorfulhearts_extensions",
 	"version": "${version}",
 
 	"name": "Colorful Hearts Extensions",
@@ -28,7 +28,7 @@
 	},
 
 	"mixins": [
-		"colorfulhearts-extensions.mixins.json"
+		"colorfulhearts_extensions.mixins.json"
 	],
 
 	"depends": {
