@@ -86,9 +86,8 @@ shadowJar {
     from rootProject.file("LICENSE")
 }
 
-tasks.build.mustRunAfter(tasks.clean)
 tasks.register('publishProduction') {
-    dependsOn([tasks.clean, tasks.build])
+    dependsOn([tasks.build])
     finalizedBy([tasks.modrinth, tasks.publishCurseForge])
 }
 
