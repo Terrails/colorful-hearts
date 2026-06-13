@@ -1,3 +1,5 @@
+import net.fabricmc.loom.api.LoomGradleExtensionAPI
+
 plugins {
     id 'com.gradleup.shadow'
 }
@@ -92,8 +94,9 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = null
+    exclude "architectury.common.json"
     from rootProject.file("LICENSE")
-    from(project(":base:neoforge").loom.accessWidenerPath) {
+    from(project(":base:neoforge").getExtensions().getByType(LoomGradleExtensionAPI.class).accessWidenerPath) {
         rename { "colorfulhearts_extensions.accesswidener" }
     }
 }

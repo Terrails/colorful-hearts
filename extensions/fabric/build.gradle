@@ -2,6 +2,10 @@ plugins {
     id 'com.gradleup.shadow'
 }
 
+import com.google.gson.JsonObject
+import net.fabricmc.loom.api.LoomGradleExtensionAPI
+import net.fabricmc.loom.util.ZipUtils
+
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -107,8 +111,16 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = null
+    exclude "architectury.common.json"
     from rootProject.file("LICENSE")
-    from(project(":base:fabric").loom.accessWidenerPath) {
+    from(project(":base:fabric").getExtensions().getByType(LoomGradleExtensionAPI.class).accessWidenerPath) {
         rename { "colorfulhearts_extensions.accesswidener" }
+    }
+    doLast {
+        var archivePath = archiveFile.get().getAsFile().toPath()
+        ZipUtils.transformJson(JsonObject.class, archivePath, "fabric.mod.json", json -> {
+            json.addProperty("accessWidener", "colorfulhearts_extensions.accesswidener")
+            return json
+        })
     }
 }

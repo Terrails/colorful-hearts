@@ -4,6 +4,10 @@ plugins {
     id 'net.darkhax.curseforgegradle'
 }
 
+import com.google.gson.JsonObject
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+import net.fabricmc.loom.util.ZipUtils
+
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -84,6 +88,13 @@ shadowJar {
     archiveClassifier = null
     exclude "architectury.common.json"
     from rootProject.file("LICENSE")
+    doLast {
+        var archivePath = archiveFile.get().getAsFile().toPath()
+        ZipUtils.transformJson(JsonObject.class, archivePath, "fabric.mod.json", json -> {
+            json.addProperty("accessWidener", "colorfulhearts.accesswidener")
+            return json
+        })
+    }
 }
 
 tasks.build.mustRunAfter(tasks.clean)
@@ -105,8 +116,6 @@ modrinth {
     }
     changelog = rootProject.file("CHANGELOG.md").text
 }
-
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 tasks.register('publishCurseForge', TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
