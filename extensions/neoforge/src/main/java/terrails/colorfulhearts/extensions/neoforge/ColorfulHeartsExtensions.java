@@ -17,8 +17,8 @@ public class ColorfulHeartsExtensions {
 
     private static final Map<String, String> COMPAT = Map.of(
             "appleskin", "AppleSkinCompat",
-            "undergarden", "UndergardenCompat"
-            //            "overflowingbars", "OverflowingBarsCompat"
+            "undergarden", "UndergardenCompat",
+            "overflowingbars", "OverflowingBarsCompat"
     );
 
     public ColorfulHeartsExtensions(final IEventBus bus) {

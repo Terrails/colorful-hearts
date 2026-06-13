@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 public abstract class OverflowingBarsCommonCompat {
 
     public void render(HeartRenderEvent.Post event) {
-        Player player = Minecraft.getInstance().player;
+        Player player = Minecraft.getInstance().getCameraEntity() instanceof Player p ? p : null;
 
         if (player != null && this.allowCount()) {
             int health = Mth.ceil(player.getHealth());
