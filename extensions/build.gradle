@@ -7,7 +7,7 @@ subprojects {
     apply plugin: 'dev.architectury.loom'
 
     base {
-        archivesBaseName = "colorfulhearts-extensions-${project.name}-${project.minecraft_version}"
+        archivesName = "colorfulhearts-extensions-${project.name}-${project.minecraft_version}"
     }
 
     loom {

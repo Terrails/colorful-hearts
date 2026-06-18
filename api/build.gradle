@@ -9,7 +9,7 @@ subprojects {
     apply plugin: 'maven-publish'
 
     base {
-        archivesBaseName = "colorfulhearts-api-${project.name}-${project.minecraft_version}"
+        archivesName = "colorfulhearts-api-${project.name}-${project.minecraft_version}"
     }
 
     java {

@@ -9,7 +9,7 @@ architectury {
 
 loom.runs.configureEach {
     // prevent loom from making run configurations for API
-    ideConfigGenerated(false)
+    setGenerateRunConfig(false)
 }
 
 configurations {

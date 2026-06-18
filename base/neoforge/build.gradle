@@ -4,6 +4,9 @@ plugins {
     id 'net.darkhax.curseforgegradle'
 }
 
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+import net.fabricmc.loom.task.RemapJarTask
+
 architectury {
     platformSetupLoomIde()
     neoForge()
@@ -11,9 +14,13 @@ architectury {
 
 loom {
     runs {
-        server.ideConfigGenerated(false)
+        server.setGenerateRunConfig(false)
         // set window size to 720p
-        client.programArgs("--width", "1280", "--height", "720")
+        client.setProgramArguments(["--width", "1280", "--height", "720"])
+    }
+
+    neoForge {
+        convertAccessWideners(tasks.named('remapJar', RemapJarTask.class), 'colorfulhearts.accesswidener')
     }
 }
 
@@ -47,7 +54,7 @@ dependencies {
     shadowBundle(project(path: ':api:common', configuration: 'transformProductionNeoForge'))
     shadowBundle(project(path: ':api:neoforge', configuration: 'namedElements')) { transitive false }
     shadowBundle(project(path: ':base:common', configuration: 'transformProductionNeoForge'))
-    include(project(path: ':extensions:neoforge', configuration: 'shadowArtifact')) { transitive false }
+    include(project(path: ':extensions:neoforge', configuration: 'remapArtifact')) { transitive false }
 }
 
 processResources {
@@ -60,15 +67,15 @@ processResources {
 
 remapJar {
     input.set shadowJar.archiveFile
-    atAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
 }
 
 shadowJar {
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = 'dev-shadow'
+    exclude "architectury.common.json"
+    from rootProject.file("LICENSE")
 }
 
-tasks.build.mustRunAfter(tasks.clean)
 tasks.register('publishProduction') {
     dependsOn([tasks.clean, tasks.build])
     finalizedBy([tasks.modrinth, tasks.publishCurseForge])
@@ -85,7 +92,6 @@ modrinth {
     changelog = rootProject.file("CHANGELOG.md").text
 }
 
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 tasks.register('publishCurseForge', TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
