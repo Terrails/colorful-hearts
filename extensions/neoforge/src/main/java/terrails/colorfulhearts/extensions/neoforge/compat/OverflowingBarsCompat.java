@@ -7,7 +7,6 @@ import net.neoforged.neoforge.common.NeoForge;
 
 import terrails.colorfulhearts.api.neoforge.event.NeoHeartRenderEvent;
 import terrails.colorfulhearts.extensions.compat.OverflowingBarsCommonCompat;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
 public class OverflowingBarsCompat extends OverflowingBarsCommonCompat {
@@ -23,7 +22,7 @@ public class OverflowingBarsCompat extends OverflowingBarsCommonCompat {
 
     @Override
     protected void drawBarRowCount(GuiGraphics guiGraphics, int posX, int posY, int barValue, int maxRowCount) {
-        RowCountRenderer.drawBarRowCount(guiGraphics, posX, posY, barValue, true, maxRowCount, Minecraft.getInstance().font);
+        RowCountRenderer.drawBarRowCount(guiGraphics, posX, posY, barValue, true, maxRowCount);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package terrails.colorfulhearts.neoforge;
 
 import net.neoforged.fml.ModLoader;
+import net.neoforged.neoforge.client.event.PlayerHeartTypeEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
 
 import terrails.colorfulhearts.CColorfulHearts;
 import terrails.colorfulhearts.PlatformProxy;

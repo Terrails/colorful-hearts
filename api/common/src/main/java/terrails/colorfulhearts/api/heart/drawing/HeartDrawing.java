@@ -1,7 +1,7 @@
 package terrails.colorfulhearts.api.heart.drawing;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 
 public abstract class HeartDrawing {
@@ -32,14 +32,14 @@ public abstract class HeartDrawing {
      *
      * @return drawing's id
      */
-    public abstract ResourceLocation getId();
+    public abstract Identifier getId();
 
     @Override
     public String toString() {
         return getId().toString();
     }
 
-    public static HeartDrawing colorBlend(HeartDrawing drawing, ResourceLocation id, float r, float g, float b, float a) {
+    public static HeartDrawing colorBlend(HeartDrawing drawing, Identifier id, float r, float g, float b, float a) {
         return new HeartDrawing() {
             @Override
             public void draw(GuiGraphics guiGraphics, int x, int y, boolean half, boolean hardcore, boolean highlight, int argb) {
@@ -48,7 +48,7 @@ public abstract class HeartDrawing {
             }
 
             @Override
-            public ResourceLocation getId() {
+            public Identifier getId() {
                 return id;
             }
         };

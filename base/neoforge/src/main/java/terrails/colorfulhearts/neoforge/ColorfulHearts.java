@@ -8,7 +8,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
+import net.neoforged.neoforge.client.event.RegisterSpriteSourcesEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
@@ -20,7 +20,7 @@ import terrails.colorfulhearts.config.Configuration;
 import terrails.colorfulhearts.config.screen.ConfigurationScreen;
 import terrails.colorfulhearts.neoforge.render.RenderEventHandler;
 import terrails.colorfulhearts.render.atlas.sources.ColoredHearts;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -51,8 +51,8 @@ public class ColorfulHearts {
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, RenderEventHandler.INSTANCE::renderHearts);
     }
 
-    private void registerSprite(final RegisterSpriteSourceTypesEvent event) {
-        event.register(ResourceLocation.fromNamespaceAndPath(CColorfulHearts.MOD_ID, "colored_hearts"), ColoredHearts.TYPE);
+    private void registerSprite(final RegisterSpriteSourcesEvent event) {
+        event.register(Identifier.fromNamespaceAndPath(CColorfulHearts.MOD_ID, "colored_hearts"), ColoredHearts.CODEC);
     }
 
     private void loadConfig(final ModConfigEvent.Loading event) {

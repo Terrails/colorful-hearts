@@ -1,10 +1,9 @@
 package terrails.colorfulhearts.config.screen.base;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -21,16 +20,6 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
         super(minecraft, width, height, y, entryHeight);
     }
 
-    public void removeEntries() {
-        this.clearEntries();
-    }
-
-    @Nullable
-    @Override
-    public Entry remove(int index) {
-        return super.remove(index);
-    }
-
     @Override
     public int addEntry(@NotNull Entry entry) {
         return super.addEntry(entry);
@@ -43,13 +32,12 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
 
     @Override
     protected int scrollBarX() {
-        // TODO: fix this
-        return super.scrollBarX(); //this.width - 7;
+        return this.width - 7;
     }
 
     @Override
     public int getRowWidth() {
-        return this.width - 14;
+        return this.width - 7;
     }
 
     @MethodsReturnNonnullByDefault
@@ -66,9 +54,9 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
         }
 
         @Override
-        public void render(@NotNull GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
+        public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
             this.children.forEach(widget -> {
-                widget.setY(top);
+                widget.setY(getContentY());
                 widget.render(guiGraphics, mouseX, mouseY, partialTick);
             });
         }

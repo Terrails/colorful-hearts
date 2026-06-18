@@ -9,25 +9,47 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
 public class HeartRenderer {
 
     public static final HeartRenderer INSTANCE = new HeartRenderer();
 
-    private final Minecraft client = Minecraft.getInstance();
     private final RandomSource random = RandomSource.create();
 
+    public int displayHealth, lastHealth, lastMaxHealth, lastAbsorption;
+    private long lastHealthTime, healthBlinkTime;
     private boolean lastHardcore;
-    public int lastHealth, lastMaxHealth, lastAbsorption;
     private OverlayHeart lastOverlayType;
     private Heart[] hearts;
 
-    public void renderPlayerHearts(GuiGraphics guiGraphics, Player player, int x, int y, int maxHealth, int currentHealth, int displayHealth, int absorption, boolean blinking) {
-        long tickCount = this.client.gui.getGuiTicks();
-        // synchronize random with vanilla
+    public void renderPlayerHearts(GuiGraphics guiGraphics, Player player, int x, int y) {
+        int currentHealth = Mth.ceil(player.getHealth());
+        long tickCount = Minecraft.getInstance().gui.getGuiTicks();
+        boolean blinking = this.healthBlinkTime > tickCount && (this.healthBlinkTime - tickCount) / 3L % 2L == 1L;
+        long timeMillis = Util.getMillis();
+
+        if (currentHealth < this.lastHealth && player.invulnerableTime > 0) {
+            this.lastHealthTime = timeMillis;
+            this.healthBlinkTime = tickCount + 20;
+        } else if (currentHealth > this.lastHealth && player.invulnerableTime > 0) {
+            this.lastHealthTime = timeMillis;
+            this.healthBlinkTime = tickCount + 10;
+        }
+
+        if (timeMillis - this.lastHealthTime > 1000L) {
+            Minecraft.getInstance().gui.displayHealth = currentHealth; // keep this up to date
+            this.displayHealth = currentHealth;
+            this.lastHealthTime = timeMillis;
+        }
+
         this.random.setSeed(tickCount * 312871);
+
+        int maxHealth = Mth.ceil(Math.max((float) player.getAttributeValue(Attributes.MAX_HEALTH), Math.max(this.displayHealth, currentHealth)));
+        int absorption = Mth.ceil(player.getAbsorptionAmount());
 
         int healthHearts = Mth.ceil(Math.min(maxHealth, 20) / 2.0);
         int displayHealthHearts = Mth.ceil(Math.min(displayHealth, 20) / 2.0);

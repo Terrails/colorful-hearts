@@ -8,11 +8,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -23,7 +24,7 @@ public class HeartColorEditBox extends EditBox {
 
     private boolean invalidRGBHex;
 
-    private ResourceLocation spriteLocation;
+    private Identifier spriteLocation;
     private Integer color;
 
     private final Consumer<String> defaultResponder;
@@ -41,8 +42,10 @@ public class HeartColorEditBox extends EditBox {
             this.invalidRGBHex = !HEX_MATCH.matcher(str).matches();
             if (!this.isInvalid()) {
                 this.color = Integer.decode(this.getValue());
-                ResourceLocation spriteLocation = heartType.getSprite(false, false, false, this.color);
-                TextureAtlasSprite sprite = Minecraft.getInstance().getGuiSprites().getSprite(spriteLocation);
+                Identifier spriteLocation = heartType.getSprite(false, false, false, this.color);
+                TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager()
+                        .getAtlasOrThrow(AtlasIds.GUI)
+                        .getSprite(spriteLocation);
                 if (!sprite.contents().name().equals(MissingTextureAtlasSprite.getLocation())) {
                     this.spriteLocation = spriteLocation;
                 } else {
@@ -91,7 +94,7 @@ public class HeartColorEditBox extends EditBox {
             int x = this.getX() + this.width - 11;
             int y = this.getY() + this.height / 2 - 5;
             if (this.spriteLocation != null) {
-                guiGraphics.blitSprite(RenderType::guiTextured, this.spriteLocation, x, y, 9, 9);
+                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.spriteLocation, x, y, 9, 9);
             } else {
                 guiGraphics.fill(x, y, x + 9, y + 9, this.getColor() | 0xFF000000);
                 guiGraphics.renderOutline(x, y, 9, 9, 0xFFDDDDDD);
