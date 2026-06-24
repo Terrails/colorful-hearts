@@ -17,8 +17,7 @@ public class PlayerTabOverlayMixin {
 
     @Inject(method = "renderTablistHearts", cancellable = true,
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Ljava/util/function/Function;Lnet/minecraft/resources/ResourceLocation;IIII)V")
-    )
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"))
     private void colorfulhearts_renderTablistHearts(
             int y, int x, int offset, UUID playerUuid, GuiGraphics guiGraphics, int scoreValue,
             CallbackInfo ci, @Local(ordinal = 0) PlayerTabOverlay.HealthState healthState
