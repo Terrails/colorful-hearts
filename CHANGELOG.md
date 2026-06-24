@@ -1,3 +1,7 @@
+## [21.11.0] - 2026-24-06
+
+- Updated to Minecraft 1.21.11
+
 ## [21.4.0] - 2026-05-05
 
 - Updated to Minecraft
