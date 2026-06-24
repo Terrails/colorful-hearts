@@ -40,7 +40,7 @@ public class AppleSkinCompat extends AppleSkinCommonCompat {
     }
 
     private void onPostRender(NeoHeartRenderEvent.Post event) {
-        Player player = Minecraft.getInstance().player;
+        var player = event.getPlayer();
         if (!shouldDrawOverlay(event.getOverlayHeart().orElse(null), player)) {
             return;
         }
