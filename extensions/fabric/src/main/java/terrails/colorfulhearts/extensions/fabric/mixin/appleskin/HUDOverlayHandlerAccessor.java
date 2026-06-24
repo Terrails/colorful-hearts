@@ -9,4 +9,7 @@ public interface HUDOverlayHandlerAccessor {
 
     @Accessor
     float getFlashAlpha();
+
+    @Accessor
+    HUDOverlayHandler.HeldFoodCache getHeldFood();
 }
