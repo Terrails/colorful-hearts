@@ -12,7 +12,7 @@ public class HUDOverlaysMixin {
      * The mod tries to render the effect in the topmost heart row
      * Since the rows do not move here, it has to be kept constant
      */
-    @ModifyVariable(method = "drawComfortOverlay", at = @At("STORE"), ordinal = 10)
+    @ModifyVariable(method = "drawComfortOverlay", at = @At("STORE"), name = "leftHeightOffset")
     private static int colorfulhearts$drawComfortOverlay(int leftHeightOffset) {
         return 0;
     }

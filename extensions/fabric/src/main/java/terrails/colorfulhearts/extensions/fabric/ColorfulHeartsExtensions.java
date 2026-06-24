@@ -11,7 +11,8 @@ import static terrails.colorfulhearts.extensions.CColorfulHeartsExtensions.LOGGE
 public class ColorfulHeartsExtensions implements ClientModInitializer {
 
     private static final Map<String, String> COMPAT = Map.of(
-            "overflowingbars", "OverflowingBarsCompat"
+            "overflowingbars", "OverflowingBarsCompat",
+            "farmersdelight", "FarmersDelightCompat"
     );
 
     @Override
