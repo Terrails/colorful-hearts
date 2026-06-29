@@ -3,7 +3,7 @@ package terrails.colorfulhearts.api.heart;
 import terrails.colorfulhearts.api.heart.drawing.HeartDrawing;
 import terrails.colorfulhearts.api.heart.drawing.OverlayHeart;
 import terrails.colorfulhearts.api.heart.drawing.SpriteHeartDrawing;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
@@ -33,7 +33,7 @@ public class Hearts {
         return OVERLAY_HEARTS.values().stream().filter(heart -> heart.shouldDraw(player)).findFirst();
     }
 
-    public static Optional<OverlayHeart> getOverlayHeartFromHeartType(Gui.HeartType heartType) {
+    public static Optional<OverlayHeart> getOverlayHeartFromHeartType(Hud.HeartType heartType) {
         return switch (heartType) {
             case POISIONED -> Optional.ofNullable(OVERLAY_HEARTS.get(POISON_OVERLAY_HEART_ID));
             case WITHERED -> Optional.ofNullable(OVERLAY_HEARTS.get(WITHER_OVERLAY_HEART_ID));
@@ -42,16 +42,16 @@ public class Hearts {
         };
     }
 
-    public static Gui.HeartType getHeartTypeFromOverlayHeart(OverlayHeart heart) {
+    public static Hud.HeartType getHeartTypeFromOverlayHeart(OverlayHeart heart) {
         Identifier id = heart.getId();
         if (id.equals(POISON_OVERLAY_HEART_ID)) {
-            return Gui.HeartType.POISIONED;
+            return Hud.HeartType.POISIONED;
         } else if (id.equals(WITHER_OVERLAY_HEART_ID)) {
-            return Gui.HeartType.WITHERED;
+            return Hud.HeartType.WITHERED;
         } else if (id.equals(FROZEN_OVERLAY_HEART_ID)) {
-            return Gui.HeartType.FROZEN;
+            return Hud.HeartType.FROZEN;
         } else {
-            return Gui.HeartType.NORMAL;
+            return Hud.HeartType.NORMAL;
         }
     }
 }

@@ -35,7 +35,7 @@ public class TabHeartRenderer {
         int displayHealth = Math.min(healthState.displayedValue(), 20);
         int displayHealthHearts = Mth.ceil(displayHealth / 2.0);
 
-        boolean blinking = healthState.isBlinking(client.gui.getGuiTicks());
+        boolean blinking = healthState.isBlinking(client.gui.hud.getGuiTicks());
 
         int spacingDivisor = Math.max(health, displayHealth) / 2;
         // Adds space between hearts when there are less than 10

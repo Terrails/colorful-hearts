@@ -16,11 +16,11 @@ import java.util.Objects;
 public class RenderEventHandler {
 
     public static final RenderEventHandler INSTANCE = new RenderEventHandler();
-    
+
     public void renderHearts(RenderGuiLayerEvent.Pre event) {
         Minecraft client = Minecraft.getInstance();
         if (event.isCanceled()
-                || client.options.hideGui
+                || client.gui.hud.isHidden()
                 || !event.getName().equals(VanillaGuiLayers.PLAYER_HEALTH)
                 || !Objects.requireNonNull(client.gameMode).canHurtPlayer()
                 || !(client.getCameraEntity() instanceof Player player)) {
@@ -37,12 +37,12 @@ public class RenderEventHandler {
         int width = guiGraphics.guiWidth();
         int height = guiGraphics.guiHeight();
         int left = width / 2 - 91;
-        int top = height - client.gui.leftHeight;
+        int top = height - client.gui.hud.leftHeight;
 
         // handle half heart requiring absorption to move one row up
         boolean hasAbsorptionRow = (absorption + Math.min(20, maxHealth == 19 ? 20 : maxHealth)) > 20;
         int offset = 10 + (hasAbsorptionRow ? 10 : 0);
-        client.gui.leftHeight += offset;
+        client.gui.hud.leftHeight += offset;
 
         HeartRenderer.INSTANCE.renderPlayerHearts(guiGraphics, player, left, top);
 

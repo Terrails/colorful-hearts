@@ -19,7 +19,7 @@ public class AppleSkinCommonCompat {
     private Heart[] hearts;
 
     public void drawHealthOverlay(GuiGraphicsExtractor guiGraphics, int x, int y, int absorbing, int health, int modifiedHealth, float alpha, boolean hardcore) {
-        long tickCount = Minecraft.getInstance().gui.getGuiTicks();
+        long tickCount = Minecraft.getInstance().gui.hud.getGuiTicks();
         // synchronize random with vanilla
         this.random.setSeed(tickCount * 312871);
 

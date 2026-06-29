@@ -145,8 +145,7 @@ public class ColorSelectionScreen extends Screen {
 
     @Override
     public void onClose() {
-        assert this.minecraft != null;
-        this.minecraft.setScreen(this.lastScreen);
+        this.minecraft.setScreenAndShow(this.lastScreen);
         if (this.colorsChanged) {
             // recreates texture atlas
             this.minecraft.reloadResourcePacks();

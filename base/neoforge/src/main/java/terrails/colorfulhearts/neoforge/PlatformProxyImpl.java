@@ -15,8 +15,8 @@ import terrails.colorfulhearts.api.neoforge.event.NeoHeartRegistryEvent;
 import terrails.colorfulhearts.api.neoforge.event.NeoHeartRenderEvent;
 import terrails.colorfulhearts.api.neoforge.event.NeoHeartSingleRenderEvent;
 import terrails.colorfulhearts.api.neoforge.event.NeoHeartUpdateEvent;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.world.entity.player.Player;
 
 import static terrails.colorfulhearts.CColorfulHearts.LOGGER;
@@ -48,7 +48,7 @@ public class PlatformProxyImpl implements PlatformProxy {
 
     @Override
     public OverlayHeart playerHeartTypeEvent(Player player, OverlayHeart overlayHeart) {
-        Gui.HeartType heartType = overlayHeart == null ? Gui.HeartType.NORMAL : Hearts.getHeartTypeFromOverlayHeart(overlayHeart);
+        var heartType = overlayHeart == null ? Hud.HeartType.NORMAL : Hearts.getHeartTypeFromOverlayHeart(overlayHeart);
         return Hearts.getOverlayHeartFromHeartType(NeoForge.EVENT_BUS.post(new PlayerHeartTypeEvent(player, heartType)).getType()).orElse(overlayHeart);
     }
 

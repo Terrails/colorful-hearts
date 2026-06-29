@@ -1,7 +1,7 @@
 package terrails.colorfulhearts.config.screen.base;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
+import org.jspecify.annotations.NonNull;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -20,7 +20,7 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
     }
 
     @Override
-    public int addEntry(Entry entry) {
+    public int addEntry(@NonNull Entry entry) {
         return super.addEntry(entry);
     }
 
@@ -34,7 +34,6 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
         return this.width - scrollbarWidth();
     }
 
-    @MethodsReturnNonnullByDefault
     public static class Entry extends ContainerObjectSelectionList.Entry<Entry> {
 
         final List<AbstractWidget> children;
@@ -48,28 +47,20 @@ public class ScrollableWidgetList extends ContainerObjectSelectionList<Scrollabl
         }
 
         @Override
-        public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
+        public void extractContent(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
             this.children.forEach(widget -> {
                 widget.setY(getContentY());
                 widget.extractRenderState(graphics, mouseX, mouseY, a);
             });
         }
 
-        //        @Override
-        //        public void render(@NotNull GuiGraphicsExtractor guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
-        //            this.children.forEach(widget -> {
-        //                widget.setY(top);
-        //                widget.render(guiGraphics, mouseX, mouseY, partialTick);
-        //            });
-        //        }
-
         @Override
-        public List<? extends GuiEventListener> children() {
+        public @NonNull List<? extends GuiEventListener> children() {
             return this.children;
         }
 
         @Override
-        public List<? extends NarratableEntry> narratables() {
+        public @NonNull List<? extends NarratableEntry> narratables() {
             return this.children;
         }
     }

@@ -1,5 +1,7 @@
 package terrails.colorfulhearts.config.screen;
 
+import org.jspecify.annotations.NonNull;
+
 import terrails.colorfulhearts.config.screen.widgets.LabelLine;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -38,14 +40,14 @@ public class ConfigurationScreen extends Screen {
         y += font.lineHeight * 2;
         this.addRenderableWidget(
                 Button.builder(Component.translatable("colorfulhearts.options.button.health_colors"),
-                                (btn) -> this.minecraft.setScreen(new ColorSelectionScreen(this, true)))
+                                (btn) -> this.minecraft.setScreenAndShow(new ColorSelectionScreen(this, true)))
                         .pos(leftButtonX, y).size(Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT)
                         .build()
         );
 
         this.addRenderableWidget(
                 Button.builder(Component.translatable("colorfulhearts.options.button.absorption_colors"),
-                                (btn) -> this.minecraft.setScreen(new ColorSelectionScreen(this, false)))
+                                (btn) -> this.minecraft.setScreenAndShow(new ColorSelectionScreen(this, false)))
                         .pos(rightButtonX, y).size(Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT)
                         .build()
         );
@@ -59,7 +61,7 @@ public class ConfigurationScreen extends Screen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.centeredText(this.font, this.title, this.width / 2, 20, 16777215);
 
@@ -67,6 +69,6 @@ public class ConfigurationScreen extends Screen {
 
     @Override
     public void onClose() {
-        this.minecraft.setScreen(this.lastScreen);
+        this.minecraft.setScreenAndShow(this.lastScreen);
     }
 }

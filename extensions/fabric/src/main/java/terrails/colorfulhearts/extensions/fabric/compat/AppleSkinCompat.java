@@ -31,7 +31,7 @@ public class AppleSkinCompat extends AppleSkinCommonCompat implements AppleSkinA
             }
 
             /* copied from HUDOverlayHandler */
-            FoodHelper.QueriedFoodResult result = ((HUDOverlayHandlerAccessor) HUDOverlayHandler.INSTANCE).getHeldFood().result(client.gui.getGuiTicks(), player);
+            FoodHelper.QueriedFoodResult result = ((HUDOverlayHandlerAccessor) HUDOverlayHandler.INSTANCE).getHeldFood().result(client.gui.hud.getGuiTicks(), player);
             if (result == null) {
                 HUDOverlayHandler.INSTANCE.resetFlash();
                 return;
